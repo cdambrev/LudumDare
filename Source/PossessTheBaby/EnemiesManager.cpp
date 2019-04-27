@@ -17,7 +17,6 @@ UEnemiesManager::UEnemiesManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryComponentTick.bCanEverTick = true;
-	bWantsBeginPlay = true;
 }
 
 // Called when the game starts or when spawned
@@ -119,10 +118,14 @@ void UEnemiesManager::InitializeWave()
 UWorldStateComponent* UEnemiesManager::GetWorldStateComponent() const
 {
 	UWorldStateComponent* worldStateComponent = nullptr;
-	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
-	if (IsValid(gameState))
+	UWorld* world = GetWorld();
+	if (IsValid(world))
 	{
-		worldStateComponent = gameState->GetWorldState();
+		APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+		if (IsValid(gameState))
+		{
+			worldStateComponent = gameState->GetWorldState();
+		}
 	}
 	return worldStateComponent;
 }

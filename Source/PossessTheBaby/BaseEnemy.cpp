@@ -20,6 +20,8 @@ void ABaseEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GetSprite()->SetSpriteColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.0f));
+
 	_currentHp = maxHp;
 }
 
