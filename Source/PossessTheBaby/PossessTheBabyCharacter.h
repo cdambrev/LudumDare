@@ -8,6 +8,9 @@
 
 class UTextRenderComponent;
 
+class UWorldStateComponent;
+class UHealthComponent;
+
 /**
  * This class is the default character for PossessTheBaby, and it is responsible for all
  * physical interaction between the player and the world.
@@ -31,6 +34,9 @@ class APossessTheBabyCharacter : public APaperCharacter
 
 	UTextRenderComponent* TextComponent;
 	virtual void Tick(float DeltaSeconds) override;
+
+
+
 protected:
 	// The animation to play while running around
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animations)
@@ -45,6 +51,7 @@ protected:
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
+	void MoveUp(float Value);
 
 	void UpdateCharacter();
 
@@ -57,6 +64,20 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
+
+	UPROPERTY(EditAnywhere, Category = Perspective)
+	float TopScale = 0.8f;
+
+	UPROPERTY(EditAnywhere, Category = Perspective)
+	float BottomScale = 1.2f;
+
+private:
+
+	UPROPERTY()
+	UWorldStateComponent* WorldState = nullptr;
+
+	UPROPERTY()
+	UHealthComponent* Health = nullptr;
 
 public:
 	APossessTheBabyCharacter();
