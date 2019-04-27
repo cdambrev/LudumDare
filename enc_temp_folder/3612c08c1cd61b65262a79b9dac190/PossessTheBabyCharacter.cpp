@@ -112,8 +112,6 @@ void APossessTheBabyCharacter::BeginPlay()
 	{
 		gameState->SetPlayer(this);
 	}
-
-	GetSprite()->SetSpriteColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.0f));
 }
 
 void APossessTheBabyCharacter::Tick(float DeltaSeconds)
@@ -184,7 +182,7 @@ void APossessTheBabyCharacter::ToggleWorldState()
 {
 	GetWorldState()->ToggleWorldState();
 
-	_flicker->Flick(0.2f, FLinearColor(1.0f, 0.0f, 0.0f));
+	_flicker->Flick(0.5f, FLinearColor(1.0f, 0.0f, 0.0f));
 }
 
 

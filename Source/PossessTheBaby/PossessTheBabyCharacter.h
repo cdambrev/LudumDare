@@ -11,6 +11,7 @@ class UWorldStateComponent;
 class UHealthComponent;
 class UFakePerspectiveComponent;
 class UCombatComponent;
+class UFlickerComponent;
 
 /**
  * This class is the default character for PossessTheBaby, and it is responsible for all
@@ -76,6 +77,9 @@ private:
 
 	UPROPERTY()
 	UCombatComponent* _combat = nullptr;
+
+	UPROPERTY()
+	UFlickerComponent* _flicker = nullptr;
 
 public:
 	APossessTheBabyCharacter();
