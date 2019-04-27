@@ -7,6 +7,7 @@
 #include "PossessTheBabyGameState.generated.h"
 
 class UWorldStateComponent;
+class UWorldLimitsComponent;
 
 /**
  * 
@@ -22,7 +23,13 @@ public:
 	UFUNCTION(BlueprintGetter, Category="World State")
 	UWorldStateComponent* GetWorldState() const;
 
+	UFUNCTION(BlueprintGetter, Category = "World Limits")
+	UWorldLimitsComponent* GetWorldLimits() const;
+
 private:
 	UPROPERTY(BlueprintGetter= GetWorldState)
 	UWorldStateComponent* WorldState = nullptr;
+
+	UPROPERTY(BlueprintGetter= GetWorldLimits)
+	UWorldLimitsComponent* _worldLimits = nullptr;
 };
