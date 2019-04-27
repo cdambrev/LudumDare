@@ -28,8 +28,8 @@ public:
 
 	FLevelData GetLevelData() const;
 
-	AEnemiesManager* GetEnemyManager(EWorldState worldState) const;
-	AEnemiesManager* GetEnemyManager() const;
+	UEnemiesManager* GetEnemyManager(EWorldState worldState) const;
+	UEnemiesManager* GetEnemyManager() const;
 
 protected:
 	

@@ -28,7 +28,7 @@ FLevelData APossessTheBabyGameMode::GetLevelData() const
 	return levelData;
 }
 
-AEnemiesManager* APossessTheBabyGameMode::GetEnemyManager(EWorldState worldState) const
+UEnemiesManager* APossessTheBabyGameMode::GetEnemyManager(EWorldState worldState) const
 {
 	if (worldState == EWorldState::Dream)
 	{
@@ -40,7 +40,7 @@ AEnemiesManager* APossessTheBabyGameMode::GetEnemyManager(EWorldState worldState
 	}
 }
 
-AEnemiesManager* APossessTheBabyGameMode::GetEnemyManager() const
+UEnemiesManager* APossessTheBabyGameMode::GetEnemyManager() const
 {
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	return GetEnemyManager(gameState->GetWorldState()->GetWorldState());
