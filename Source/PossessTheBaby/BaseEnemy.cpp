@@ -19,6 +19,8 @@ ABaseEnemy::ABaseEnemy()
 void ABaseEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	_currentHp = maxHp;
 }
 
 // Called every frame
@@ -65,4 +67,9 @@ void ABaseEnemy::SetCurrentState(EEnemyStateMachine nextState)
 void ABaseEnemy::SetAllowedToAttack(bool allowed)
 {
 	_allowedToAttack = allowed;
+}
+
+int32 ABaseEnemy::GetCurrentHp() const
+{
+	return _currentHp;
 }

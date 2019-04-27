@@ -96,6 +96,7 @@ void APossessTheBabyCharacter::UpdateAnimation()
 
 void APossessTheBabyCharacter::BeginPlay()
 {
+	Super::BeginPlay();
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	if (IsValid(gameState))
 	{

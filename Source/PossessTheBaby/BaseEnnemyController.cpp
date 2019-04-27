@@ -2,6 +2,8 @@
 
 #include "BaseEnnemyController.h"
 #include "BaseEnemy.h"
+#include "PossessTheBabyGameState.h"
+#include "PossessTheBabyCharacter.h"
 
 ABaseEnnemyController::ABaseEnnemyController()
 {
@@ -14,7 +16,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 	ABaseEnemy* ennemy = Cast<ABaseEnemy>(GetPawn());
 	if (IsValid(ennemy))
 	{
-		if (/* health Component = 0hp*/ true && ennemy->getCurrentState() != EEnemyStateMachine::Dead)
+		if (ennemy->GetCurrentHp() <= 0 && ennemy->getCurrentState() != EEnemyStateMachine::Dead)
 		{
 			ennemy->SetCurrentState(EEnemyStateMachine::Dead);
 		}
@@ -29,14 +31,16 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 			}
 			break;
 		case EEnemyStateMachine::Attacking:
-
-			/* component -> Attack()*/
 			if (!ennemy->canAttack())
 			{
 				ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
 			}
 			if (true /* out of reach */)
 			{
+				APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+				APossessTheBabyCharacter* player = gameState->GetPlayer();
+				FVector distanceToPlayer = player->GetActorLocation() - ennemy->GetActorLocation();
+				ennemy->AddMovementInput(distanceToPlayer);
 			}
 			break;
 		case EEnemyStateMachine::Frozen:
