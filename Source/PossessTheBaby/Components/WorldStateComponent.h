@@ -4,7 +4,7 @@
 #include "Components/ActorComponent.h"
 #include "WorldStateComponent.generated.h"
 
-UENUM()
+UENUM(BlueprintType)
 enum class EWorldState : uint8
 {
 	Dream,
@@ -22,6 +22,7 @@ public:
 
 	bool IsInDreamWorld() const;
 	bool IsInNightmareWorld() const;
+	EWorldState GetWorldState() const;
 	void ToggleWorldState();
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnWorldStateChanged, EWorldState)

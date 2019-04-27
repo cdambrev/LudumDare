@@ -1,8 +1,9 @@
 #include "PossessTheBabyGameState.h"
 
-#include "WorldStateComponent.h"
 #include "WaveStateComponent.h"
 #include "PossessTheBabyCharacter.h"
+#include "Components/WorldStateComponent.h"
+#include "Components/WorldLimitsComponent.h"
 
 APossessTheBabyGameState::APossessTheBabyGameState()
 	: Super()
@@ -11,6 +12,7 @@ APossessTheBabyGameState::APossessTheBabyGameState()
 
 	_dreamWaveState = CreateDefaultSubobject<UWaveStateComponent>(TEXT("DreamWaveState"));
 	_nightmareWaveState = CreateDefaultSubobject<UWaveStateComponent>(TEXT("NightmareWaveState"));
+	_worldLimits = CreateDefaultSubobject<UWorldLimitsComponent>(TEXT("WorldLimits"));
 }
 
 UWorldStateComponent* APossessTheBabyGameState::GetWorldState() const
@@ -36,4 +38,9 @@ UWaveStateComponent* APossessTheBabyGameState::GetDreamWaveState() const
 UWaveStateComponent* APossessTheBabyGameState::GetNightmareWaveState() const
 {
 	return _nightmareWaveState;
+}
+
+UWorldLimitsComponent* APossessTheBabyGameState::GetWorldLimits() const
+{
+	return _worldLimits;
 }

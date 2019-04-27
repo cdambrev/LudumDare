@@ -47,7 +47,7 @@ private:
 
 	void OnWorldStateChanged(EWorldState worldState);
 
-	TArray<ABaseEnemy> _ennemiesOnScreen;
+	TArray<ABaseEnemy*> _ennemiesOnScreen;
 
 	int32 _maxEnnemiesOnScreen = 10;
 

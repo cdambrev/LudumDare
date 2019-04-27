@@ -63,14 +63,13 @@ void AEnemiesManager::SpawnNewEnnemy(bool strong)
 
 void AEnemiesManager::InitializeWave()
 {
-	FTimerDelegate SpawnEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &AEnemiesManager::SpawnNewEnnemy, false);
 	APossessTheBabyGameMode * gameMode = Cast<APossessTheBabyGameMode>(GetWorld()->GetAuthGameMode());
 	float timeBetweenEnemiesFirstWave = gameMode->GetLevelData().timeBetweenEnemiesPerWave[0];
+	
+	FTimerDelegate SpawnEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &AEnemiesManager::SpawnNewEnnemy, false);
 	GetWorldTimerManager().SetTimer(_spawnLightMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 5.f);
 	
 	FTimerDelegate SpawnStrongEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &AEnemiesManager::SpawnNewEnnemy, true);
-	APossessTheBabyGameMode * gameMode = Cast<APossessTheBabyGameMode>(GetWorld()->GetAuthGameMode());
-	float timeBetweenEnemiesFirstWave = gameMode->GetLevelData().timeBetweenEnemiesPerWave[0];
 	GetWorldTimerManager().SetTimer(_spawnStrongMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 7.f);
 }
 

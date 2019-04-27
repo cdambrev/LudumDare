@@ -8,7 +8,8 @@
 
 class UWorldStateComponent;
 class APossessTheBabyCharacter;
-class UWaveStateComponent
+class UWaveStateComponent;
+class UWorldLimitsComponent;
 
 /**
  * 
@@ -21,6 +22,7 @@ class POSSESSTHEBABY_API APossessTheBabyGameState : public AGameStateBase
 public:
 	APossessTheBabyGameState();
 
+	UFUNCTION(BlueprintGetter, Category="World State")
 	UWorldStateComponent* GetWorldState() const;
 
 	APossessTheBabyCharacter* GetPlayer() const;
@@ -31,8 +33,11 @@ public:
 	
 	UWaveStateComponent* GetNightmareWaveState() const;
 
+	UFUNCTION(BlueprintGetter, Category = "World Limits")
+	UWorldLimitsComponent* GetWorldLimits() const;
+
 private:
-	UPROPERTY()
+	UPROPERTY(BlueprintGetter= GetWorldState)
 	UWorldStateComponent* WorldState = nullptr;
 
 	UPROPERTY()
@@ -43,4 +48,7 @@ private:
 
 	UPROPERTY()
 	UWaveStateComponent* _nightmareWaveState = nullptr;
+
+	UPROPERTY(BlueprintGetter= GetWorldLimits)
+	UWorldLimitsComponent* _worldLimits = nullptr;
 };
