@@ -2,9 +2,11 @@
 
 #include "PossessTheBabyGameMode.h"
 #include "PossessTheBabyCharacter.h"
+#include "PossessTheBabyGameState.h"
 
 APossessTheBabyGameMode::APossessTheBabyGameMode()
 {
 	// Set default pawn class to our character
 	DefaultPawnClass = APossessTheBabyCharacter::StaticClass();	
+	GameStateClass = APossessTheBabyGameState::StaticClass();
 }

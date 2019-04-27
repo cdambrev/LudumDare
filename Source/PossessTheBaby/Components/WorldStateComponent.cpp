@@ -1,5 +1,7 @@
 #include "WorldStateComponent.h"
 
+#include "Engine/Engine.h"
+
 UWorldStateComponent::UWorldStateComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -13,6 +15,15 @@ void UWorldStateComponent::BeginPlay()
 void UWorldStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (IsInDreamWorld())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, TEXT("Dream World"));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, TEXT("Nightmare World"));
+	}
 }
 
 bool UWorldStateComponent::IsInDreamWorld() const

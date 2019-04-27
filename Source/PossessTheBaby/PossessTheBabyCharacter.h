@@ -55,12 +55,6 @@ protected:
 
 	void UpdateCharacter();
 
-	/** Handle touch inputs. */
-	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
-
-	/** Handle touch stop event. */
-	void TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location);
-
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
@@ -72,9 +66,9 @@ protected:
 	float BottomScale = 1.2f;
 
 private:
+	void ToggleWorldState();
 
-	UPROPERTY()
-	UWorldStateComponent* WorldState = nullptr;
+	UWorldStateComponent* GetWorldState() const;
 
 	UPROPERTY()
 	UHealthComponent* Health = nullptr;

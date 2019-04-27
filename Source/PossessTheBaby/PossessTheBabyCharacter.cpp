@@ -11,6 +11,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/HealthComponent.h"
 #include "Components/WorldStateComponent.h"
+#include "PossessTheBabyGameState.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -76,7 +77,6 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
 
-	WorldState = CreateDefaultSubobject<UWorldStateComponent>(TEXT("WorldState"));
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 }
 
@@ -109,13 +109,10 @@ void APossessTheBabyCharacter::Tick(float DeltaSeconds)
 void APossessTheBabyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Note: the 'Jump' action and the 'MoveRight' axis are bound to actual keys/buttons/sticks in DefaultInput.ini (editable from Project Settings..Input)
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("ToggleWorldState", IE_Pressed, this, &APossessTheBabyCharacter::ToggleWorldState);
+
 	PlayerInputComponent->BindAxis("MoveRight", this, &APossessTheBabyCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("MoveUp", this, &APossessTheBabyCharacter::MoveUp);
-
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &APossessTheBabyCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &APossessTheBabyCharacter::TouchStopped);
 }
 
 void APossessTheBabyCharacter::MoveRight(float Value)
@@ -128,18 +125,6 @@ void APossessTheBabyCharacter::MoveUp(float Value)
 {
 	// Apply the input to the character motion
 	AddMovementInput(FVector(0.0f, 0.0f, 1.0f), Value);
-}
-
-void APossessTheBabyCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	// Jump on any touch
-	Jump();
-}
-
-void APossessTheBabyCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	// Cease jumping once touch stopped
-	StopJumping();
 }
 
 void APossessTheBabyCharacter::UpdateCharacter()
@@ -167,6 +152,17 @@ void APossessTheBabyCharacter::UpdateCharacter()
 	float alpha = 1.0f - (position.Z / 1000.0f + 0.5f);
 	float scale = FMath::Lerp(TopScale, BottomScale, alpha);
 	SetActorScale3D(FVector(scale, scale, scale));
+}
+
+UWorldStateComponent* APossessTheBabyCharacter::GetWorldState() const
+{
+	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+	return gameState->GetWorldState();
+}
+
+void APossessTheBabyCharacter::ToggleWorldState()
+{
+	GetWorldState()->ToggleWorldState();
 }
 
 
