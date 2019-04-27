@@ -13,13 +13,14 @@ ABaseEnemy::ABaseEnemy()
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, -1.0f, 0.0f));
 	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
-
 }
 
 // Called when the game starts or when spawned
 void ABaseEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	_currentHp = maxHp;
 }
 
 // Called every frame
@@ -66,4 +67,9 @@ void ABaseEnemy::SetCurrentState(EEnemyStateMachine nextState)
 void ABaseEnemy::SetAllowedToAttack(bool allowed)
 {
 	_allowedToAttack = allowed;
+}
+
+int32 ABaseEnemy::GetCurrentHp() const
+{
+	return _currentHp;
 }

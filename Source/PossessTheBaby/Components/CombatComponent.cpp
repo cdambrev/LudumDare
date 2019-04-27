@@ -12,7 +12,6 @@ UCombatComponent::UCombatComponent()
 bool UCombatComponent::TestAttackEnemy() const
 {
 	UEnemiesManager* enemies = GetEnemyManager();
-
 	return true;
 }
 

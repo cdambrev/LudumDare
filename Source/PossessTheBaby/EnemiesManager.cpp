@@ -17,6 +17,7 @@ UEnemiesManager::UEnemiesManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryComponentTick.bCanEverTick = true;
+	bWantsBeginPlay = true;
 }
 
 // Called when the game starts or when spawned
@@ -30,7 +31,11 @@ void UEnemiesManager::BeginPlay()
 
 void UEnemiesManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	GetWorldStateComponent()->OnWorldStateChanged.RemoveAll(this);
+	UWorldStateComponent* worldStateComponent = GetWorldStateComponent();
+	if (IsValid(worldStateComponent))
+	{
+		worldStateComponent->OnWorldStateChanged.RemoveAll(this);
+	}
 }
 
 // Called every frame
@@ -43,32 +48,41 @@ void UEnemiesManager::TickComponent(float DeltaTime, enum ELevelTick TickType, F
  
 	FVector playerPos = player->GetActorLocation();
 
-	for (int i=1; i<_ennemiesOnScreen.Num()-1; ++i)
+	for (int i=0; i<_ennemiesOnScreen.Num()-1; ++i)
 	{
-		float distanceMin = FVector::Dist2D(playerPos, _ennemiesOnScreen[i]->GetActorLocation());
-		int min = i;
-		for (int j=i; j<_ennemiesOnScreen.Num(); ++j)
+		if (IsValid(_ennemiesOnScreen[i]))
 		{
-			float distancePlayerEnnemy = FVector::Dist2D(playerPos, _ennemiesOnScreen[j]->GetActorLocation());
-			if (distancePlayerEnnemy < distanceMin)
+			float distanceMin = FVector::Dist2D(playerPos, _ennemiesOnScreen[i]->GetActorLocation());
+			int min = i;
+			for (int j = i; j < _ennemiesOnScreen.Num(); ++j)
 			{
-				min = j;
+				if (IsValid(_ennemiesOnScreen[j]))
+				{
+					float distancePlayerEnnemy = FVector::Dist2D(playerPos, _ennemiesOnScreen[j]->GetActorLocation());
+					if (distancePlayerEnnemy < distanceMin)
+					{
+						min = j;
+					}
+				}
 			}
-		}
-		if (min != i)
-		{
-			_ennemiesOnScreen.Swap(i, min);
+			if (min != i)
+			{
+				_ennemiesOnScreen.Swap(i, min);
+			}
 		}
 	}
 	for (int i=0; i<_ennemiesOnScreen.Num(); ++i)
 	{
-		if (i < _maxEnnemiesAttacking)
+		if (IsValid(_ennemiesOnScreen[i]))
 		{
-			_ennemiesOnScreen[i]->SetAllowedToAttack(true);
-		}
-		else
-		{
-			_ennemiesOnScreen[i]->SetAllowedToAttack(false);
+			if (i < _maxEnnemiesAttacking)
+			{
+				_ennemiesOnScreen[i]->SetAllowedToAttack(true);
+			}
+			else
+			{
+				_ennemiesOnScreen[i]->SetAllowedToAttack(false);
+			}
 		}
 	}
 }
@@ -104,8 +118,13 @@ void UEnemiesManager::InitializeWave()
 
 UWorldStateComponent* UEnemiesManager::GetWorldStateComponent() const
 {
+	UWorldStateComponent* worldStateComponent = nullptr;
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
-	return gameState->GetWorldState();
+	if (IsValid(gameState))
+	{
+		worldStateComponent = gameState->GetWorldState();
+	}
+	return worldStateComponent;
 }
 
 void UEnemiesManager::OnWorldStateChanged(EWorldState worldState)
