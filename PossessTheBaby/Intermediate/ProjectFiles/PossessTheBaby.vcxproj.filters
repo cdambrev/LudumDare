@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\PossessTheBaby.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{FDBEEC0D-D901-4A62-9088-ED829CEABD52}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\PossessTheBaby.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\PossessTheBabyEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <Filter Include="Config">
+      <UniqueIdentifier>{6C25646E-1BF3-4392-A51C-627379D1F103}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\PossessTheBaby">
+      <UniqueIdentifier>{E9F099EA-38DA-40F5-AA77-B62BA2CFBA07}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\PossessTheBaby\PossessTheBaby.Build.cs">
+      <Filter>Source\PossessTheBaby</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\PossessTheBaby\PossessTheBaby.cpp">
+      <Filter>Source\PossessTheBaby</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\PossessTheBaby\PossessTheBaby.h">
+      <Filter>Source\PossessTheBaby</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\PossessTheBaby\PossessTheBabyCharacter.cpp">
+      <Filter>Source\PossessTheBaby</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\PossessTheBaby\PossessTheBabyCharacter.h">
+      <Filter>Source\PossessTheBaby</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\PossessTheBaby\PossessTheBabyGameMode.cpp">
+      <Filter>Source\PossessTheBaby</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\PossessTheBaby\PossessTheBabyGameMode.h">
+      <Filter>Source\PossessTheBaby</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
