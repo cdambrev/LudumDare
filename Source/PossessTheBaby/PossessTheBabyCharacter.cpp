@@ -14,6 +14,7 @@
 #include "PossessTheBabyGameState.h"
 #include "Components/FakePerspectiveComponent.h"
 #include "Components/CombatComponent.h"
+#include "Components/FlickerComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -79,6 +80,8 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 	_fakePerspective = CreateDefaultSubobject<UFakePerspectiveComponent>(TEXT("Fake Perspective"));
 	_combat = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat Component"));
+	_flicker = CreateDefaultSubobject<UFlickerComponent>(TEXT("Flicker Component"));
+	_flicker->SetSprite(GetSprite());
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
@@ -109,6 +112,8 @@ void APossessTheBabyCharacter::BeginPlay()
 	{
 		gameState->SetPlayer(this);
 	}
+
+	GetSprite()->SetSpriteColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.0f));
 }
 
 void APossessTheBabyCharacter::Tick(float DeltaSeconds)
@@ -179,6 +184,8 @@ UHealthComponent* APossessTheBabyCharacter::GetHealth() const
 void APossessTheBabyCharacter::ToggleWorldState()
 {
 	GetWorldState()->ToggleWorldState();
+
+	_flicker->Flick(0.2f, FLinearColor(1.0f, 0.0f, 0.0f));
 }
 
 

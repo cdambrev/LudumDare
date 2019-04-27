@@ -1,34 +1,45 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "FlickerComponent.h"
 
-// Sets default values for this component's properties
+#include "PaperFlipbookComponent.h"
+
 UFlickerComponent::UFlickerComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	PrimaryComponentTick.bStartWithTickEnabled = false;
 }
 
-
-// Called when the game starts
-void UFlickerComponent::BeginPlay()
+void UFlickerComponent::SetSprite(UPaperFlipbookComponent* sprite)
 {
-	Super::BeginPlay();
-
-	// ...
-	
+	_sprite = sprite;
 }
 
-
-// Called every frame
-void UFlickerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UFlickerComponent::TickComponent(float deltaSeconds, ELevelTick tickType, FActorComponentTickFunction* thisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent(deltaSeconds, tickType, thisTickFunction);
 
-	// ...
+	if (_duration <= 0.0f)
+	{
+		_color.A = 1.0f;
+	}
+	else
+	{
+		_color.A += deltaSeconds / _duration;
+	}
+
+	if (_color.A >= 1.0f)
+	{
+		SetComponentTickEnabled(false);
+		_color.A = 0.0f;
+	}
+
+	_sprite->SetSpriteColor(_color);
+}
+
+void UFlickerComponent::Flick(float duration, FLinearColor color)
+{
+	SetComponentTickEnabled(true);
+	_duration = duration;
+	_color = color;
+	_color.A = 0.0f;
 }
 

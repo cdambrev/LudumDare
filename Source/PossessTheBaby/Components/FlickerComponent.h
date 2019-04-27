@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "FlickerComponent.generated.h"
 
+class UPaperFlipbookComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class POSSESSTHEBABY_API UFlickerComponent : public UActorComponent
@@ -16,13 +17,16 @@ public:
 	// Sets default values for this component's properties
 	UFlickerComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	void SetSprite(UPaperFlipbookComponent* sprite);
+	void Flick(float duration, FLinearColor color);
 
 public:	
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float deltaSeconds, ELevelTick tickType, FActorComponentTickFunction* thisTickFunction) override;
 
-		
+	UPROPERTY()
+	UPaperFlipbookComponent* _sprite = nullptr;
+
+	float _duration = 0.1f;
+	FLinearColor _color;
 };
