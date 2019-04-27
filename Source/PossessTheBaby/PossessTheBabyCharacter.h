@@ -35,7 +35,8 @@ class APossessTheBabyCharacter : public APaperCharacter
 	UTextRenderComponent* TextComponent;
 	virtual void Tick(float DeltaSeconds) override;
 
-
+	UFUNCTION(BlueprintGetter)
+	UHealthComponent* GetHealth() const;
 
 protected:
 	// The animation to play while running around
@@ -70,7 +71,7 @@ private:
 
 	UWorldStateComponent* GetWorldState() const;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintGetter="GetHealth")
 	UHealthComponent* Health = nullptr;
 
 public:

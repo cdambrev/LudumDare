@@ -156,6 +156,11 @@ UWorldStateComponent* APossessTheBabyCharacter::GetWorldState() const
 	return gameState->GetWorldState();
 }
 
+UHealthComponent* APossessTheBabyCharacter::GetHealth() const
+{
+	return Health;
+}
+
 void APossessTheBabyCharacter::ToggleWorldState()
 {
 	GetWorldState()->ToggleWorldState();

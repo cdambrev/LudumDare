@@ -43,10 +43,10 @@ private:
 	void SetNightmarePoints(float value);
 
 	UPROPERTY(BlueprintGetter="GetDreamPoints", Category="State")
-	float DreamPoints = 0;
+	float DreamPoints = 1.0f;
 
 	UPROPERTY(BlueprintGetter = "GetNightmarePoints", Category = "State")
-	float NightmarePoints = 0;
+	float NightmarePoints = 1.0f;
 
 	UPROPERTY(Transient)
 	UWorldStateComponent* _worldState = nullptr;

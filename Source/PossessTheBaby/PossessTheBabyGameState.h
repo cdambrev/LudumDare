@@ -19,9 +19,10 @@ class POSSESSTHEBABY_API APossessTheBabyGameState : public AGameStateBase
 public:
 	APossessTheBabyGameState();
 
+	UFUNCTION(BlueprintGetter, Category="World State")
 	UWorldStateComponent* GetWorldState() const;
 
 private:
-	UPROPERTY()
+	UPROPERTY(BlueprintGetter= GetWorldState)
 	UWorldStateComponent* WorldState = nullptr;
 };

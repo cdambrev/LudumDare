@@ -26,6 +26,11 @@ void UWorldStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	}
 }
 
+EWorldState UWorldStateComponent::GetWorldState() const
+{
+	return State;
+}
+
 bool UWorldStateComponent::IsInDreamWorld() const
 {
 	return State == EWorldState::Dream;
