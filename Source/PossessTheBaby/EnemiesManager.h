@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Components/ActorComponent.h"
 #include "BaseEnemy.h"
 #include "LevelDescriptor.h"
 
@@ -12,17 +12,17 @@
 class UWorldStateComponent;
 enum class EWorldState : uint8;
 
-UCLASS()
-class POSSESSTHEBABY_API AEnemiesManager : public AActor
+UCLASS(Blueprintable, BlueprintType, meta=(BlueprintSpawnableComponent))
+class POSSESSTHEBABY_API UEnemiesManager : public UActorComponent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AEnemiesManager();
+	UEnemiesManager();
 
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction) override;
 
 	void SetIsForDream(bool forDream);
 

@@ -11,14 +11,15 @@ APossessTheBabyGameMode::APossessTheBabyGameMode()
 	// Set default pawn class to our character
 	DefaultPawnClass = APossessTheBabyCharacter::StaticClass();	
 	GameStateClass = APossessTheBabyGameState::StaticClass();
+	
+	FActorSpawnParameters spawnParameters;
+	_dreamWorldEnnemiesManager = CreateDefaultSubobject<UEnemiesManager>(TEXT("DreamWorldManager"));
+	_nightmareEnnemiesManager = CreateDefaultSubobject<UEnemiesManager>(TEXT("NightmareWorldManager"));
 }
 
 void APossessTheBabyGameMode::BeginPlay()
 {
-	FActorSpawnParameters spawnParameters;
-	_dreamWorldEnnemiesManager = GetWorld()->SpawnActor<AEnemiesManager>(enemiesManagerClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParameters);
 	_dreamWorldEnnemiesManager->SetIsForDream(true);
-	_nightmareEnnemiesManager = GetWorld()->SpawnActor<AEnemiesManager>(enemiesManagerClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParameters);
 	_nightmareEnnemiesManager->SetIsForDream(false);
 }
 
