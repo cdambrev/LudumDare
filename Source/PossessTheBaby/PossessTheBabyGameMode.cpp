@@ -27,3 +27,15 @@ FLevelData APossessTheBabyGameMode::GetLevelData() const
 {
 	return levelData;
 }
+
+AEnemiesManager* APossessTheBabyGameMode::GetEnemyManager(EWorldState worldState) const
+{
+	if (worldState == EWorldState::Dream)
+	{
+		return _dreamWorldEnnemiesManager;
+	}
+	else
+	{
+		return _nightmareEnnemiesManager;
+	}
+}
