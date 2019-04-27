@@ -38,9 +38,6 @@ class APossessTheBabyCharacter : public APaperCharacter
 
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintGetter)
-	UHealthComponent* GetHealth() const;
-
 protected:
 	// The animation to play while running around
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animations)
@@ -77,6 +74,8 @@ private:
 	UPROPERTY()
 	UCombatComponent* _combat = nullptr;
 
+	bool _facingRight = true;
+
 public:
 	APossessTheBabyCharacter();
 
@@ -84,4 +83,7 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	
+	UFUNCTION(BlueprintGetter)
+	UHealthComponent* GetHealth() const;
 };

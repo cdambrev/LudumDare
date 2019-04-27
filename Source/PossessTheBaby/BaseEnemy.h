@@ -7,11 +7,14 @@
 #include "BaseEnemy.generated.h"
 
 class UPaperFlipbook;
+class UFakePerspectiveComponent;
+class UCombatComponent;
 
 enum class EEnemyStateMachine : uint8
 {
 	Frozen,
 	Wandering,
+	MovingToPlayer,
 	Attacking,
 	GettingHit,
 	Dead
@@ -40,7 +43,17 @@ public:
 
 	bool canAttack() const;
 
-	int32 GetCurrentHp() const;
+	float GetCurrentHp() const;
+
+	UCombatComponent* GetCombatComponent() const;
+
+	void SetFacingRight(bool facingRight);
+
+	bool GetFacingRight() const;
+
+	float GetHitPoints() const;
+
+	float GetSoulsRewarded() const;
 
 protected:
 	// Called when the game starts or when spawned
@@ -62,13 +75,24 @@ protected:
 	float hit = 0.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
-	int32 maxHp = 0;
+	float maxHp = 0.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
+	float soulsReward = 0.f;
 
 private:
 
-	EEnemyStateMachine _currentState = EEnemyStateMachine::Frozen;
+	EEnemyStateMachine _currentState = EEnemyStateMachine::Wandering;
 
 	bool _allowedToAttack = false;
 	
-	int32 _currentHp = 0;
+	float _currentHp = 0;
+	
+	UPROPERTY()
+	UFakePerspectiveComponent* _fakePerspective = nullptr;
+
+	UPROPERTY()
+	UCombatComponent* _combatComponent = nullptr;
+
+	bool _facingRight = true;
 };

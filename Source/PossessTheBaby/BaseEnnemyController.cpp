@@ -4,6 +4,7 @@
 #include "BaseEnemy.h"
 #include "PossessTheBabyGameState.h"
 #include "PossessTheBabyCharacter.h"
+#include "Components/CombatComponent.h"
 
 ABaseEnnemyController::ABaseEnnemyController()
 {
@@ -16,37 +17,64 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 	ABaseEnemy* ennemy = Cast<ABaseEnemy>(GetPawn());
 	if (IsValid(ennemy))
 	{
-		if (ennemy->GetCurrentHp() <= 0 && ennemy->getCurrentState() != EEnemyStateMachine::Dead)
-		{
-			ennemy->SetCurrentState(EEnemyStateMachine::Dead);
-		}
-
+		float XComp = FMath::FRandRange(-1.f, 1.f);
 		switch (ennemy->getCurrentState())
 		{
 		case EEnemyStateMachine::Wandering:
-			ennemy->AddMovementInput(FVector(FMath::FRandRange(1.f, 5.f), 0.f, FMath::FRandRange(1.f, 5.f)));
+			ennemy->AddMovementInput(FVector(XComp, 0.f, FMath::FRandRange(-1.f, 1.f)));
+			ennemy->SetFacingRight(XComp > 0);
 			if (ennemy->canAttack())
 			{
-				ennemy->SetCurrentState(EEnemyStateMachine::Attacking);
+				ennemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
 			}
 			break;
+		case EEnemyStateMachine::MovingToPlayer:
+			if (!ennemy->canAttack())
+			{
+				ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
+			}
+			else
+			{
+				if (!ennemy->GetCombatComponent()->TestAttackHero()) // out of reach
+				{
+					APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+					APossessTheBabyCharacter* player = gameState->GetPlayer();
+					FVector distanceToPlayer = player->GetActorLocation() - ennemy->GetActorLocation();
+					distanceToPlayer.Y = 0;
+					ennemy->SetFacingRight(distanceToPlayer.X > 0);
+					ennemy->AddMovementInput(distanceToPlayer);
+				}
+				else
+				{
+					ennemy->SetCurrentState(EEnemyStateMachine::Attacking);
+				}
+			}
 		case EEnemyStateMachine::Attacking:
 			if (!ennemy->canAttack())
 			{
 				ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
 			}
-			if (true /* out of reach */)
+			else if (!ennemy->GetCombatComponent()->TestAttackEnemy())
 			{
-				APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
-				APossessTheBabyCharacter* player = gameState->GetPlayer();
-				FVector distanceToPlayer = player->GetActorLocation() - ennemy->GetActorLocation();
-				ennemy->AddMovementInput(distanceToPlayer);
+				ennemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
+			}
+			else
+			{
+				// animation
+				ennemy->GetCombatComponent()->AttackHero();
 			}
 			break;
-		case EEnemyStateMachine::Frozen:
 		case EEnemyStateMachine::Dead:
+			ennemy->Destroy();
+			break;
+		case EEnemyStateMachine::Frozen:
 		default:
 			break;
+		}
+		if (ennemy->GetCurrentHp() <= 0 && ennemy->getCurrentState() != EEnemyStateMachine::Dead)
+		{
+			ennemy->SetCurrentState(EEnemyStateMachine::Dead);
+			OnEnnemyDied.Broadcast(ennemy);
 		}
 	}
 }

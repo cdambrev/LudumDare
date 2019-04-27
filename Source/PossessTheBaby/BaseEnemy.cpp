@@ -4,6 +4,8 @@
 #include "BaseEnemy.h"
 #include "PaperFlipbookComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/FakePerspectiveComponent.h"
+#include "Components/CombatComponent.h"
 
 // Sets default values
 ABaseEnemy::ABaseEnemy()
@@ -13,6 +15,9 @@ ABaseEnemy::ABaseEnemy()
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, -1.0f, 0.0f));
 	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
+	
+	_fakePerspective = CreateDefaultSubobject<UFakePerspectiveComponent>(TEXT("Fake Perspective"));
+	_combatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat Component"));
 }
 
 // Called when the game starts or when spawned
@@ -51,7 +56,7 @@ void ABaseEnemy::UpdateAnimation()
 
 bool ABaseEnemy::canAttack() const
 {
-	return _allowedToAttack || true /*can reach*/;
+	return _allowedToAttack || GetCombatComponent()->TestAttackHero();
 }
 
 EEnemyStateMachine ABaseEnemy::getCurrentState() const
@@ -69,7 +74,32 @@ void ABaseEnemy::SetAllowedToAttack(bool allowed)
 	_allowedToAttack = allowed;
 }
 
-int32 ABaseEnemy::GetCurrentHp() const
+float ABaseEnemy::GetCurrentHp() const
 {
 	return _currentHp;
+}
+
+UCombatComponent* ABaseEnemy::GetCombatComponent() const
+{
+	return _combatComponent;
+}
+
+void ABaseEnemy::SetFacingRight(bool facingRight)
+{
+	_facingRight = facingRight;
+}
+
+bool ABaseEnemy::GetFacingRight() const
+{
+	return _facingRight;
+}
+
+float ABaseEnemy::GetHitPoints() const
+{
+	return hit;
+}
+
+float ABaseEnemy::GetSoulsRewarded() const
+{
+	return soulsReward;
 }

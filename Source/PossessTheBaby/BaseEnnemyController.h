@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "BaseEnnemyController.generated.h"
 
+class ABaseEnemy;
 /**
  * 
  */
@@ -15,6 +16,10 @@ class POSSESSTHEBABY_API ABaseEnnemyController : public AAIController
 	GENERATED_BODY()
 
 public:
+	
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnEnnemyDied, ABaseEnemy*)
+	FOnEnnemyDied OnEnnemyDied;
+	
 	ABaseEnnemyController();
 	
 	virtual void Tick(float DeltaTime) override;
