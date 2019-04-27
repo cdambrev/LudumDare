@@ -25,9 +25,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FLevelData levelDescriptor;
-
 private:
 
 	void SpawnNewEnnemy();
@@ -35,6 +32,8 @@ private:
 	TArray<ABaseEnemy> _ennemiesOnScreen;
 
 	int32 currentWave = 0;
+
+	int32 deadEnnemiesOfCurrentWave = 0;
 
 	int32 maxEnnemiesOnScreen = 0;
 

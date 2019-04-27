@@ -25,3 +25,8 @@ void AEnemiesManager::Tick(float DeltaTime)
 
 }
 
+void AEnemiesManagerSpawnNewEnnemy()
+{
+
+}
+

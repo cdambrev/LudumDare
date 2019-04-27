@@ -50,5 +50,20 @@ void ABaseEnemy::UpdateAnimation()
 
 bool ABaseEnemy::canAttack()
 {
-	return allowedToAttack || true /*can reach*/;
+	return _allowedToAttack || true /*can reach*/;
+}
+
+EEnemyStateMachine ABaseEnemy::getCurrentState()
+{
+	return _currentState;
+}
+
+void ABaseEnemy::SetCurrentState(EEnemyStateMachine nextState)
+{
+	_currentState = nextState;
+}
+
+void ABaseEnemy::SetAllowedToAttack(bool allowed)
+{
+	_allowedToAttack = allowed;
 }

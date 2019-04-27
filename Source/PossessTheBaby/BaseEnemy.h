@@ -34,7 +34,7 @@ public:
 
 	EEnemyStateMachine getCurrentState();
 
-	EEnemyStateMachine SetCurrentState(EEnemyStateMachine nextState);
+	void SetCurrentState(EEnemyStateMachine nextState);
 
 	void SetAllowedToAttack(bool allowed);
 
@@ -63,5 +63,5 @@ private:
 
 	EEnemyStateMachine _currentState = EEnemyStateMachine::Frozen;
 
-	bool allowedToAttack = false;
+	bool _allowedToAttack = false;
 };

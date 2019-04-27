@@ -72,10 +72,6 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
     // 	TextComponent->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
     // 	TextComponent->SetupAttachment(RootComponent);
 
-	// Enable replication on the Sprite component so animations show up when networked
-	GetSprite()->SetIsReplicated(true);
-	bReplicates = true;
-
 	WorldState = CreateDefaultSubobject<UWorldStateComponent>(TEXT("WorldState"));
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 }
