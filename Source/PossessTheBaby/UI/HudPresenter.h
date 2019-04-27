@@ -17,7 +17,7 @@ class UHudPresenter : public UUserWidget
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Presentor")
-	void Initialize(UHealthComponent* health);
+	void SetHealthComponent(UHealthComponent* health);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Presentor")
 	void OnDreamPointsChanged(float health);

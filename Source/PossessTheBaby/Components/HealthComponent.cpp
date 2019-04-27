@@ -1,5 +1,7 @@
 #include "HealthComponent.h"
 
+#include "Components/WorldStateComponent.h"
+
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
 {
@@ -12,11 +14,23 @@ UHealthComponent::UHealthComponent()
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	}
+}
 
 void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
+
+void UHealthComponent::ApplyDamage(float value)
+{
+	if (_worldState->IsInDreamWorld())
+	{
+		SetDreamPoints(GetDreamPoints() - value);
+	}
+	else
+	{
+		SetNightmarePoints(GetNightmarePoints() - value);
+	}
 }
 
 bool UHealthComponent::IsDead() const
@@ -29,7 +43,19 @@ float UHealthComponent::GetDreamPoints() const
 	return DreamPoints;
 }
 
+void UHealthComponent::SetDreamPoints(float value)
+{
+	DreamPoints = FMath::Max(0.0f, value);
+	OnDreamPointsChanged.Broadcast(DreamPoints);
+}
+
 float UHealthComponent::GetNightmarePoints() const
 {
 	return NightmarePoints;
+}
+
+void UHealthComponent::SetNightmarePoints(float value)
+{
+	NightmarePoints = FMath::Max(0.0f, value);
+	OnNightmarePointsChanged.Broadcast(NightmarePoints);
 }

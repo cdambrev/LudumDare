@@ -100,9 +100,8 @@ void APossessTheBabyCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	
-	UpdateCharacter();	
+	UpdateCharacter();
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 // Input

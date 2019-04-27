@@ -15,9 +15,19 @@ void UWorldStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
+bool UWorldStateComponent::IsInDreamWorld() const
+{
+	return State == EWorldState::Dream;
+}
+
+bool UWorldStateComponent::IsInNightmareWorld() const
+{
+	return State == EWorldState::Nightmare;
+}
+
 void UWorldStateComponent::ToggleWorldState()
 {
-	if (State == EWorldState::Dream)
+	if (IsInDreamWorld())
 	{
 		State = EWorldState::Nightmare;
 	}

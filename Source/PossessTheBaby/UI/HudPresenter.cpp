@@ -2,7 +2,7 @@
 
 #include "Components/HealthComponent.h"
 
-void UHudPresenter::Initialize(UHealthComponent* health)
+void UHudPresenter::SetHealthComponent(UHealthComponent* health)
 {
 	if (IsValid(_health))
 	{
@@ -11,14 +11,14 @@ void UHudPresenter::Initialize(UHealthComponent* health)
 		_health->OnNightmarePointsChanged.Remove(_onNightmarePointsChangedHandle);
 		_onNightmarePointsChangedHandle.Reset();
 	}
-	_character = character;
-	if (IsValid(_character))
+	_health = health;
+	if (IsValid(_health))
 	{
 		_onDreamPointsChangedHandle = _health->OnDreamPointsChanged.AddUObject(this, &UHudPresenter::OnDreamPointsChanged);
 		OnDreamPointsChanged(_health->GetDreamPoints());
 
-		_onNightmarePointsChangedHandle = _character->OnNightmarePointsChanged.AddUObject(this, &UHudPresenter::OnNightmarePointsChanged);
-		OnNightmarePointsChanged(_character->GetNightmarePoints());
+		_onNightmarePointsChangedHandle = _health->OnNightmarePointsChanged.AddUObject(this, &UHudPresenter::OnNightmarePointsChanged);
+		OnNightmarePointsChanged(_health->GetNightmarePoints());
 	}
 }
 
