@@ -25,7 +25,7 @@ void UFakePerspectiveComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	FVector position = target->GetActorLocation();
 	position.X = FMath::Clamp(position.X, worldLimits->GetMinX(), worldLimits->GetMaxX());
 	position.Z = FMath::Clamp(position.Z, worldLimits->GetMinZ(), worldLimits->GetMaxZ());
-	position.Y = -position.Z;
+	position.Y = -position.Z / 10.0f;
 
 	float clampedPosZ = FMath::Clamp(position.Z, worldLimits->GetMinZ(), worldLimits->GetMaxZ());
 	float alpha = 1.0f - (clampedPosZ / rangeZ);
