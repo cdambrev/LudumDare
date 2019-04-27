@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
-class AEnemiesManager;
+class UEnemiesManager;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class POSSESSTHEBABY_API UCombatComponent : public UActorComponent
@@ -20,5 +20,5 @@ public:
 	bool TestAttackEnemy();
 
 private:
-	AEnemiesManager* GetEnemyManager() const;
+	UEnemiesManager* GetEnemyManager() const;
 };

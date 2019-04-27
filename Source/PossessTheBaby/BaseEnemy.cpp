@@ -13,7 +13,6 @@ ABaseEnemy::ABaseEnemy()
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, -1.0f, 0.0f));
 	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
-
 }
 
 // Called when the game starts or when spawned

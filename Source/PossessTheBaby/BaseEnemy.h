@@ -59,6 +59,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float hit = 0.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
+	int32 hp = 0;
+
 private:
 
 	EEnemyStateMachine _currentState = EEnemyStateMachine::Frozen;
