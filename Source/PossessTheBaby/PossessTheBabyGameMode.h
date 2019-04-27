@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "LevelDescriptor.h"
+#include "Components/WorldStateComponent.h"
+
 #include "PossessTheBabyGameMode.generated.h"
 
 class AEnemiesManager;
@@ -25,6 +27,8 @@ public:
 	virtual void BeginPlay() override;
 
 	FLevelData GetLevelData() const;
+
+	AEnemiesManager* GetEnemyManager(EWorldState worldState) const;
 
 protected:
 	

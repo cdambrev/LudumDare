@@ -19,10 +19,22 @@ void APossessTheBabyGameMode::BeginPlay()
 	_dreamWorldEnnemiesManager = GetWorld()->SpawnActor<AEnemiesManager>(enemiesManagerClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParameters);
 	_dreamWorldEnnemiesManager->SetIsForDream(true);
 	_nightmareEnnemiesManager = GetWorld()->SpawnActor<AEnemiesManager>(enemiesManagerClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParameters);
-	_dreamWorldEnnemiesManager->SetIsForDream(false);
+	_nightmareEnnemiesManager->SetIsForDream(false);
 }
 
 FLevelData APossessTheBabyGameMode::GetLevelData() const
 {
 	return levelData;
+}
+
+AEnemiesManager* APossessTheBabyGameMode::GetEnemyManager(EWorldState worldState) const
+{
+	if (worldState == EWorldState::Dream)
+	{
+		return _dreamWorldEnnemiesManager;
+	}
+	else
+	{
+		return _nightmareEnnemiesManager;
+	}
 }
