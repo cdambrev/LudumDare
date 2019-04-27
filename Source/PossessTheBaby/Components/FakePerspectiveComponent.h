@@ -15,12 +15,18 @@ public:
 	UFakePerspectiveComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	void SetRestrictInX(bool value);
+	void SetRestrictInZ(bool value);
+
 private:
+	UWorldLimitsComponent* GetWorldLimits() const;
+
 	UPROPERTY(EditAnywhere, Category = Perspective)
 	float TopScale = 0.8f;
 
 	UPROPERTY(EditAnywhere, Category = Perspective)
 	float BottomScale = 1.2f;
 
-	UWorldLimitsComponent* GetWorldLimits() const;	
+	bool _restrictInX = true;
+	bool _restrictInZ = true;
 };
