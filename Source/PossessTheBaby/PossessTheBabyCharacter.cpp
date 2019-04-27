@@ -9,6 +9,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
+#include "Components/HealthComponent.h"
+#include "Components/WorldStateComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -26,6 +28,7 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
 	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 	GetCapsuleComponent()->SetCapsuleRadius(40.0f);
 
+	/*
 	// Create a camera boom attached to the root (capsule)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -38,7 +41,7 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
 
 	// Create an orthographic camera (no perspective) and attach it to the boom
 	SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
-	SideViewCameraComponent->ProjectionMode = ECameraProjectionMode::Orthographic;
+	SideViewCameraComponent->ProjectionMode = ECameraProjectionMode::Perspective;
 	SideViewCameraComponent->OrthoWidth = 2048.0f;
 	SideViewCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 
@@ -46,6 +49,8 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
 	CameraBoom->bAbsoluteRotation = true;
 	SideViewCameraComponent->bUsePawnControlRotation = false;
 	SideViewCameraComponent->bAutoActivate = true;
+	*/
+
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 
 	// Configure character movement
@@ -56,14 +61,10 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 	GetCharacterMovement()->MaxFlySpeed = 600.0f;
 
-	// Lock character motion onto the XZ plane, so the character can't move in or out of the screen
-	GetCharacterMovement()->bConstrainToPlane = true;
-	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, -1.0f, 0.0f));
-
 	// Behave like a traditional 2D platformer character, with a flat bottom instead of a curved capsule bottom
 	// Note: This can cause a little floating when going up inclines; you can choose the tradeoff between better
 	// behavior on the edge of a ledge versus inclines by setting this to true or false
-	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
+	//GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
 
     // 	TextComponent = CreateDefaultSubobject<UTextRenderComponent>(TEXT("IncarGear"));
     // 	TextComponent->SetRelativeScale3D(FVector(3.0f, 3.0f, 3.0f));
@@ -74,6 +75,9 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
+
+	WorldState = CreateDefaultSubobject<UWorldStateComponent>(TEXT("WorldState"));
+	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -109,6 +113,7 @@ void APossessTheBabyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis("MoveRight", this, &APossessTheBabyCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MoveUp", this, &APossessTheBabyCharacter::MoveUp);
 
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &APossessTheBabyCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &APossessTheBabyCharacter::TouchStopped);
@@ -116,10 +121,14 @@ void APossessTheBabyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void APossessTheBabyCharacter::MoveRight(float Value)
 {
-	/*UpdateChar();*/
-
 	// Apply the input to the character motion
 	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
+}
+
+void APossessTheBabyCharacter::MoveUp(float Value)
+{
+	// Apply the input to the character motion
+	AddMovementInput(FVector(0.0f, 0.0f, 1.0f), Value);
 }
 
 void APossessTheBabyCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
@@ -154,4 +163,11 @@ void APossessTheBabyCharacter::UpdateCharacter()
 			Controller->SetControlRotation(FRotator(0.0f, 0.0f, 0.0f));
 		}
 	}
+
+	const FVector& position = GetActorLocation();
+	float alpha = 1.0f - (position.Z / 1000.0f + 0.5f);
+	float scale = FMath::Lerp(TopScale, BottomScale, alpha);
+	SetActorScale3D(FVector(scale, scale, scale));
 }
+
+
