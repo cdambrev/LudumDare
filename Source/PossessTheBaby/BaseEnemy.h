@@ -6,8 +6,6 @@
 #include "PaperCharacter.h"
 #include "BaseEnemy.generated.h"
 
-DECLARE_MULTICAST_DELEGATE()
-
 class UPaperFlipbook;
 
 enum class EEnemyStateMachine : uint8

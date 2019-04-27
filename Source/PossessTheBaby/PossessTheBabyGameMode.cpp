@@ -4,6 +4,7 @@
 #include "PossessTheBabyCharacter.h"
 #include "PossessTheBabyGameState.h"
 #include "EnemiesManager.h"
+#include "Engine/World.h"
 
 APossessTheBabyGameMode::APossessTheBabyGameMode()
 {
@@ -15,5 +16,13 @@ APossessTheBabyGameMode::APossessTheBabyGameMode()
 void APossessTheBabyGameMode::BeginPlay()
 {
 	FActorSpawnParameters spawnParameters;
-	ennemiesManager = GetWorld()->SpawnActor<AEnemiesManager>(FVector::ZeroVector, FRotator::ZeroRotator);
+	_dreamWorldEnnemiesManager = GetWorld()->SpawnActor<AEnemiesManager>(enemiesManagerClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParameters);
+	_dreamWorldEnnemiesManager->SetIsForDream(true);
+	_nightmareEnnemiesManager = GetWorld()->SpawnActor<AEnemiesManager>(enemiesManagerClass, FVector::ZeroVector, FRotator::ZeroRotator, spawnParameters);
+	_dreamWorldEnnemiesManager->SetIsForDream(false);
+}
+
+FLevelData APossessTheBabyGameMode::GetLevelData() const
+{
+	return levelData;
 }

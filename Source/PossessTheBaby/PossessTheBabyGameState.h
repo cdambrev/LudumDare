@@ -8,6 +8,7 @@
 
 class UWorldStateComponent;
 class APossessTheBabyCharacter;
+class UWaveStateComponent
 
 /**
  * 
@@ -26,10 +27,20 @@ public:
 
 	void SetPlayer(APossessTheBabyCharacter* player);
 
+	UWaveStateComponent* GetDreamWaveState() const;
+	
+	UWaveStateComponent* GetNightmareWaveState() const;
+
 private:
 	UPROPERTY()
 	UWorldStateComponent* WorldState = nullptr;
 
 	UPROPERTY()
 	APossessTheBabyCharacter* _player = nullptr;
+
+	UPROPERTY()
+	UWaveStateComponent* _dreamWaveState = nullptr;
+
+	UPROPERTY()
+	UWaveStateComponent* _nightmareWaveState = nullptr;
 };

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "LevelDescriptor.h"
 #include "PossessTheBabyGameMode.generated.h"
 
 class AEnemiesManager;
@@ -23,8 +24,21 @@ public:
 
 	virtual void BeginPlay() override;
 
-private:
+	FLevelData GetLevelData() const;
 
-	UPROPERTY()
-	AEnemiesManager* ennemiesManager = nullptr;
+protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
+	FLevelData levelData;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
+	TSubclassOf<AEnemiesManager> enemiesManagerClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
+	AEnemiesManager* _dreamWorldEnnemiesManager = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
+	AEnemiesManager* _nightmareEnnemiesManager = nullptr;
+
+private:
 };

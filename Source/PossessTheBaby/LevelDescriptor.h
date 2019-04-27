@@ -15,8 +15,11 @@ struct FLevelData
 	int32 maxWave;
 	
 	UPROPERTY(EditAnywhere)
-	TArray<int32> lightEnemiesPerWave;
-	
-	UPROPERTY(EditAnywhere)
-	TArray<int32> strongEnemiesPerWave;
+	TArray<float> timeBetweenEnemiesPerWave;
+
+	UPROPERTY(EditDefaultsOnly)
+	UCurveFloat* lightEnemiesCountPerWave;
+
+	UPROPERTY(EditDefaultsOnly)
+	UCurveFloat* strongEnemiesCountPerWave;
 };
