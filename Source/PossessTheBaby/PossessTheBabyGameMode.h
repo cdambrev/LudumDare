@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "PossessTheBabyGameMode.generated.h"
 
+class AEnemiesManager;
+
 /**
  * The GameMode defines the game being played. It governs the game rules, scoring, what actors
  * are allowed to exist in this game type, and who may enter the game.
@@ -18,4 +20,11 @@ class APossessTheBabyGameMode : public AGameModeBase
 	GENERATED_BODY()
 public:
 	APossessTheBabyGameMode();
+
+	virtual void BeginPlay() override;
+
+private:
+
+	UPROPERTY()
+	AEnemiesManager* ennemiesManager = nullptr;
 };

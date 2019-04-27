@@ -92,6 +92,15 @@ void APossessTheBabyCharacter::UpdateAnimation()
 	}
 }
 
+void APossessTheBabyCharacter::BeginPlay()
+{
+	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+	if (IsValid(gameState))
+	{
+		gameState->SetPlayer(this);
+	}
+}
+
 void APossessTheBabyCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

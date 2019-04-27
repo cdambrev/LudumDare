@@ -35,7 +35,7 @@ class APossessTheBabyCharacter : public APaperCharacter
 	UTextRenderComponent* TextComponent;
 	virtual void Tick(float DeltaSeconds) override;
 
-
+	virtual void BeginPlay() override;
 
 protected:
 	// The animation to play while running around

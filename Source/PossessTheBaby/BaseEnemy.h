@@ -6,6 +6,8 @@
 #include "PaperCharacter.h"
 #include "BaseEnemy.generated.h"
 
+DECLARE_MULTICAST_DELEGATE()
+
 class UPaperFlipbook;
 
 enum class EEnemyStateMachine : uint8
@@ -32,13 +34,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	EEnemyStateMachine getCurrentState();
+	EEnemyStateMachine getCurrentState() const;
 
 	void SetCurrentState(EEnemyStateMachine nextState);
 
 	void SetAllowedToAttack(bool allowed);
 
-	bool canAttack();
+	bool canAttack() const;
 
 protected:
 	// Called when the game starts or when spawned

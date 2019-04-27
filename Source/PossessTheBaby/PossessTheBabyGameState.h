@@ -7,6 +7,7 @@
 #include "PossessTheBabyGameState.generated.h"
 
 class UWorldStateComponent;
+class APossessTheBabyCharacter;
 
 /**
  * 
@@ -21,7 +22,14 @@ public:
 
 	UWorldStateComponent* GetWorldState() const;
 
+	APossessTheBabyCharacter* GetPlayer() const;
+
+	void SetPlayer(APossessTheBabyCharacter* player);
+
 private:
 	UPROPERTY()
 	UWorldStateComponent* WorldState = nullptr;
+
+	UPROPERTY()
+	APossessTheBabyCharacter* _player = nullptr;
 };
