@@ -48,12 +48,12 @@ void ABaseEnemy::UpdateAnimation()
 	}
 }
 
-bool ABaseEnemy::canAttack()
+bool ABaseEnemy::canAttack() const
 {
 	return _allowedToAttack || true /*can reach*/;
 }
 
-EEnemyStateMachine ABaseEnemy::getCurrentState()
+EEnemyStateMachine ABaseEnemy::getCurrentState() const
 {
 	return _currentState;
 }

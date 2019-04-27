@@ -29,6 +29,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 			}
 			break;
 		case EEnemyStateMachine::Attacking:
+
 			/* component -> Attack()*/
 			if (!ennemy->canAttack())
 			{

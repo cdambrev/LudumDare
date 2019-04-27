@@ -35,6 +35,8 @@ class APossessTheBabyCharacter : public APaperCharacter
 	UTextRenderComponent* TextComponent;
 	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void BeginPlay() override;
+
 	UFUNCTION(BlueprintGetter)
 	UHealthComponent* GetHealth() const;
 

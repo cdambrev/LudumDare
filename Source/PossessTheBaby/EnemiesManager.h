@@ -9,6 +9,9 @@
 
 #include "EnemiesManager.generated.h"
 
+class UWorldStateComponent;
+enum class EWorldState : uint8;
+
 UCLASS()
 class POSSESSTHEBABY_API AEnemiesManager : public AActor
 {
@@ -21,23 +24,39 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void SetIsForDream(bool forDream);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Properties")
+	TSubclassOf<ABaseEnemy> lightMonsterClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Properties")
+	TSubclassOf<ABaseEnemy> strongMonsterClass;
 
 private:
 
-	void SpawnNewEnnemy();
+	void SpawnNewEnnemy(bool strong);
 
-	TArray<ABaseEnemy> _ennemiesOnScreen;
+	void InitializeWave();
 
-	int32 currentWave = 0;
+	UWorldStateComponent* GetWorldStateComponent() const;
 
-	int32 deadEnnemiesOfCurrentWave = 0;
+	void OnWorldStateChanged(EWorldState worldState);
 
-	int32 maxEnnemiesOnScreen = 0;
+	TArray<ABaseEnemy*> _ennemiesOnScreen;
 
-	int32 maxEnnemiesAttacking = 3;
+	int32 _maxEnnemiesOnScreen = 10;
 
-	int32 currentEnnemiesAttacking = 0;
+	int32 _maxEnnemiesAttacking = 5;
+
+	int32 _currentEnnemiesAttacking = 0;
+
+	FTimerHandle _spawnLightMonsterHandle;
+	FTimerHandle _spawnStrongMonsterHandle;
+
+	bool _isForDream = false;
 };

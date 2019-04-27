@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "LevelDescriptor.h"
 #include "PossessTheBabyGameMode.generated.h"
+
+class AEnemiesManager;
 
 /**
  * The GameMode defines the game being played. It governs the game rules, scoring, what actors
@@ -18,4 +21,24 @@ class APossessTheBabyGameMode : public AGameModeBase
 	GENERATED_BODY()
 public:
 	APossessTheBabyGameMode();
+
+	virtual void BeginPlay() override;
+
+	FLevelData GetLevelData() const;
+
+protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
+	FLevelData levelData;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
+	TSubclassOf<AEnemiesManager> enemiesManagerClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
+	AEnemiesManager* _dreamWorldEnnemiesManager = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
+	AEnemiesManager* _nightmareEnnemiesManager = nullptr;
+
+private:
 };
