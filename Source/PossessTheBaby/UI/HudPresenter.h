@@ -20,10 +20,10 @@ public:
 	void SetHealthComponent(UHealthComponent* health);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Presentor")
-	void OnDreamPointsChanged(float health);
+	void OnDreamPointsChanged(float dreamPoints);
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Presentor")
-	void OnNightmarePointsChanged(float energy);
+	void OnNightmarePointsChanged(float nightmarePoints);
 
 private:
 	UPROPERTY(Transient)

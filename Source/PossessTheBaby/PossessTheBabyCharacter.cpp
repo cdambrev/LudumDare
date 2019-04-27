@@ -128,7 +128,7 @@ void APossessTheBabyCharacter::UpdateCharacter()
 	// Update animation to match the motion
 	UpdateAnimation();
 
-	// Now setup the rotation of the controller based on the direction we are travelling
+	// Now setup the rotation of the controller based on the direction we are travelling.
 	const FVector PlayerVelocity = GetVelocity();	
 	float TravelDirection = PlayerVelocity.X;
 	// Set the rotation so that the character faces his direction of travel.
