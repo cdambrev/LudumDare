@@ -23,9 +23,15 @@ void UFakePerspectiveComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	float rangeZ = worldLimits->GetMaxZ() - worldLimits->GetMinZ();
 
 	FVector position = target->GetActorLocation();
-	position.X = FMath::Clamp(position.X, worldLimits->GetMinX(), worldLimits->GetMaxX());
-	position.Z = FMath::Clamp(position.Z, worldLimits->GetMinZ(), worldLimits->GetMaxZ());
-	position.Y = -position.Z / 10.0f;
+	if (_restrictInX)
+	{
+		position.X = FMath::Clamp(position.X, worldLimits->GetMinX(), worldLimits->GetMaxX());
+	}
+	if (_restrictInZ)
+	{
+		position.Z = FMath::Clamp(position.Z, worldLimits->GetMinZ(), worldLimits->GetMaxZ());
+		position.Y = -position.Z / 10.0f;
+	}
 
 	float clampedPosZ = FMath::Clamp(position.Z, worldLimits->GetMinZ(), worldLimits->GetMaxZ());
 	float alpha = 1.0f - (clampedPosZ / rangeZ);
@@ -39,3 +45,14 @@ UWorldLimitsComponent* UFakePerspectiveComponent::GetWorldLimits() const
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	return gameState->GetWorldLimits();
 }
+
+void UFakePerspectiveComponent::SetRestrictInX(bool value)
+{
+	_restrictInX = value;
+}
+
+void UFakePerspectiveComponent::SetRestrictInZ(bool value)
+{
+	_restrictInZ = value;
+}
+
