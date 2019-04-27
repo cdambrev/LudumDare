@@ -29,6 +29,7 @@ public:
 	FLevelData GetLevelData() const;
 
 	UEnemiesManager* GetEnemyManager(EWorldState worldState) const;
+	UEnemiesManager* GetEnemyManager() const;
 
 protected:
 	

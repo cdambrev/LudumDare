@@ -9,17 +9,20 @@ UCombatComponent::UCombatComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-
-bool UCombatComponent::TestAttackEnemy()
+bool UCombatComponent::TestAttackEnemy() const
 {
 	UEnemiesManager* enemies = GetEnemyManager();
 	return true;
 }
 
+bool UCombatComponent::TestAttackHero() const
+{
+	return false;
+}
+
 UEnemiesManager* UCombatComponent::GetEnemyManager() const
 {
 	APossessTheBabyGameMode* gameMode = GetWorld()->GetAuthGameMode<APossessTheBabyGameMode>();
-	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
-	return gameMode->GetEnemyManager(gameState->GetWorldState()->GetWorldState());
+	return gameMode->GetEnemyManager();
 }
 

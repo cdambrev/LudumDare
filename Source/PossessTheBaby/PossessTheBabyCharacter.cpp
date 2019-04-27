@@ -13,6 +13,7 @@
 #include "Components/WorldStateComponent.h"
 #include "PossessTheBabyGameState.h"
 #include "Components/FakePerspectiveComponent.h"
+#include "Components/CombatComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -20,6 +21,7 @@ DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 // APossessTheBabyCharacter
 
 APossessTheBabyCharacter::APossessTheBabyCharacter()
+	: Super()
 {
 	// Use only Yaw from the controller and ignore the rest of the rotation.
 	bUseControllerRotationPitch = false;
@@ -76,6 +78,10 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
 
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
 	_fakePerspective = CreateDefaultSubobject<UFakePerspectiveComponent>(TEXT("Fake Perspective"));
+	_combat = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat Component"));
+
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -97,6 +103,7 @@ void APossessTheBabyCharacter::UpdateAnimation()
 void APossessTheBabyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	if (IsValid(gameState))
 	{

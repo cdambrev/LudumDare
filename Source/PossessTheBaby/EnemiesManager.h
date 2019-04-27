@@ -26,6 +26,8 @@ public:
 
 	void SetIsForDream(bool forDream);
 
+	const TArray<ABaseEnemy*>& GetEnemiesOnScreen() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -47,6 +49,7 @@ private:
 
 	void OnWorldStateChanged(EWorldState worldState);
 
+	UPROPERTY(Transient)
 	TArray<ABaseEnemy*> _ennemiesOnScreen;
 
 	int32 _maxEnnemiesOnScreen = 10;

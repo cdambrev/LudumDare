@@ -10,6 +10,7 @@ class UTextRenderComponent;
 class UWorldStateComponent;
 class UHealthComponent;
 class UFakePerspectiveComponent;
+class UCombatComponent;
 
 /**
  * This class is the default character for PossessTheBaby, and it is responsible for all
@@ -70,7 +71,11 @@ private:
 	UPROPERTY(BlueprintGetter="GetHealth")
 	UHealthComponent* Health = nullptr;
 
+	UPROPERTY()
 	UFakePerspectiveComponent* _fakePerspective = nullptr;
+
+	UPROPERTY()
+	UCombatComponent* _combat = nullptr;
 
 public:
 	APossessTheBabyCharacter();
