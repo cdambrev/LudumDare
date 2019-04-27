@@ -12,7 +12,7 @@
 #include "Components/HealthComponent.h"
 #include "Components/WorldStateComponent.h"
 #include "PossessTheBabyGameState.h"
-#include "FakePerspectiveComponent.h"
+#include "Components/FakePerspectiveComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 

@@ -1,5 +1,8 @@
 #include "WorldLimitsComponent.h"
 
+// UE4
+#include "DrawDebugHelpers.h"
+
 // Sets default values for this component's properties
 UWorldLimitsComponent::UWorldLimitsComponent()
 {
@@ -10,14 +13,17 @@ UWorldLimitsComponent::UWorldLimitsComponent()
 	// ...
 }
 
-
-// Called when the game starts
-void UWorldLimitsComponent::BeginPlay()
+void UWorldLimitsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::BeginPlay();
+	FVector topRight(GetMinX(), 0.0f, GetMaxZ());
+	FVector topLeft(GetMaxX(), 0.0f, GetMaxZ());
+	FVector bottomRight(GetMinX(), 0.0f, GetMinZ());
+	FVector bottomLeft(GetMaxX(), 0.0f, GetMinZ());
 
-	// ...
-	
+	DrawDebugLine(GetWorld(), topLeft, topRight, FColor::Blue);
+	DrawDebugLine(GetWorld(), topRight, bottomRight, FColor::Blue);
+	DrawDebugLine(GetWorld(), bottomRight, bottomLeft, FColor::Blue);
+	DrawDebugLine(GetWorld(), bottomLeft, topLeft, FColor::Blue);
 }
 
 float UWorldLimitsComponent::GetMinX() const

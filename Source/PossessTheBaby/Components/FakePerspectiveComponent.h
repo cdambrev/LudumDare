@@ -17,9 +17,6 @@ public:
 	UFakePerspectiveComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-protected:
-	virtual void BeginPlay() override;
-
 private:
 	UPROPERTY(EditAnywhere, Category = Perspective)
 	float TopScale = 0.8f;

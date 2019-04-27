@@ -13,32 +13,25 @@ UFakePerspectiveComponent::UFakePerspectiveComponent()
 	// ...
 }
 
-
-// Called when the game starts
-void UFakePerspectiveComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
-
 // Called every frame
 void UFakePerspectiveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	/*
 	AActor* target = GetOwner();
 	UWorldLimitsComponent* worldLimits = GetWorldLimits();
-	float rangeZ = worldLimits->GetMax
+	float rangeZ = worldLimits->GetMaxZ() - worldLimits->GetMinZ();
 
-	const FVector& position = target->GetActorLocation();
-	float alpha = 
+	FVector position = target->GetActorLocation();
+	position.X = FMath::Clamp(position.X, worldLimits->GetMinX(), worldLimits->GetMaxX());
+	position.Z = FMath::Clamp(position.Z, worldLimits->GetMinZ(), worldLimits->GetMaxZ());
+	position.Y = -position.Z;
+
+	float clampedPosZ = FMath::Clamp(position.Z, worldLimits->GetMinZ(), worldLimits->GetMaxZ());
+	float alpha = 1.0f - (clampedPosZ / rangeZ);
 	float scale = FMath::Lerp(TopScale, BottomScale, alpha);
 	target->SetActorScale3D(FVector(scale, scale, scale));
-	*/
+	target->SetActorLocation(position);
 }
 
 UWorldLimitsComponent* UFakePerspectiveComponent::GetWorldLimits() const
