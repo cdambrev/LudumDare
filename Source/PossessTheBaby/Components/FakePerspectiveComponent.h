@@ -21,5 +21,11 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	UPROPERTY(EditAnywhere, Category = Perspective)
+	float TopScale = 0.8f;
+
+	UPROPERTY(EditAnywhere, Category = Perspective)
+	float BottomScale = 1.2f;
+
 	UWorldLimitsComponent* GetWorldLimits() const;	
 };

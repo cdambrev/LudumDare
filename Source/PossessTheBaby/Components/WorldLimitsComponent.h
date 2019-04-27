@@ -16,10 +16,6 @@ public:
 	// Sets default values for this component's properties
 	UWorldLimitsComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
 	UFUNCTION(BlueprintGetter, Category="Settings")
 	float GetMinX() const;
 
@@ -31,6 +27,10 @@ protected:
 
 	UFUNCTION(BlueprintGetter, Category = "Settings")
 	float GetMaxZ() const;
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintGetter=GetMinX, Category = "Settings")

@@ -29,7 +29,16 @@ void UFakePerspectiveComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	/*
+	AActor* target = GetOwner();
+	UWorldLimitsComponent* worldLimits = GetWorldLimits();
+	float rangeZ = worldLimits->GetMax
+
+	const FVector& position = target->GetActorLocation();
+	float alpha = 
+	float scale = FMath::Lerp(TopScale, BottomScale, alpha);
+	target->SetActorScale3D(FVector(scale, scale, scale));
+	*/
 }
 
 UWorldLimitsComponent* UFakePerspectiveComponent::GetWorldLimits() const

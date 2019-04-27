@@ -7,9 +7,9 @@
 #include "PossessTheBabyCharacter.generated.h"
 
 class UTextRenderComponent;
-
 class UWorldStateComponent;
 class UHealthComponent;
+class UFakePerspectiveComponent;
 
 /**
  * This class is the default character for PossessTheBaby, and it is responsible for all
@@ -60,12 +60,6 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
 
-	UPROPERTY(EditAnywhere, Category = Perspective)
-	float TopScale = 0.8f;
-
-	UPROPERTY(EditAnywhere, Category = Perspective)
-	float BottomScale = 1.2f;
-
 private:
 	void ToggleWorldState();
 
@@ -73,6 +67,8 @@ private:
 
 	UPROPERTY(BlueprintGetter="GetHealth")
 	UHealthComponent* Health = nullptr;
+
+	UFakePerspectiveComponent* _fakePerspective = nullptr;
 
 public:
 	APossessTheBabyCharacter();

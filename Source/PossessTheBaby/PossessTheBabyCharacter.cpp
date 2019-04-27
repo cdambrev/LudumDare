@@ -12,6 +12,7 @@
 #include "Components/HealthComponent.h"
 #include "Components/WorldStateComponent.h"
 #include "PossessTheBabyGameState.h"
+#include "FakePerspectiveComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -74,6 +75,7 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
     // 	TextComponent->SetupAttachment(RootComponent);
 
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
+	_fakePerspective = CreateDefaultSubobject<UFakePerspectiveComponent>(TEXT("Fake Perspective"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -143,11 +145,6 @@ void APossessTheBabyCharacter::UpdateCharacter()
 			Controller->SetControlRotation(FRotator(0.0f, 0.0f, 0.0f));
 		}
 	}
-
-	const FVector& position = GetActorLocation();
-	float alpha = 1.0f - (position.Z / 1000.0f + 0.5f);
-	float scale = FMath::Lerp(TopScale, BottomScale, alpha);
-	SetActorScale3D(FVector(scale, scale, scale));
 }
 
 UWorldStateComponent* APossessTheBabyCharacter::GetWorldState() const
