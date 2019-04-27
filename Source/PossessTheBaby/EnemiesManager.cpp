@@ -10,41 +10,70 @@
 #include "PossessTheBabyGameMode.h"
 #include "PossessTheBabyGameState.h"
 #include "Engine/World.h"
+#include "PossessTheBabyCharacter.h"
 
 // Sets default values
-AEnemiesManager::AEnemiesManager()
+UEnemiesManager::UEnemiesManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 // Called when the game starts or when spawned
-void AEnemiesManager::BeginPlay()
+void UEnemiesManager::BeginPlay()
 {
 	Super::BeginPlay();
 	InitializeWave();
 
-	GetWorldStateComponent()->OnWorldStateChanged.AddUObject(this, &AEnemiesManager::OnWorldStateChanged);
+	GetWorldStateComponent()->OnWorldStateChanged.AddUObject(this, &UEnemiesManager::OnWorldStateChanged);
 }
 
-void AEnemiesManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void UEnemiesManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	GetWorldStateComponent()->OnWorldStateChanged.RemoveAll(this);
 }
 
 // Called every frame
-void AEnemiesManager::Tick(float DeltaTime)
+void UEnemiesManager::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction * ThisTickFunction)
 {
-	Super::Tick(DeltaTime);
-	
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+	APossessTheBabyCharacter* player = gameState->GetPlayer();
+ 
+	FVector playerPos = player->GetActorLocation();
+
+	for (int i=1; i<_ennemiesOnScreen.Num()-1; ++i)
+	{
+		float distanceMin = FVector::Dist2D(playerPos, _ennemiesOnScreen[i]->GetActorLocation());
+		int min = i;
+		for (int j=i; j<_ennemiesOnScreen.Num(); ++j)
+		{
+			float distancePlayerEnnemy = FVector::Dist2D(playerPos, _ennemiesOnScreen[j]->GetActorLocation());
+			if (distancePlayerEnnemy < distanceMin)
+			{
+				min = j;
+			}
+		}
+		if (min != i)
+		{
+			_ennemiesOnScreen.Swap(i, min);
+		}
+	}
 	for (int i=0; i<_ennemiesOnScreen.Num(); ++i)
 	{
-		int truc = 1;
+		if (i < _maxEnnemiesAttacking)
+		{
+			_ennemiesOnScreen[i]->SetAllowedToAttack(true);
+		}
+		else
+		{
+			_ennemiesOnScreen[i]->SetAllowedToAttack(false);
+		}
 	}
 }
 
-void AEnemiesManager::SpawnNewEnnemy(bool strong)
+void UEnemiesManager::SpawnNewEnnemy(bool strong)
 {
 	if (_ennemiesOnScreen.Num() < _maxEnnemiesOnScreen)
 	{
@@ -61,39 +90,39 @@ void AEnemiesManager::SpawnNewEnnemy(bool strong)
 	}
 }
 
-void AEnemiesManager::InitializeWave()
+void UEnemiesManager::InitializeWave()
 {
 	APossessTheBabyGameMode * gameMode = Cast<APossessTheBabyGameMode>(GetWorld()->GetAuthGameMode());
 	float timeBetweenEnemiesFirstWave = gameMode->GetLevelData().timeBetweenEnemiesPerWave[0];
 	
-	FTimerDelegate SpawnEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &AEnemiesManager::SpawnNewEnnemy, false);
-	GetWorldTimerManager().SetTimer(_spawnLightMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 5.f);
+	FTimerDelegate SpawnEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &UEnemiesManager::SpawnNewEnnemy, false);
+	GetOwner()->GetWorldTimerManager().SetTimer(_spawnLightMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 5.f);
 	
-	FTimerDelegate SpawnStrongEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &AEnemiesManager::SpawnNewEnnemy, true);
-	GetWorldTimerManager().SetTimer(_spawnStrongMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 7.f);
+	FTimerDelegate SpawnStrongEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &UEnemiesManager::SpawnNewEnnemy, true);
+	GetOwner()->GetWorldTimerManager().SetTimer(_spawnStrongMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 7.f);
 }
 
-UWorldStateComponent* AEnemiesManager::GetWorldStateComponent() const
+UWorldStateComponent* UEnemiesManager::GetWorldStateComponent() const
 {
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	return gameState->GetWorldState();
 }
 
-void AEnemiesManager::OnWorldStateChanged(EWorldState worldState)
+void UEnemiesManager::OnWorldStateChanged(EWorldState worldState)
 {
 	if ((worldState == EWorldState::Dream && !_isForDream) || (worldState == EWorldState::Nightmare && _isForDream))
 	{
-		GetWorldTimerManager().PauseTimer(_spawnStrongMonsterHandle);
-		GetWorldTimerManager().PauseTimer(_spawnLightMonsterHandle);
+		GetOwner()->GetWorldTimerManager().PauseTimer(_spawnStrongMonsterHandle);
+		GetOwner()->GetWorldTimerManager().PauseTimer(_spawnLightMonsterHandle);
 	}
 	else
 	{
-		GetWorldTimerManager().UnPauseTimer(_spawnStrongMonsterHandle);
-		GetWorldTimerManager().UnPauseTimer(_spawnLightMonsterHandle);
+		GetOwner()->GetWorldTimerManager().UnPauseTimer(_spawnStrongMonsterHandle);
+		GetOwner()->GetWorldTimerManager().UnPauseTimer(_spawnLightMonsterHandle);
 	}
 }
 
-void AEnemiesManager::SetIsForDream(bool forDream)
+void UEnemiesManager::SetIsForDream(bool forDream)
 {
 	_isForDream = forDream;
 }

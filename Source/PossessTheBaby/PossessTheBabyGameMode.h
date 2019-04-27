@@ -7,7 +7,7 @@
 #include "LevelDescriptor.h"
 #include "PossessTheBabyGameMode.generated.h"
 
-class AEnemiesManager;
+class UEnemiesManager;
 
 /**
  * The GameMode defines the game being played. It governs the game rules, scoring, what actors
@@ -30,15 +30,10 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
 	FLevelData levelData;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
-	TSubclassOf<AEnemiesManager> enemiesManagerClass;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
-	AEnemiesManager* _dreamWorldEnnemiesManager = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, Category = "LevelProperties")
-	AEnemiesManager* _nightmareEnnemiesManager = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "LevelProperties")
+	UEnemiesManager* _dreamWorldEnnemiesManager = nullptr;
 
-private:
+	UPROPERTY(VisibleAnywhere, Category = "LevelProperties")
+	UEnemiesManager* _nightmareEnnemiesManager = nullptr;
 };
