@@ -7,6 +7,15 @@
 
 #include "HealthComponent.generated.h"
 
+/*
+UENUM(BlueprintType)
+enum class EDamageType : uint8
+{
+	Depletion,
+	Punch
+};
+*/
+
 class UWorldStateComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -22,15 +31,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "State")
 	bool IsDead() const;
 
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnFloatChanged, float)
+
 	UFUNCTION(BlueprintGetter, Category="State")
 	float GetDreamPoints() const;
-
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnFloatChanged, float)
+	float GetDreamPointsPercent() const;
 	FOnFloatChanged OnDreamPointsChanged;
+	FOnFloatChanged OnDreamPointsPercentChanged;
 
 	UFUNCTION(BlueprintGetter, Category = "State")
 	float GetNightmarePoints() const;
+	float GetNightmarePointsPercent() const;
 	FOnFloatChanged OnNightmarePointsChanged;
+	FOnFloatChanged OnNightmarePointsPercentChanged;
 
 	void ApplyDamage(float value);
 
@@ -47,6 +60,20 @@ private:
 
 	UPROPERTY(BlueprintGetter = "GetNightmarePoints", Category = "State")
 	float NightmarePoints = 1.0f;
+
+	//  Points per seconds depleted in the opposite world.
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float _pointsDepletionRate = 1.0f;
+
+	//  Points per seconds depleted in the opposite world.
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float _maxPoints = 65.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float _initialDreamPoints = 20.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float _initialNightmarePoints = 0.0f;
 
 	UPROPERTY(Transient)
 	UWorldStateComponent* _worldState = nullptr;

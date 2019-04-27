@@ -14,11 +14,11 @@ void UHudPresenter::SetHealthComponent(UHealthComponent* health)
 	_health = health;
 	if (IsValid(_health))
 	{
-		_onDreamPointsChangedHandle = _health->OnDreamPointsChanged.AddUObject(this, &UHudPresenter::OnDreamPointsChanged);
-		OnDreamPointsChanged(_health->GetDreamPoints());
+		_onDreamPointsChangedHandle = _health->OnDreamPointsPercentChanged.AddUObject(this, &UHudPresenter::OnDreamPointsChanged);
+		OnDreamPointsChanged(_health->GetDreamPointsPercent());
 
-		_onNightmarePointsChangedHandle = _health->OnNightmarePointsChanged.AddUObject(this, &UHudPresenter::OnNightmarePointsChanged);
-		OnNightmarePointsChanged(_health->GetNightmarePoints());
+		_onNightmarePointsChangedHandle = _health->OnNightmarePointsPercentChanged.AddUObject(this, &UHudPresenter::OnNightmarePointsChanged);
+		OnNightmarePointsChanged(_health->GetNightmarePointsPercent());
 	}
 }
 

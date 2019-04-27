@@ -19,6 +19,7 @@ void UWorldStateComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	if (IsInDreamWorld())
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, TEXT("Dream World"));
+
 	}
 	else
 	{
