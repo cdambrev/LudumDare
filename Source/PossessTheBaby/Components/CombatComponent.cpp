@@ -13,13 +13,15 @@ UCombatComponent::UCombatComponent()
 bool UCombatComponent::TestAttackEnemy()
 {
 	AEnemiesManager* enemies = GetEnemyManager();
+
+	for ( )
+
 	return true;
 }
 
 AEnemiesManager* UCombatComponent::GetEnemyManager() const
 {
 	APossessTheBabyGameMode* gameMode = GetWorld()->GetAuthGameMode<APossessTheBabyGameMode>();
-	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
-	return gameMode->GetEnemyManager(gameState->GetWorldState()->GetWorldState());
+	return gameMode->GetEnemyManager();
 }
 

@@ -38,3 +38,9 @@ AEnemiesManager* APossessTheBabyGameMode::GetEnemyManager(EWorldState worldState
 		return _nightmareEnnemiesManager;
 	}
 }
+
+AEnemiesManager* APossessTheBabyGameMode::GetEnemyManager() const
+{
+	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+	return GetEnemyManager(gameState->GetWorldState()->GetWorldState());
+}

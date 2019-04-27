@@ -97,3 +97,8 @@ void AEnemiesManager::SetIsForDream(bool forDream)
 {
 	_isForDream = forDream;
 }
+
+const TArray<ABaseEnemy*>& AEnemiesManager::GetEnemiesOnScreen() const
+{
+	return _ennemiesOnScreen;
+}
