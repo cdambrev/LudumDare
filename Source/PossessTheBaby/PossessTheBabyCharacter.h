@@ -56,9 +56,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category=Sounds)
 	class USoundBase* WorldSwitchToggleDeniedSound = nullptr;
 
-	UPROPERTY(EditAnywhere, Category = Gameplay)
-	float _attackDuration = 0.1f;
-	
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();
 
@@ -81,11 +78,6 @@ private:
 	void AttackLeft();
 	void AttackRight();
 
-
-
-	void SetMovementEnabled(bool enabled);
-	void SetAttackEnabled(bool enabled);
-
 	void PlayAnimAttack(bool right);
 
 	void OnDeath();
@@ -94,6 +86,4 @@ private:
 	UHealthComponent* Health = nullptr;
 
 	float _stunDuration = 0.0f;
-
-	bool _attackEnabled = true;
 };

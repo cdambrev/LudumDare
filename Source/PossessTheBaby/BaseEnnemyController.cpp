@@ -86,11 +86,11 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 					}
 					else
 					{
-						ennemy->SetCurrentState(EEnemyStateMachine::Attacking);
+						ennemy->SetCurrentState(EEnemyStateMachine::Attack);
 					}
 				}
 				break;
-			case EEnemyStateMachine::Attacking:
+			case EEnemyStateMachine::Attack:
 				ennemy->PlayFoleySound();
 				if (!ennemy->canAttack())
 				{
@@ -102,11 +102,14 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				}
 				else
 				{
-					// animation
-					ennemy->SetWantToAttack(true);
-					ennemy->GetCharacterMovement()->SetMovementMode(MOVE_None);
-					ennemy->GetCombatComponent()->AttackHero();
-					ennemy->PlayHitSound();
+					ennemy->Attack();
+					ennemy->SetCurrentState(EEnemyStateMachine::Attacking);
+				}
+				break;
+			case EEnemyStateMachine::Attacking:
+				if (ennemy->IsAttackEnabled())
+				{
+					ennemy->SetCurrentState(EEnemyStateMachine::Attack);
 				}
 				break;
 			case EEnemyStateMachine::Dead:
@@ -145,7 +148,7 @@ void ABaseEnnemyController::State_Wander()
 	enemy->SetFacingRight(inputX > 0);
 	if (enemy->canAttack())
 	{
-		//ennemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
+		enemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
 	}
 }
 

@@ -15,6 +15,7 @@ enum class EEnemyStateMachine : uint8
 	Frozen,
 	Wandering,
 	MovingToPlayer,
+	Attack,
 	Attacking,
 	GettingHit,
 	Dead,
@@ -68,6 +69,8 @@ public:
 	bool playAppear = false;
 
 	bool alreadyPlayedAnim = false;
+
+	void Attack();
 
 protected:
 	// Called when the game starts or when spawned

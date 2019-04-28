@@ -203,7 +203,7 @@ void APossessTheBabyCharacter::OnHit(float damage)
 
 void APossessTheBabyCharacter::AttackLeft()
 {
-	if (_attackEnabled)
+	if (IsAttackEnabled())
 	{
 		PlayAnimAttack(false);
 		Attack();
@@ -212,7 +212,7 @@ void APossessTheBabyCharacter::AttackLeft()
 
 void APossessTheBabyCharacter::AttackRight()
 {
-	if (_attackEnabled)
+	if (IsAttackEnabled())
 	{
 		PlayAnimAttack(true);
 		Attack();
@@ -237,25 +237,7 @@ void APossessTheBabyCharacter::Attack()
 		PlayHitSound();
 	}
 
-	UGameplayStatics::PlaySound2D(GetWorld(), FoleySound);
-}
-
-void APossessTheBabyCharacter::SetAttackEnabled(bool enabled)
-{
-	_attackEnabled = enabled;
-	SetMovementEnabled(enabled);
-}
-
-void APossessTheBabyCharacter::SetMovementEnabled(bool enabled)
-{
-	if (enabled)
-	{
-		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-	}
-	else
-	{
-		GetCharacterMovement()->SetMovementMode(MOVE_None);
-	}
+	PlayFoleySound();
 }
 
 void APossessTheBabyCharacter::PlayAnimAttack(bool right)
