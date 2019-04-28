@@ -163,12 +163,6 @@ void APossessTheBabyCharacter::UpdateCharacter()
 	UpdateAnimation();
 }
 
-UWorldStateComponent* APossessTheBabyCharacter::GetWorldState() const
-{
-	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
-	return gameState->GetWorldState();
-}
-
 UHealthComponent* APossessTheBabyCharacter::GetHealth() const
 {
 	return Health;
@@ -176,7 +170,7 @@ UHealthComponent* APossessTheBabyCharacter::GetHealth() const
 
 void APossessTheBabyCharacter::ToggleWorldState()
 {
-	GetWorldState()->ToggleWorldState();
+	GetWorldStateComponent()->ToggleWorldState();
 }
 
 bool APossessTheBabyCharacter::IsStun() const
@@ -189,7 +183,6 @@ void APossessTheBabyCharacter::OnHit(float damage)
 	GetHealth()->ApplyDamage(damage);
 	GetFlicker()->TintFlick(0.2f, FColor::Red);
 	_stunDuration = 0.5f;
-	UGameplayStatics::PlaySound2D(GetWorld(), HitSound);
 }
 
 void APossessTheBabyCharacter::AttackLeft()
@@ -219,9 +212,10 @@ void APossessTheBabyCharacter::Attack()
 	if (ennemy != nullptr)
 	{
 		GetCombatComponent()->AttackEnemy(ennemy);
+		PlayHitSound();
 	}
 
-	UGameplayStatics::PlaySound2D(GetWorld(), PunchSound);
+	UGameplayStatics::PlaySound2D(GetWorld(), FoleySound);
 }
 
 void APossessTheBabyCharacter::SetMovementEnabled(bool enabled)

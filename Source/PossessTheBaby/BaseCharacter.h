@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "Components/WorldStateComponent.h"
 
 #include "BaseCharacter.generated.h"
 
@@ -12,6 +13,7 @@ class UFakePerspectiveComponent;
 class UCombatComponent;
 class UFlickerComponent;
 class UAnimationComponent;
+class UWorldStateComponent;
 
 UENUM(BlueprintType)
 enum class EAnimState : uint8
@@ -51,17 +53,27 @@ public:
 
 	void SetFacingRight(bool facingRight);
 
+	void PlayFoleySound();
+	void PlayHitSound();
+
 protected:
 
 	UFlickerComponent* GetFlicker() const;
 
 	UPROPERTY(EditAnywhere, Category=Sounds)
-	class USoundBase* PunchSound = nullptr;
+	class USoundBase* FoleySound = nullptr;
 
 	UPROPERTY(EditAnywhere, Category=Sounds)
-	class USoundBase* HitSound = nullptr;
+	class USoundBase* DreamHitSound = nullptr;
+
+	UPROPERTY(EditAnywhere, Category=Sounds)
+	class USoundBase* NightmareHitSound = nullptr;
+
+	UWorldStateComponent* GetWorldStateComponent() const;
+	EWorldState GetWorldState() const;
 
 private:
+
 	UPROPERTY()
 	UFakePerspectiveComponent* _fakePerspective = nullptr;
 

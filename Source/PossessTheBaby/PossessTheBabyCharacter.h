@@ -71,8 +71,6 @@ private:
 	void OnAnimationEnded();
 	void ToggleWorldState();
 
-	UWorldStateComponent* GetWorldState() const;
-
 	void Attack();
 	void AttackLeft();
 	void AttackRight();

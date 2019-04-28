@@ -97,6 +97,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				}
 				break;
 			case EEnemyStateMachine::Attacking:
+				ennemy->PlayFoleySound();
 				if (!ennemy->canAttack())
 				{
 					ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
@@ -111,6 +112,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 					ennemy->SetWantToAttack(true);
 					ennemy->GetCharacterMovement()->SetMovementMode(MOVE_None);
 					ennemy->GetCombatComponent()->AttackHero();
+					ennemy->PlayHitSound();
 				}
 				break;
 			case EEnemyStateMachine::Dead:
