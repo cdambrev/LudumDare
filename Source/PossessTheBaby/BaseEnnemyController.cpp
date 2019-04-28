@@ -15,6 +15,7 @@ ABaseEnnemyController::ABaseEnnemyController()
 
 void ABaseEnnemyController::BeginPlay()
 {
+	Super::BeginPlay();
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	if (IsValid(gameState))
 	{
@@ -29,6 +30,7 @@ void ABaseEnnemyController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		gameState->GetWorldState()->OnWorldStateChanged.RemoveAll(this);
 	}
+	Super::EndPlay(EndPlayReason);
 }
 
 void ABaseEnnemyController::Tick(float DeltaTime)

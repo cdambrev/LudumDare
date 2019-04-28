@@ -37,6 +37,7 @@ void UEnemiesManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		worldStateComponent->OnWorldStateChanged.RemoveAll(this);
 	}
 	_ennemiesOnScreen.Empty();
+	Super::EndPlay(EndPlayReason);
 }
 
 // Called every frame
