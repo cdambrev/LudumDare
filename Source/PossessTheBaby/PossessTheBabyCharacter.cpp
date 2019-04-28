@@ -193,7 +193,6 @@ UHealthComponent* APossessTheBabyCharacter::GetHealth() const
 void APossessTheBabyCharacter::ToggleWorldState()
 {
 	GetWorldState()->ToggleWorldState();
-	OnHit(5.0f);
 }
 
 bool APossessTheBabyCharacter::IsStun() const
