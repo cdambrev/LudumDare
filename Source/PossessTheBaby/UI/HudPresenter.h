@@ -11,6 +11,7 @@
 #include "HudPresenter.generated.h"
 
 class UHealthComponent;
+class UCombatComponent;
 
 UCLASS()
 class UHudPresenter : public UUserWidget
@@ -24,6 +25,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Presentor")
 	void SetWorldStateComponent(UWorldStateComponent* worldState);
 
+	UFUNCTION(BlueprintCallable, Category = "Presentor")
+	void SetCombatComponent(UCombatComponent* combat);
+
 	UFUNCTION(BlueprintImplementableEvent, Category="Presentor")
 	void OnDreamPointsChanged(float dreamPoints);
 
@@ -33,6 +37,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Presentor")
 	void OnWorldStateChanged(EWorldState worldState);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Presentor")
+	void OnSuccessfulHitChanged(int32 count);
+
 private:
 	UPROPERTY(Transient)
 	UHealthComponent* _health = nullptr;
@@ -40,7 +47,11 @@ private:
 	UPROPERTY(Transient)
 	UWorldStateComponent* _worldState = nullptr;
 
+	UPROPERTY(Transient)
+	UCombatComponent* _combat = nullptr;
+
 	FDelegateHandle _onDreamPointsChangedHandle;
 	FDelegateHandle _onNightmarePointsChangedHandle;
 	FDelegateHandle _onWorldStateChangedHandle;
+	FDelegateHandle _onCombatChangedHandle;
 };

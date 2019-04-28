@@ -75,4 +75,11 @@ void UCombatComponent::AttackHero()
 void UCombatComponent::AttackEnemy(ABaseEnemy* enemy)
 {
 	enemy->ApplyDamage();
+	_successfulHit++;
+	OnSuccessfulHit.Broadcast(_successfulHit);
+}
+
+int32 UCombatComponent::GetSuccessfulHit() const
+{
+	return _successfulHit;
 }

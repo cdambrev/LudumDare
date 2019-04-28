@@ -1,6 +1,7 @@
 #include "HudPresenter.h"
 
 #include "Components/HealthComponent.h"
+#include "Components/CombatComponent.h"
 
 void UHudPresenter::SetHealthComponent(UHealthComponent* health)
 {
@@ -34,6 +35,21 @@ void UHudPresenter::SetWorldStateComponent(UWorldStateComponent* worldState)
 	{
 		_worldState->OnWorldStateChanged.AddDynamic(this, &UHudPresenter::OnWorldStateChanged);
 		OnWorldStateChanged(_worldState->GetWorldState());
+	}
+}
+
+void UHudPresenter::SetCombatComponent(UCombatComponent* combat)
+{
+	if (IsValid(_combat))
+	{
+		_combat->OnSuccessfulHit.Remove(_onCombatChangedHandle);
+		_onCombatChangedHandle.Reset();
+	}
+	_combat = _combat;
+	if (IsValid(_combat))
+	{
+		_combat->OnSuccessfulHit.AddUObject(this, &UHudPresenter::OnSuccessfulHitChanged);
+		OnSuccessfulHitChanged(_combat->GetSuccessfulHit());
 	}
 }
 
