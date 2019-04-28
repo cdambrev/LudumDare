@@ -13,10 +13,10 @@ void UWorldStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_dreamAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceDream);
+	_dreamAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceDream, 1, 1, 0, nullptr, false, false);
 	_dreamAmbienceInstance->Play();
 
-	_nightmareAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceNightmare);
+	_nightmareAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceNightmare, 1, 1, 0, nullptr, false, false);
 	_nightmareAmbienceInstance->Stop();
 }
 

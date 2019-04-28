@@ -81,7 +81,10 @@ private:
 	void AttackLeft();
 	void AttackRight();
 
+
+
 	void SetMovementEnabled(bool enabled);
+	void SetAttackEnabled(bool enabled);
 
 	void PlayAnimAttack(bool right);
 
@@ -91,4 +94,6 @@ private:
 	UHealthComponent* Health = nullptr;
 
 	float _stunDuration = 0.0f;
+
+	bool _attackEnabled = true;
 };

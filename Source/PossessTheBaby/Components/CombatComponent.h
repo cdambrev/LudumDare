@@ -30,7 +30,7 @@ protected:
 	float _precisionZ = 50.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Settings")
-	float _precisionX = 120.0f;
+	float _precisionX = 150.0f;
 
 private:
 	UEnemiesManager* GetEnemyManager() const;

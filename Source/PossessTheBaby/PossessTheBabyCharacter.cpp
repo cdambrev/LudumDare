@@ -203,24 +203,30 @@ void APossessTheBabyCharacter::OnHit(float damage)
 
 void APossessTheBabyCharacter::AttackLeft()
 {
-	PlayAnimAttack(false);
-	Attack();
+	if (_attackEnabled)
+	{
+		PlayAnimAttack(false);
+		Attack();
+	}
 }
 
 void APossessTheBabyCharacter::AttackRight()
 {
-	PlayAnimAttack(true);
-	Attack();
+	if (_attackEnabled)
+	{
+		PlayAnimAttack(true);
+		Attack();
+	}
 }
 
 void APossessTheBabyCharacter::Attack()
 {
 	// jouer animation et stopper le player pour le temps de l'anim
 	GetCharacterMovement()->StopActiveMovement();
-	GetCharacterMovement()->SetMovementMode(MOVE_None);
+	SetAttackEnabled(false);
 
 	FTimerHandle timerHandle;
-	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetMovementEnabled, true);
+	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetAttackEnabled, true);
 	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, _attackDuration, false);
 
 	// tenter de toucher qqchose
@@ -232,6 +238,12 @@ void APossessTheBabyCharacter::Attack()
 	}
 
 	UGameplayStatics::PlaySound2D(GetWorld(), FoleySound);
+}
+
+void APossessTheBabyCharacter::SetAttackEnabled(bool enabled)
+{
+	_attackEnabled = enabled;
+	SetMovementEnabled(enabled);
 }
 
 void APossessTheBabyCharacter::SetMovementEnabled(bool enabled)
