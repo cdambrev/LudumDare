@@ -55,14 +55,26 @@ void UWorldStateComponent::ToggleWorldState()
 	if (IsInDreamWorld())
 	{
 		State = EWorldState::Nightmare;
-		_dreamAmbienceInstance->FadeOut(1.0f, 0.0f);
-		_nightmareAmbienceInstance->FadeIn(1.0f);
+		if (IsValid(_dreamAmbienceInstance))
+		{
+			_dreamAmbienceInstance->FadeOut(1.0f, 0.0f);
+		}
+		if (IsValid(_nightmareAmbienceInstance))
+		{
+			_nightmareAmbienceInstance->FadeIn(1.0f);
+		}
 	}
 	else
 	{
 		State = EWorldState::Dream;
-		_nightmareAmbienceInstance->FadeOut(1.0f, 0.0f);
-		_dreamAmbienceInstance->FadeIn(1.0f);
+		if (IsValid(_nightmareAmbienceInstance))
+		{
+			_nightmareAmbienceInstance->FadeOut(1.0f, 0.0f);
+		}
+		if (IsValid(_dreamAmbienceInstance))
+		{
+			_dreamAmbienceInstance->FadeIn(1.0f);
+		}
 	}
 
 	OnWorldStateChanged.Broadcast(State);
