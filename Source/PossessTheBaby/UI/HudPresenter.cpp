@@ -45,7 +45,7 @@ void UHudPresenter::SetCombatComponent(UCombatComponent* combat)
 		_combat->OnSuccessfulHit.Remove(_onCombatChangedHandle);
 		_onCombatChangedHandle.Reset();
 	}
-	_combat = _combat;
+	_combat = combat;
 	if (IsValid(_combat))
 	{
 		_combat->OnSuccessfulHit.AddUObject(this, &UHudPresenter::OnSuccessfulHitChanged);

@@ -45,6 +45,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintGetter, Category="Combat")
 	UCombatComponent* GetCombatComponent() const;
 	UFakePerspectiveComponent* GetFakePerspective() const;
 
@@ -96,7 +97,7 @@ private:
 	UPROPERTY()
 	UFakePerspectiveComponent* _fakePerspective = nullptr;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintGetter = "GetCombatComponent")
 	UCombatComponent* _combat = nullptr;
 
 	UPROPERTY()

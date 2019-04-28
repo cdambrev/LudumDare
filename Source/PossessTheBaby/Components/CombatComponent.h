@@ -28,6 +28,7 @@ public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnSuccessfulHit, int32)
 	FOnSuccessfulHit OnSuccessfulHit;
 
+	UFUNCTION(BlueprintCallable, Category = "World State")
 	int32 GetSuccessfulHit() const;
 
 protected:

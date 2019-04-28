@@ -25,6 +25,7 @@ public:
 	UFUNCTION(BlueprintGetter, Category="World State")
 	UWorldStateComponent* GetWorldState() const;
 
+	UFUNCTION(BlueprintCallable, Category = "World State")
 	APossessTheBabyCharacter* GetPlayer() const;
 
 	void SetPlayer(APossessTheBabyCharacter* player);
