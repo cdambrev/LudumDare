@@ -25,7 +25,7 @@ public:
 	APossessTheBabyGameMode();
 
 	virtual void BeginPlay() override;
-
+	virtual void Tick(float DeltaSeconds) override;
 	FLevelData GetLevelData() const;
 
 	UEnemiesManager* GetEnemyManager(EWorldState worldState) const;
@@ -41,4 +41,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "LevelProperties")
 	UEnemiesManager* _nightmareEnnemiesManager = nullptr;
+
+private:
+	void GameOver();
+	bool _registeredForPlayerDeath = false;
 };

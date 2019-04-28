@@ -114,7 +114,7 @@ void APossessTheBabyCharacter::UpdateAnimation()
 	const FVector PlayerVelocity = GetVelocity();
 	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
 
-	if (Health->IsDead())
+	if (IsDead())
 	{
 		GetSprite()->SetLooping(false);
 		GetSprite()->SetFlipbook(DieAnimation);
@@ -178,7 +178,7 @@ UHealthComponent* APossessTheBabyCharacter::GetHealth() const
 void APossessTheBabyCharacter::ToggleWorldState()
 {
 	bool canToogle = false;
-	if (!Health->IsDead())
+	if (!IsDead())
 	{
 		if (GetWorldState() == EWorldState::Dream)
 		{
@@ -269,4 +269,11 @@ void APossessTheBabyCharacter::OnDeath()
 {
 	PlayDieSound();
 	StopMoving();
+	SetMovementEnabled(false);
+	OnDeathDelegate.Broadcast();
+}
+
+bool APossessTheBabyCharacter::IsDead() const
+{
+	return Health->IsDead();
 }

@@ -32,6 +32,8 @@ public:
 
 	virtual void BeginPlay() override;
 	
+	bool IsDead() const;
+
 	UFUNCTION(BlueprintGetter)
 	UHealthComponent* GetHealth() const;
 
@@ -39,6 +41,9 @@ public:
 	void OnHit(float damage);
 
 	bool IsStun() const;
+
+	DECLARE_MULTICAST_DELEGATE(FOnDeath)
+	FOnDeath OnDeathDelegate;
 
 protected:
 	// The animation to play while running around
