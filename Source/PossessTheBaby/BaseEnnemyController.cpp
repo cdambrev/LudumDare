@@ -86,7 +86,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 					}
 					else
 					{
-						ennemy->SetCurrentState(EEnemyStateMachine::WaitForAttacking);
+						ennemy->SetCurrentState(EEnemyStateMachine::WaitForAttacking_Enter);
 					}
 				}
 				break;
@@ -164,7 +164,7 @@ void ABaseEnnemyController::State_Wander()
 
 void ABaseEnnemyController::State_WaitForAttackingEnter()
 {
-	float delay = FMath::FRandRange(0.5f, 3.0f);
+	float delay = FMath::FRandRange(AttackMinWait, AttackMaxWait);
 	GetWorldTimerManager().SetTimer(_waitingForActionTimer, delay, false);
 	GetEnemyPawn()->SetCurrentState(EEnemyStateMachine::WaitForAttacking);
 	GetEnemyPawn()->StopMoving();
