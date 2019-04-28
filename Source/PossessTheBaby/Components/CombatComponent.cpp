@@ -31,7 +31,6 @@ ABaseEnemy* UCombatComponent::TestAttackEnemy() const
 
 bool UCombatComponent::TestAttackHero() const
 {
-	return false;
 	bool canHit = false;
 	ABaseEnemy* enemy = Cast<ABaseEnemy>(GetOwner());
 	if (IsValid(enemy))
