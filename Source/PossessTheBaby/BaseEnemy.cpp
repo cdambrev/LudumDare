@@ -185,7 +185,6 @@ void ABaseEnemy::OnAppearEnd()
 void ABaseEnemy::OnDeadAnimOver()
 {
 	GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &ABaseEnemy::OnDeadAnimOver);
-	Destroy();
 }
 
 void ABaseEnemy::OnAttackEnd()

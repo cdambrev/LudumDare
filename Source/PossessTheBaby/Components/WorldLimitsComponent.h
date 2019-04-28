@@ -33,13 +33,13 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintGetter=GetMinX, Category = "Settings")
-	float _minX = -925.0f;
+	float _minX = -900.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintGetter = GetMaxX, Category = "Settings")
-	float _maxX = 925.0f;
+	float _maxX = 900.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintGetter = GetMinZ, Category = "Settings")
-	float _minZ = -325.0f;
+	float _minZ = -225.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintGetter = GetMaxZ, Category = "Settings")
 	float _maxZ = 200.0f;

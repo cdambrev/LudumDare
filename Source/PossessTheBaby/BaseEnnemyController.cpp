@@ -86,9 +86,15 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 					}
 					else
 					{
-						ennemy->SetCurrentState(EEnemyStateMachine::Attack);
+						ennemy->SetCurrentState(EEnemyStateMachine::WaitForAttacking);
 					}
 				}
+				break;
+			case EEnemyStateMachine::WaitForAttacking_Enter:
+				State_WaitForAttackingEnter();
+				break;
+			case EEnemyStateMachine::WaitForAttacking:
+				State_WaitForAttacking();
 				break;
 			case EEnemyStateMachine::Attack:
 				ennemy->PlayFoleySound();
@@ -109,29 +115,34 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 			case EEnemyStateMachine::Attacking:
 				if (ennemy->IsAttackEnabled())
 				{
-					ennemy->SetCurrentState(EEnemyStateMachine::Attack);
+					ennemy->SetCurrentState(EEnemyStateMachine::WaitForAttacking);
 				}
 				break;
+			case EEnemyStateMachine::DieEnter:
+				State_DieEnter();
+				break;
+			case EEnemyStateMachine::Die:
+				State_Die();
+				break;
 			case EEnemyStateMachine::Dead:
-				ennemy->PlayDieSound();
-				ennemy->GetCharacterMovement()->StopActiveMovement();
+				State_Dead();
 				break;
 			case EEnemyStateMachine::Frozen:
-				ennemy->GetCharacterMovement()->StopActiveMovement();
-				ennemy->ConsumeMovementInputVector();
+				GetEnemyPawn()->StopMoving();
 				ennemy->GetCharacterMovement()->SetMovementMode(MOVE_None);
 				break;
 			default:
 				break;
 			}
 		}
-		if (ennemy->IsDead() && ennemy->getCurrentState() != EEnemyStateMachine::Dead)
+		if (ennemy->IsDead() 
+			&& ennemy->getCurrentState() != EEnemyStateMachine::Dead
+			&& ennemy->getCurrentState() != EEnemyStateMachine::Die
+			&& ennemy->getCurrentState() != EEnemyStateMachine::DieEnter)
 		{
-			ennemy->SetCurrentState(EEnemyStateMachine::Dead);
-			OnEnnemyDied.Broadcast(ennemy);
+			ennemy->SetCurrentState(EEnemyStateMachine::DieEnter);			
 		}
 	}
-
 
 	ennemy->FaceRotation(GetControlRotation(), DeltaTime);
 }
@@ -151,6 +162,43 @@ void ABaseEnnemyController::State_Wander()
 	}
 }
 
+void ABaseEnnemyController::State_WaitForAttackingEnter()
+{
+	float delay = FMath::FRandRange(0.5f, 3.0f);
+	GetWorldTimerManager().SetTimer(_waitingForActionTimer, delay, false);
+	GetEnemyPawn()->SetCurrentState(EEnemyStateMachine::WaitForAttacking);
+	GetEnemyPawn()->StopMoving();
+}
+
+void ABaseEnnemyController::State_WaitForAttacking()
+{
+	if (!GetWorldTimerManager().IsTimerActive(_waitingForActionTimer))
+	{
+		GetEnemyPawn()->SetCurrentState(EEnemyStateMachine::Attack);
+	}
+}
+
+void ABaseEnnemyController::State_DieEnter()
+{
+	GetWorldTimerManager().SetTimer(_waitingForActionTimer, 3.0, false);
+	GetEnemyPawn()->StopMoving();
+	GetEnemyPawn()->SetCurrentState(EEnemyStateMachine::Die);
+	GetEnemyPawn()->PlayDieSound();
+}
+
+void ABaseEnnemyController::State_Die()
+{
+	if (!GetWorldTimerManager().IsTimerActive(_waitingForActionTimer))
+	{
+		GetEnemyPawn()->SetCurrentState(EEnemyStateMachine::Dead);
+	}
+}
+
+void ABaseEnnemyController::State_Dead()
+{
+	OnEnnemyDied.Broadcast(GetEnemyPawn());
+	GetEnemyPawn()->Destroy();
+}
 
 void ABaseEnnemyController::OnPlayerChangedWorld(EWorldState worldState)
 {

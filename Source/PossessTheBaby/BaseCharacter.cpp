@@ -154,3 +154,9 @@ void ABaseCharacter::SetMovementEnabled(bool enabled)
 		GetCharacterMovement()->SetMovementMode(MOVE_None);
 	}
 }
+
+void ABaseCharacter::StopMoving()
+{
+	GetCharacterMovement()->StopActiveMovement();
+	ConsumeMovementInputVector();
+}

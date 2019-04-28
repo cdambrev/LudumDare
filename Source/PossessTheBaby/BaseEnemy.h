@@ -15,9 +15,13 @@ enum class EEnemyStateMachine : uint8
 	Frozen,
 	Wandering,
 	MovingToPlayer,
+	WaitForAttacking_Enter,
+	WaitForAttacking,
 	Attack,
 	Attacking,
 	GettingHit,
+	DieEnter,
+	Die,
 	Dead,
 	Spawning
 };
