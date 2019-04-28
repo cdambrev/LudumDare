@@ -152,6 +152,7 @@ void APossessTheBabyCharacter::UpdateAnimation()
 		UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
 		if (GetSprite()->GetFlipbook() != DesiredAnimation)
 		{
+			GetSprite()->SetLooping(true);
 			GetSprite()->SetFlipbook(DesiredAnimation);
 			GetSprite()->PlayFromStart();
 		}
