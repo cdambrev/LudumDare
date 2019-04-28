@@ -8,6 +8,9 @@
 
 APossessTheBabyGameMode::APossessTheBabyGameMode()
 {
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
+
 	// Set default pawn class to our character
 	DefaultPawnClass = APossessTheBabyCharacter::StaticClass();	
 	GameStateClass = APossessTheBabyGameState::StaticClass();
@@ -20,6 +23,18 @@ APossessTheBabyGameMode::APossessTheBabyGameMode()
 void APossessTheBabyGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void APossessTheBabyGameMode::Tick(float DeltaSeconds)
+{
+	APossessTheBabyCharacter* player = GetGameState<APossessTheBabyGameState>()->GetPlayer();
+	if (IsValid(player) && player->IsDead())
+	{
+		FTimerHandle handle;
+		FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyGameMode::GameOver);
+		GetWorldTimerManager().SetTimer(handle, timerDelegate, 3.0f, false);
+		SetActorTickEnabled(false);
+	}
 }
 
 FLevelData APossessTheBabyGameMode::GetLevelData() const
@@ -43,4 +58,9 @@ UEnemiesManager* APossessTheBabyGameMode::GetEnemyManager() const
 {
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	return GetEnemyManager(gameState->GetWorldState()->GetWorldState());
+}
+
+void APossessTheBabyGameMode::GameOver()
+{
+
 }

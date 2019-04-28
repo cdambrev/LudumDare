@@ -114,7 +114,7 @@ void APossessTheBabyCharacter::UpdateAnimation()
 	const FVector PlayerVelocity = GetVelocity();
 	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
 
-	if (Health->IsDead())
+	if (IsDead())
 	{
 		GetSprite()->SetLooping(false);
 		GetSprite()->SetFlipbook(DieAnimation);
@@ -162,18 +162,24 @@ void APossessTheBabyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void APossessTheBabyCharacter::MoveRight(float Value)
 {
-	// Apply the input to the character motion
-	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
-	if (FMath::Abs(Value) > 0.1f)
+	if (!IsDead())
 	{
-		SetFacingRight(Value > 0);
+		// Apply the input to the character motion
+		AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
+		if (FMath::Abs(Value) > 0.1f)
+		{
+			SetFacingRight(Value > 0);
+		}
 	}
 }
 
 void APossessTheBabyCharacter::MoveUp(float Value)
 {
-	// Apply the input to the character motion
-	AddMovementInput(FVector(0.0f, 0.0f, 1.0f), Value);
+	if (!IsDead())
+	{
+		// Apply the input to the character motion
+		AddMovementInput(FVector(0.0f, 0.0f, 1.0f), Value);
+	}
 }
 
 void APossessTheBabyCharacter::UpdateCharacter()
@@ -190,7 +196,7 @@ UHealthComponent* APossessTheBabyCharacter::GetHealth() const
 void APossessTheBabyCharacter::ToggleWorldState()
 {
 	bool canToogle = false;
-	if (!Health->IsDead())
+	if (!IsDead())
 	{
 		if (GetWorldState() == EWorldState::Dream)
 		{
@@ -279,6 +285,13 @@ void APossessTheBabyCharacter::OnDeath()
 {
 	PlayDieSound();
 	StopMoving();
+	SetMovementEnabled(false);
+	OnDeathDelegate.Broadcast();
+}
+
+bool APossessTheBabyCharacter::IsDead() const
+{
+	return Health->IsDead();
 }
 
 void APossessTheBabyCharacter::OnAttackingEnd()
