@@ -60,7 +60,7 @@ UEnemiesManager* APossessTheBabyGameMode::GetEnemyManager() const
 	return GetEnemyManager(gameState->GetWorldState()->GetWorldState());
 }
 
-void APossessTheBabyGameMode::GameOver()
-{
-
-}
+//void APossessTheBabyGameMode::GameOver()
+//{
+//
+//}

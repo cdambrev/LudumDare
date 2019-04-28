@@ -42,7 +42,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "LevelProperties")
 	UEnemiesManager* _nightmareEnnemiesManager = nullptr;
 
-private:
+	UFUNCTION(BlueprintImplementableEvent, Category = "BaseCharacter")
 	void GameOver();
+
+private:
 	bool _registeredForPlayerDeath = false;
 };
