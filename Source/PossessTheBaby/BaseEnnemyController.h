@@ -44,6 +44,7 @@ private:
 	void OnPlayerChangedWorld(EWorldState worldState);
 
 	void State_Wander();
+	void State_WanderEndGame();
 	void State_WaitForAttackingEnter();
 	void State_WaitForAttacking();
 	void State_DieEnter();

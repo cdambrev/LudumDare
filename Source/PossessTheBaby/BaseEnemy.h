@@ -14,6 +14,7 @@ enum class EEnemyStateMachine : uint8
 {
 	Frozen,
 	Wandering,
+	WanderingEndGame,
 	MovingToPlayer,
 	WaitForAttacking_Enter,
 	WaitForAttacking,
