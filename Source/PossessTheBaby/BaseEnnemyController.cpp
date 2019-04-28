@@ -50,7 +50,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 			case EEnemyStateMachine::Spawning:
 				if (gameState->GetWorldLimits()->IsInWorldLimits(ennemy->GetActorLocation()))
 				{
-					ennemy->getFakePerspective()->SetRestrictInX(true);
+					ennemy->GetFakePerspective()->SetRestrictInX(true);
 					ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
 				}
 				else
@@ -83,7 +83,6 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				{
 					if (!ennemy->GetCombatComponent()->TestAttackHero()) // out of reach
 					{
-						APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 						APossessTheBabyCharacter* player = gameState->GetPlayer();
 						FVector distanceToPlayer = player->GetActorLocation() - ennemy->GetActorLocation();
 						distanceToPlayer.Y = 0;

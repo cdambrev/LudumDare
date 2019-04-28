@@ -101,8 +101,3 @@ bool ABaseEnemy::GetIsDreamWorld() const
 {
 	return _isDreamWorld;
 }
-
-UFakePerspectiveComponent* ABaseEnemy::getFakePerspective() const
-{
-	return _fakePerspective;
-}

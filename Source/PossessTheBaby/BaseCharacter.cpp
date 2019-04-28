@@ -58,3 +58,8 @@ UFlickerComponent* ABaseCharacter::GetFlicker() const
 {
 	return _flicker;
 }
+
+UFakePerspectiveComponent* ABaseCharacter::GetFakePerspective() const
+{
+	return _fakePerspective;
+}

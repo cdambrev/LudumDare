@@ -43,6 +43,7 @@ public:
 	virtual void BeginPlay() override;
 
 	UCombatComponent* GetCombatComponent() const;
+	UFakePerspectiveComponent* GetFakePerspective() const;
 
 	void OnHit(float damage);
 	bool GetFacingRight() const;

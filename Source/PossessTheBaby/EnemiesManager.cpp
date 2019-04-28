@@ -105,7 +105,7 @@ void UEnemiesManager::SpawnNewEnnemy(bool strong)
 				controller->OnEnnemyDied.AddUObject(this, &UEnemiesManager::OnEnnemyDied);
 			}
 			ennemy->SetIsDreamWorld(_isForDream);
-			ennemy->getFakePerspective()->SetRestrictInX(false);
+			ennemy->GetFakePerspective()->SetRestrictInX(false);
 			_ennemiesOnScreen.Add(ennemy);
 		}
 		else
@@ -119,7 +119,7 @@ void UEnemiesManager::SpawnNewEnnemy(bool strong)
 				controller->OnEnnemyDied.AddUObject(this, &UEnemiesManager::OnEnnemyDied);
 			}
 			ennemy->SetIsDreamWorld(_isForDream);
-			ennemy->getFakePerspective()->SetRestrictInX(false);
+			ennemy->GetFakePerspective()->SetRestrictInX(false);
 			_ennemiesOnScreen.Add(ennemy);
 		}
 	}
