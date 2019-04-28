@@ -54,6 +54,12 @@ protected:
 
 	UFlickerComponent* GetFlicker() const;
 
+	UPROPERTY(EditAnywhere, Category=Sounds)
+	class USoundBase* PunchSound = nullptr;
+
+	UPROPERTY(EditAnywhere, Category=Sounds)
+	class USoundBase* HitSound = nullptr;
+
 private:
 	UPROPERTY()
 	UFakePerspectiveComponent* _fakePerspective = nullptr;
