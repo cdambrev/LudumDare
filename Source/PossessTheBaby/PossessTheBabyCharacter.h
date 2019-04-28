@@ -44,6 +44,12 @@ public:
 
 	bool GetWantToAttack() const;
 
+	bool IsGettingHit() const;
+
+	bool CanGetHit() const;
+
+	void SetCanGetHit(bool canGetHit);
+
 	DECLARE_MULTICAST_DELEGATE(FOnDeath)
 	FOnDeath OnDeathDelegate;
 
@@ -65,6 +71,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* HitAnimation;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* GettingHitAnimation;
 
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();
@@ -95,6 +104,11 @@ private:
 	UFUNCTION()
 	void OnAttackingEnd();
 
+	void SetGettingHit(bool gettingHit);
+
+	UFUNCTION()
+	void OnGettingHitEnded();
+
 	UPROPERTY(BlueprintGetter="GetHealth")
 	UHealthComponent* Health = nullptr;
 
@@ -104,4 +118,7 @@ private:
 
 	bool _wantToAttack = false;
 	bool _attackEnded = true;
+
+	bool _gettingHit = false;
+	bool _canGetHit = true;
 };
