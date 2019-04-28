@@ -30,6 +30,12 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	virtual void UpdateControlRotation(float DeltaTime, bool bUpdatePawn = true) override final;
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float AttackMinWait = 0.5f;
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float AttackMaxWait = 1.5f;
 	
 private:
 	ABaseEnemy* GetEnemyPawn() const;
@@ -38,6 +44,7 @@ private:
 	void OnPlayerChangedWorld(EWorldState worldState);
 
 	void State_Wander();
+	void State_WanderEndGame();
 	void State_WaitForAttackingEnter();
 	void State_WaitForAttacking();
 	void State_DieEnter();

@@ -116,12 +116,35 @@ void APossessTheBabyCharacter::UpdateAnimation()
 
 	if (IsDead())
 	{
-		GetSprite()->SetLooping(false);
-		GetSprite()->SetFlipbook(DieAnimation);
 		if (!_isBoundToDeath)
 		{
+			GetSprite()->SetLooping(false);
+			GetSprite()->SetFlipbook(DieAnimation);
+			GetSprite()->PlayFromStart();
 			GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnAnimationEnded);
 			_isBoundToDeath = true;
+		}
+	}
+	else if (IsGettingHit())
+	{
+		if (GetSprite()->GetFlipbook() != GettingHitAnimation)
+		{
+			GetSprite()->SetLooping(false);
+			GetSprite()->SetFlipbook(GettingHitAnimation);
+			GetSprite()->PlayFromStart();
+			GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnGettingHitEnded);
+		}
+	}
+	else if (GetWantToAttack() || !_attackEnded)
+	{
+		if (_attackEnded)
+		{
+			GetSprite()->SetLooping(false);
+			GetSprite()->SetFlipbook(HitAnimation);
+			GetSprite()->PlayFromStart();
+			SetWantToAttack(false);
+			_attackEnded = false;
+			GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnAttackingEnd);
 		}
 	}
 	else
@@ -129,7 +152,9 @@ void APossessTheBabyCharacter::UpdateAnimation()
 		UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
 		if (GetSprite()->GetFlipbook() != DesiredAnimation)
 		{
+			GetSprite()->SetLooping(true);
 			GetSprite()->SetFlipbook(DesiredAnimation);
+			GetSprite()->PlayFromStart();
 		}
 	}
 }
@@ -210,16 +235,31 @@ bool APossessTheBabyCharacter::IsStun() const
 
 void APossessTheBabyCharacter::OnHit(float damage)
 {
-	GetHealth()->ApplyDamage(damage);
-	GetFlicker()->TintFlick(0.2f, FColor::Red);
-	_stunDuration = 0.5f;
+	if (CanGetHit())
+	{
+		GetHealth()->ApplyDamage(damage);
+		GetFlicker()->TintFlick(0.2f, FColor::Red);
+		SetGettingHit(true);
+		SetCanGetHit(false);
+		SetMovementEnabled(false);
+		_stunDuration = 0.5f;
+	}
+}
+
+void APossessTheBabyCharacter::SetGettingHit(bool gettingHit)
+{
+	_gettingHit = gettingHit;
+}
+
+bool APossessTheBabyCharacter::IsGettingHit() const
+{
+	return _gettingHit;
 }
 
 void APossessTheBabyCharacter::AttackLeft()
 {
 	if (IsAttackEnabled())
 	{
-		PlayAnimAttack(false);
 		Attack();
 	}
 }
@@ -228,7 +268,6 @@ void APossessTheBabyCharacter::AttackRight()
 {
 	if (IsAttackEnabled())
 	{
-		PlayAnimAttack(true);
 		Attack();
 	}
 }
@@ -237,11 +276,8 @@ void APossessTheBabyCharacter::Attack()
 {
 	// jouer animation et stopper le player pour le temps de l'anim
 	GetCharacterMovement()->StopActiveMovement();
+	SetWantToAttack(true);
 	SetAttackEnabled(false);
-
-	FTimerHandle timerHandle;
-	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetAttackEnabled, true);
-	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, _attackDuration, false);
 
 	// tenter de toucher qqchose
 	ABaseEnemy* ennemy = GetCombatComponent()->TestAttackEnemy();
@@ -254,21 +290,18 @@ void APossessTheBabyCharacter::Attack()
 	PlayFoleySound();
 }
 
-void APossessTheBabyCharacter::PlayAnimAttack(bool right)
-{
-	if (right)
-	{
-
-	}
-	else
-	{
-
-	}
-}
-
 void APossessTheBabyCharacter::OnAnimationEnded()
 {
 	GetSprite()->Stop();
+}
+
+void APossessTheBabyCharacter::OnAttackingEnd()
+{
+	OnAnimationEnded();
+	GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &APossessTheBabyCharacter::OnAttackingEnd);
+	_wantToAttack = false;
+	_attackEnded = true;
+	SetAttackEnabled(true);
 }
 
 void APossessTheBabyCharacter::OnDeath()
@@ -282,4 +315,31 @@ void APossessTheBabyCharacter::OnDeath()
 bool APossessTheBabyCharacter::IsDead() const
 {
 	return Health->IsDead();
+}
+
+void APossessTheBabyCharacter::SetWantToAttack(bool attack)
+{
+	_wantToAttack = attack;
+}
+
+bool APossessTheBabyCharacter::GetWantToAttack() const
+{
+	return _wantToAttack;
+}
+
+void APossessTheBabyCharacter::OnGettingHitEnded()
+{
+	SetCanGetHit(true);
+	SetGettingHit(false);
+	GetSprite()->OnFinishedPlaying.RemoveDynamic(this,&APossessTheBabyCharacter::OnGettingHitEnded);
+}
+
+bool APossessTheBabyCharacter::CanGetHit() const
+{
+	return _canGetHit;
+}
+
+void APossessTheBabyCharacter::SetCanGetHit(bool canGetHit)
+{
+	_canGetHit = canGetHit;
 }
