@@ -131,3 +131,26 @@ void ABaseCharacter::PlayDieSound()
 {
 	UGameplayStatics::PlaySound2D(GetWorld(), DieSound);
 }
+
+bool ABaseCharacter::IsAttackEnabled() const
+{
+	return _attackEnabled;
+}
+
+void ABaseCharacter::SetAttackEnabled(bool enabled)
+{
+	_attackEnabled = enabled;
+	SetMovementEnabled(enabled);
+}
+
+void ABaseCharacter::SetMovementEnabled(bool enabled)
+{
+	if (enabled)
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+	}
+	else
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_None);
+	}
+}

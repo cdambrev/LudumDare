@@ -15,6 +15,7 @@ enum class EEnemyStateMachine : uint8
 	Frozen,
 	Wandering,
 	MovingToPlayer,
+	Attack,
 	Attacking,
 	GettingHit,
 	Dead,
@@ -40,9 +41,10 @@ public:
 
 	void SetCurrentState(EEnemyStateMachine nextState);
 
+	bool canAttack() const;
 	void SetAllowedToAttack(bool allowed);
 
-	bool canAttack() const;
+	bool CanMoveCloseToHero() const;
 
 	float GetCurrentHp() const;
 
@@ -67,6 +69,8 @@ public:
 	bool playAppear = false;
 
 	bool alreadyPlayedAnim = false;
+
+	void Attack();
 
 protected:
 	// Called when the game starts or when spawned
@@ -108,6 +112,7 @@ private:
 	EEnemyStateMachine _currentState = EEnemyStateMachine::Spawning;
 
 	bool _allowedToAttack = false;
+	bool _canMoveCloseToHero = false;
 	
 	float _currentHp = 0;
 	
