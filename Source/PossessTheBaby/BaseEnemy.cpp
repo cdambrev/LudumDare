@@ -15,6 +15,8 @@ ABaseEnemy::ABaseEnemy()
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, -1.0f, 0.0f));
 	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
+
+	_attackDuration = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -45,36 +47,60 @@ void ABaseEnemy::UpdateAnimation()
 	const FVector PlayerVelocity = GetVelocity();
 	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
 
+	UPaperFlipbookComponent* sprite = GetSprite();
+	UPaperFlipbook* currentFlipbook = sprite->GetFlipbook();
+
 	if (IsDead())
 	{
-		GetSprite()->SetFlipbook(DieAnimation);
-		GetSprite()->SetLooping(false);
+		if (currentFlipbook != DieAnimation)
+		{
+			GetSprite()->SetLooping(false);
+			GetSprite()->SetFlipbook(DieAnimation);
+			GetSprite()->PlayFromStart();
+			GetSprite()->OnFinishedPlaying.AddDynamic(this, &ABaseEnemy::OnDeadAnimOver);
+		}
 	}
 	else if (_currentState == EEnemyStateMachine::Frozen)
 	{
-		GetSprite()->SetFlipbook(FrozenAnimation);
-		GetSprite()->SetLooping(false);
+		if (currentFlipbook != FrozenAnimation)
+		{
+			GetSprite()->SetLooping(false);
+			GetSprite()->SetFlipbook(FrozenAnimation);
+			GetSprite()->PlayFromStart();
+		}
 	}
 	else if (playAppear)
 	{
-		GetSprite()->ReverseFromEnd();
-		GetSprite()->SetLooping(false);
-		playAppear = false;
+		if (currentFlipbook != AppearAnimation)
+		{
+			GetSprite()->SetLooping(false);
+			GetSprite()->SetFlipbook(AppearAnimation);
+			GetSprite()->PlayFromStart();
+			GetSprite()->OnFinishedPlaying.AddDynamic(this, &ABaseEnemy::OnAppearEnd);
+		}
 	}
-	else if (_wantToAttack)
+	else if (GetWantToAttack() || !_attackEnd)
 	{
-		GetSprite()->SetFlipbook(HitAnimation);
-		GetSprite()->SetLooping(false);
-		_wantToAttack = false;
+		if (_attackEnd)
+		{
+			GetSprite()->SetLooping(false);
+			GetSprite()->SetFlipbook(HitAnimation);
+			GetSprite()->PlayFromStart();
+			SetWantToAttack(false);
+			_wantToAttack = false;
+			_attackEnd = false;
+			GetSprite()->OnFinishedPlaying.AddDynamic(this, &ABaseEnemy::OnAttackEnd);
+		}
 	}
 	else
 	{
 		// Are we moving or standing still?
+		GetSprite()->SetLooping(true);
 		UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
 		if (GetSprite()->GetFlipbook() != DesiredAnimation)
 		{
 			GetSprite()->SetFlipbook(DesiredAnimation);
-			GetSprite()->SetLooping(true);
+			GetSprite()->PlayFromStart();
 		}
 	}
 }
@@ -82,6 +108,11 @@ void ABaseEnemy::UpdateAnimation()
 bool ABaseEnemy::canAttack() const
 {
 	return _allowedToAttack || GetCombatComponent()->TestAttackHero();
+}
+
+bool ABaseEnemy::CanMoveCloseToHero() const
+{
+	return _canMoveCloseToHero;
 }
 
 EEnemyStateMachine ABaseEnemy::getCurrentState() const
@@ -143,4 +174,38 @@ void ABaseEnemy::SetWantToAttack(bool wantToAttack)
 bool ABaseEnemy::GetWantToAttack() const
 {
 	return _wantToAttack;
+}
+
+void ABaseEnemy::OnAppearEnd()
+{
+	GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &ABaseEnemy::OnAppearEnd);
+	playAppear = false;
+}
+	
+void ABaseEnemy::OnDeadAnimOver()
+{
+	GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &ABaseEnemy::OnDeadAnimOver);
+}
+
+void ABaseEnemy::OnAttackEnd()
+{
+	GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &ABaseEnemy::OnAttackEnd);
+	_attackEnd = true;
+}
+
+void ABaseEnemy::Attack()
+{
+	SetWantToAttack(true);
+
+	GetCharacterMovement()->StopActiveMovement();
+	SetAttackEnabled(false);
+
+	FTimerHandle timerHandle;
+	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &ABaseEnemy::SetAttackEnabled, true);
+	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, _attackDuration, false);
+
+	GetCombatComponent()->AttackHero();
+	PlayHitSound();
+
+	PlayFoleySound();
 }

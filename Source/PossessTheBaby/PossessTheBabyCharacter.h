@@ -32,6 +32,8 @@ public:
 
 	virtual void BeginPlay() override;
 	
+	bool IsDead() const;
+
 	UFUNCTION(BlueprintGetter)
 	UHealthComponent* GetHealth() const;
 
@@ -39,6 +41,9 @@ public:
 	void OnHit(float damage);
 
 	bool IsStun() const;
+
+	DECLARE_MULTICAST_DELEGATE(FOnDeath)
+	FOnDeath OnDeathDelegate;
 
 protected:
 	// The animation to play while running around
@@ -55,7 +60,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category=Sounds)
 	class USoundBase* WorldSwitchToggleDeniedSound = nullptr;
-	
+
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();
 
@@ -78,8 +83,6 @@ private:
 	void AttackLeft();
 	void AttackRight();
 
-	void SetMovementEnabled(bool enabled);
-
 	void PlayAnimAttack(bool right);
 
 	void OnDeath();
@@ -88,4 +91,6 @@ private:
 	UHealthComponent* Health = nullptr;
 
 	float _stunDuration = 0.0f;
+
+	bool _isBoundToDeath = false;
 };

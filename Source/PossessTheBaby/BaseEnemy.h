@@ -15,8 +15,13 @@ enum class EEnemyStateMachine : uint8
 	Frozen,
 	Wandering,
 	MovingToPlayer,
+	WaitForAttacking_Enter,
+	WaitForAttacking,
+	Attack,
 	Attacking,
 	GettingHit,
+	DieEnter,
+	Die,
 	Dead,
 	Spawning
 };
@@ -40,9 +45,10 @@ public:
 
 	void SetCurrentState(EEnemyStateMachine nextState);
 
+	bool canAttack() const;
 	void SetAllowedToAttack(bool allowed);
 
-	bool canAttack() const;
+	bool CanMoveCloseToHero() const;
 
 	float GetCurrentHp() const;
 
@@ -68,6 +74,8 @@ public:
 
 	bool alreadyPlayedAnim = false;
 
+	void Attack();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -90,6 +98,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* FrozenAnimation;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* AppearAnimation;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float speed = 0.f;
@@ -105,13 +116,24 @@ protected:
 	
 private:
 
+	UFUNCTION()
+	void OnAppearEnd();
+
+	UFUNCTION()
+	void OnDeadAnimOver();
+	
+	UFUNCTION()
+	void OnAttackEnd();
+	
 	EEnemyStateMachine _currentState = EEnemyStateMachine::Spawning;
 
 	bool _allowedToAttack = false;
+	bool _canMoveCloseToHero = false;
 	
 	float _currentHp = 0;
 	
 	bool _isDreamWorld = false;
 
 	bool _wantToAttack = false;
+	bool _attackEnd = true;
 };

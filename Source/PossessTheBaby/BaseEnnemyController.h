@@ -32,8 +32,17 @@ public:
 	virtual void UpdateControlRotation(float DeltaTime, bool bUpdatePawn = true) override final;
 	
 private:
+	ABaseEnemy* GetEnemyPawn() const;
 
 	UFUNCTION()
 	void OnPlayerChangedWorld(EWorldState worldState);
 
+	void State_Wander();
+	void State_WaitForAttackingEnter();
+	void State_WaitForAttacking();
+	void State_DieEnter();
+	void State_Die();
+	void State_Dead();
+
+	FTimerHandle _waitingForActionTimer;
 };

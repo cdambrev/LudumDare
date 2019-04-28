@@ -58,6 +58,11 @@ public:
 	void PlayFootStep();
 	void PlayDieSound();
 
+	void SetMovementEnabled(bool enabled);
+	void SetAttackEnabled(bool enabled);
+	bool IsAttackEnabled() const;
+	void StopMoving();
+
 protected:
 
 	UFlickerComponent* GetFlicker() const;
@@ -80,6 +85,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category=Sounds)
 	float FootStepPerMeter = 1.0f;
 
+	UPROPERTY(EditAnywhere, Category = Gameplay)
+	float _attackDuration = 0.1f;
+
 	UWorldStateComponent* GetWorldStateComponent() const;
 	EWorldState GetWorldState() const;
 
@@ -100,4 +108,5 @@ private:
 	bool _facingRight = true;
 
 	float _footStepTimer = 0.0f;
+	bool _attackEnabled = true;
 };

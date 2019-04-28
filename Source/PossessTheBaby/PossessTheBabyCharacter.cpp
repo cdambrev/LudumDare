@@ -114,10 +114,15 @@ void APossessTheBabyCharacter::UpdateAnimation()
 	const FVector PlayerVelocity = GetVelocity();
 	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
 
-	if (Health->IsDead())
+	if (IsDead())
 	{
+		GetSprite()->SetLooping(false);
 		GetSprite()->SetFlipbook(DieAnimation);
-		//GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnAnimationEnded);
+		if (!_isBoundToDeath)
+		{
+			GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnAnimationEnded);
+			_isBoundToDeath = true;
+		}
 	}
 	else
 	{
@@ -145,18 +150,24 @@ void APossessTheBabyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void APossessTheBabyCharacter::MoveRight(float Value)
 {
-	// Apply the input to the character motion
-	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
-	if (FMath::Abs(Value) > 0.1f)
+	if (!IsDead())
 	{
-		SetFacingRight(Value > 0);
+		// Apply the input to the character motion
+		AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
+		if (FMath::Abs(Value) > 0.1f)
+		{
+			SetFacingRight(Value > 0);
+		}
 	}
 }
 
 void APossessTheBabyCharacter::MoveUp(float Value)
 {
-	// Apply the input to the character motion
-	AddMovementInput(FVector(0.0f, 0.0f, 1.0f), Value);
+	if (!IsDead())
+	{
+		// Apply the input to the character motion
+		AddMovementInput(FVector(0.0f, 0.0f, 1.0f), Value);
+	}
 }
 
 void APossessTheBabyCharacter::UpdateCharacter()
@@ -173,13 +184,16 @@ UHealthComponent* APossessTheBabyCharacter::GetHealth() const
 void APossessTheBabyCharacter::ToggleWorldState()
 {
 	bool canToogle = false;
-	if (GetWorldState() == EWorldState::Dream)
+	if (!IsDead())
 	{
-		canToogle = GetHealth()->GetNightmarePoints() > 0;
-	}
-	else
-	{
-		canToogle = GetHealth()->GetDreamPoints() > 0;
+		if (GetWorldState() == EWorldState::Dream)
+		{
+			canToogle = GetHealth()->GetNightmarePoints() > 0;
+		}
+		else
+		{
+			canToogle = GetHealth()->GetDreamPoints() > 0;
+		}
 	}
 
 	if (canToogle)
@@ -203,25 +217,31 @@ void APossessTheBabyCharacter::OnHit(float damage)
 
 void APossessTheBabyCharacter::AttackLeft()
 {
-	PlayAnimAttack(false);
-	Attack();
+	if (IsAttackEnabled())
+	{
+		PlayAnimAttack(false);
+		Attack();
+	}
 }
 
 void APossessTheBabyCharacter::AttackRight()
 {
-	PlayAnimAttack(true);
-	Attack();
+	if (IsAttackEnabled())
+	{
+		PlayAnimAttack(true);
+		Attack();
+	}
 }
 
 void APossessTheBabyCharacter::Attack()
 {
 	// jouer animation et stopper le player pour le temps de l'anim
 	GetCharacterMovement()->StopActiveMovement();
-	GetCharacterMovement()->SetMovementMode(MOVE_None);
+	SetAttackEnabled(false);
 
 	FTimerHandle timerHandle;
-	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetMovementEnabled, true);
-	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, 1.f, false);
+	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetAttackEnabled, true);
+	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, _attackDuration, false);
 
 	// tenter de toucher qqchose
 	ABaseEnemy* ennemy = GetCombatComponent()->TestAttackEnemy();
@@ -231,19 +251,7 @@ void APossessTheBabyCharacter::Attack()
 		PlayHitSound();
 	}
 
-	UGameplayStatics::PlaySound2D(GetWorld(), FoleySound);
-}
-
-void APossessTheBabyCharacter::SetMovementEnabled(bool enabled)
-{
-	if (enabled)
-	{
-		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-	}
-	else
-	{
-		GetCharacterMovement()->SetMovementMode(MOVE_None);
-	}
+	PlayFoleySound();
 }
 
 void APossessTheBabyCharacter::PlayAnimAttack(bool right)
@@ -266,4 +274,12 @@ void APossessTheBabyCharacter::OnAnimationEnded()
 void APossessTheBabyCharacter::OnDeath()
 {
 	PlayDieSound();
+	StopMoving();
+	SetMovementEnabled(false);
+	OnDeathDelegate.Broadcast();
+}
+
+bool APossessTheBabyCharacter::IsDead() const
+{
+	return Health->IsDead();
 }

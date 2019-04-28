@@ -25,7 +25,7 @@ private:
 	float TopScale = 0.8f;
 
 	UPROPERTY(EditAnywhere, Category = Perspective)
-	float BottomScale = 1.2f;
+	float BottomScale = 1.0f;
 
 	bool _restrictInX = true;
 	bool _restrictInZ = true;
