@@ -27,6 +27,7 @@ public:
 
 private:
 	UEnemiesManager* GetEnemyManager() const;
+	bool CanHit(const FVector& attackerLocation, bool isAttackerFacingRight, const FVector& attackeeLocation) const;
 
-	float _precision = 0.01;
+	float _precision = 0.01f;
 };

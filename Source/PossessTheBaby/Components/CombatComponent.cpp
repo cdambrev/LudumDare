@@ -14,55 +14,48 @@ UCombatComponent::UCombatComponent()
 
 ABaseEnemy* UCombatComponent::TestAttackEnemy() const
 {
-	ABaseEnemy* result = nullptr;
 	UEnemiesManager* enemiesManager = GetEnemyManager();
 	TArray<ABaseEnemy*> enemies = enemiesManager->GetEnemiesOnScreen();
-	if (enemies.Num() > 0)
+	ABaseEnemy** result = enemies.FindByPredicate([&](ABaseEnemy* enemy)
 	{
 		APossessTheBabyCharacter* player = Cast<APossessTheBabyCharacter>(GetOwner());
-		if (IsValid(player))
-		{
-			FVector playerLocation = player->GetActorLocation();
-			bool notFound = true;
-			int i = 0;
-			while (notFound && i < enemies.Num())
-			{
-				ABaseEnemy* enemy = enemies[i];
-				if (IsValid(enemy))
-				{
-					FVector ennemyLocation = enemy->GetActorLocation();
+		return CanHit(player->GetActorLocation(), player->GetFacingRight(), enemy->GetActorLocation());
+	});
 
-					if (FMath::Abs(playerLocation.X - ennemyLocation.X) < 100.f && FMath::Abs(playerLocation.Z - ennemyLocation.Z) < _precision
-						&& (playerLocation.X - ennemyLocation.X > 0 && !player->GetFacingRight() || playerLocation.X - ennemyLocation.X < 0 && player->GetFacingRight()))
-					{
-						notFound = false;
-					}
-				}
-				++i;
-			}
-		}
+	if (result != nullptr)
+	{
+		return *result;
 	}
-
-	return result;
+	return nullptr;
 }
 
 bool UCombatComponent::TestAttackHero() const
 {
-	bool canAttack = false;
+	bool canHit = false;
 	ABaseEnemy* enemy = Cast<ABaseEnemy>(GetOwner());
 	if (IsValid(enemy))
 	{
 		APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 		APossessTheBabyCharacter* player = gameState->GetPlayer();
-		FVector playerLocation = player->GetActorLocation();
-		FVector ennemyLocation = enemy->GetActorLocation();
-		if (FMath::Abs(playerLocation.X - ennemyLocation.X) < 100.f && FMath::Abs(playerLocation.Z - ennemyLocation.Z) < _precision
-			&& (ennemyLocation.X - playerLocation.X > 0 && !enemy->GetFacingRight() || ennemyLocation.X - playerLocation.X < 0 && enemy->GetFacingRight()))
-		{
-			canAttack = true;
-		}
+
+		canHit = CanHit(enemy->GetActorLocation(), enemy->GetFacingRight(), player->GetActorLocation());
+
 	}
-	return canAttack;
+	return canHit;
+}
+
+bool UCombatComponent::CanHit(const FVector& attackerLocation, bool isAttackerFacingRight, const FVector& attackeeLocation) const
+{
+	bool result = false;
+
+	float diffX = attackeeLocation.X - attackerLocation.X;
+	bool onRight = diffX > 0.0f;
+	float distanceX = FMath::Abs(diffX);
+	float distanceZ = FMath::Abs(attackerLocation.Z - attackeeLocation.Z);
+	result = distanceX < 100.f
+		&& distanceZ < _precision
+		&& (onRight != isAttackerFacingRight);
+	return result;
 }
 
 UEnemiesManager* UCombatComponent::GetEnemyManager() const
@@ -76,10 +69,7 @@ void UCombatComponent::AttackHero()
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	APossessTheBabyCharacter* player = gameState->GetPlayer();
 	ABaseEnemy* enemy = Cast<ABaseEnemy>(GetOwner());
-	if (IsValid(enemy))
-	{
-		player->GetHealth()->ApplyDamage(enemy->GetHitPoints());
-	}
+	player->OnHit(enemy->GetHitPoints());
 }
 
 void UCombatComponent::AttackEnemy(ABaseEnemy* ennemy)

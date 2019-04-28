@@ -78,7 +78,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 			{
 				ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
 			}
-			else if (!ennemy->GetCombatComponent()->TestAttackEnemy())
+			else if (!ennemy->GetCombatComponent()->TestAttackHero())
 			{
 				ennemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
 			}
