@@ -116,10 +116,11 @@ void APossessTheBabyCharacter::UpdateAnimation()
 
 	if (IsDead())
 	{
-		GetSprite()->SetLooping(false);
-		GetSprite()->SetFlipbook(DieAnimation);
 		if (!_isBoundToDeath)
 		{
+			GetSprite()->SetLooping(false);
+			GetSprite()->SetFlipbook(DieAnimation);
+			GetSprite()->PlayFromStart();
 			GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnAnimationEnded);
 			_isBoundToDeath = true;
 		}
@@ -307,6 +308,16 @@ void APossessTheBabyCharacter::OnAnimationEnded()
 	GetSprite()->Stop();
 }
 
+void APossessTheBabyCharacter::OnAttackingEnd()
+{
+	OnAnimationEnded();
+
+	GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &APossessTheBabyCharacter::OnAttackingEnd);
+	_wantToAttack = false;
+	_attackEnded = true;
+	SetAttackEnabled(true);
+}
+
 void APossessTheBabyCharacter::OnDeath()
 {
 	PlayDieSound();
@@ -318,14 +329,6 @@ void APossessTheBabyCharacter::OnDeath()
 bool APossessTheBabyCharacter::IsDead() const
 {
 	return Health->IsDead();
-}
-
-void APossessTheBabyCharacter::OnAttackingEnd()
-{
-	GetSprite()->OnFinishedPlaying.RemoveDynamic(this,&APossessTheBabyCharacter::OnAttackingEnd);
-	_wantToAttack = false;
-	_attackEnded = true;
-	SetAttackEnabled(true);
 }
 
 void APossessTheBabyCharacter::SetWantToAttack(bool attack)

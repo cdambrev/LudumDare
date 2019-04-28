@@ -45,6 +45,12 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 		APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 		if (IsValid(gameState))
 		{
+			// Force wandering when player is dead.
+			if (!ennemy->IsDead() && gameState->GetPlayer()->IsDead())
+			{
+				ennemy->SetCurrentState(EEnemyStateMachine::WanderingEndGame);
+			}
+
 			switch (ennemy->getCurrentState())
 			{
 			case EEnemyStateMachine::Spawning:
@@ -66,6 +72,9 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				}
 				break;
 			case EEnemyStateMachine::Wandering:
+				State_Wander();
+				break;
+			case EEnemyStateMachine::WanderingEndGame:
 				State_Wander();
 				break;
 			case EEnemyStateMachine::MovingToPlayer:
@@ -160,6 +169,16 @@ void ABaseEnnemyController::State_Wander()
 	{
 		enemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
 	}
+}
+
+void ABaseEnnemyController::State_WanderEndGame()
+{
+	ABaseEnemy* enemy = GetEnemyPawn();
+	float inputX = FMath::FRandRange(-1.f, 1.f);
+	float inputZ = FMath::FRandRange(-1.f, 1.f);
+	enemy->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+	enemy->AddMovementInput(FVector(inputX, 0.f, inputZ));
+	enemy->SetFacingRight(inputX > 0);
 }
 
 void ABaseEnnemyController::State_WaitForAttackingEnter()
