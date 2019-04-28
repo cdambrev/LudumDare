@@ -61,6 +61,7 @@ public:
 	void SetMovementEnabled(bool enabled);
 	void SetAttackEnabled(bool enabled);
 	bool IsAttackEnabled() const;
+	void StopMoving();
 
 protected:
 
