@@ -40,9 +40,10 @@ public:
 
 	void SetCurrentState(EEnemyStateMachine nextState);
 
+	bool canAttack() const;
 	void SetAllowedToAttack(bool allowed);
 
-	bool canAttack() const;
+	bool CanMoveCloseToHero() const;
 
 	float GetCurrentHp() const;
 
@@ -108,6 +109,7 @@ private:
 	EEnemyStateMachine _currentState = EEnemyStateMachine::Spawning;
 
 	bool _allowedToAttack = false;
+	bool _canMoveCloseToHero = false;
 	
 	float _currentHp = 0;
 	

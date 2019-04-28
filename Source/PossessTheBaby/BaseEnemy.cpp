@@ -84,6 +84,11 @@ bool ABaseEnemy::canAttack() const
 	return _allowedToAttack || GetCombatComponent()->TestAttackHero();
 }
 
+bool ABaseEnemy::CanMoveCloseToHero() const
+{
+	return _canMoveCloseToHero;
+}
+
 EEnemyStateMachine ABaseEnemy::getCurrentState() const
 {
 	return _currentState;

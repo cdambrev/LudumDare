@@ -55,12 +55,14 @@ void UWorldStateComponent::ToggleWorldState()
 	if (IsInDreamWorld())
 	{
 		State = EWorldState::Nightmare;
-		_nightmareAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceNightmare);
+		_dreamAmbienceInstance->FadeOut(1.0f, 0.0f);
+		_nightmareAmbienceInstance->FadeIn(1.0f);
 	}
 	else
 	{
 		State = EWorldState::Dream;
-		_dreamAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceDream);
+		_nightmareAmbienceInstance->FadeOut(1.0f, 0.0f);
+		_dreamAmbienceInstance->FadeIn(1.0f);
 	}
 
 	UGameplayStatics::PlaySound2D(GetWorld(), WorldSwitch);

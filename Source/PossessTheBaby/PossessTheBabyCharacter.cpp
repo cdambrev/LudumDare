@@ -221,7 +221,7 @@ void APossessTheBabyCharacter::Attack()
 
 	FTimerHandle timerHandle;
 	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetMovementEnabled, true);
-	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, 1.f, false);
+	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, _attackDuration, false);
 
 	// tenter de toucher qqchose
 	ABaseEnemy* ennemy = GetCombatComponent()->TestAttackEnemy();

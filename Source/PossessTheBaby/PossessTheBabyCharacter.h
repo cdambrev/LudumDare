@@ -56,7 +56,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category=Sounds)
 	class USoundBase* WorldSwitchToggleDeniedSound = nullptr;
 
-	//float 1.f
+	UPROPERTY(EditAnywhere, Category = Gameplay)
+	float _attackDuration = 0.1f;
 	
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();
