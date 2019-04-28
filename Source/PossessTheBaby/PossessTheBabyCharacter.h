@@ -71,8 +71,6 @@ private:
 	void OnAnimationEnded();
 	void ToggleWorldState();
 
-	UWorldStateComponent* GetWorldState() const;
-
 	void Attack();
 	void AttackLeft();
 	void AttackRight();
@@ -80,6 +78,8 @@ private:
 	void SetMovementEnabled(bool enabled);
 
 	void PlayAnimAttack(bool right);
+
+	void OnDeath();
 
 	UPROPERTY(BlueprintGetter="GetHealth")
 	UHealthComponent* Health = nullptr;

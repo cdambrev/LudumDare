@@ -41,6 +41,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Sounds)
 	class USoundBase* AmbienceNightmare = nullptr;
 
+	UPROPERTY(EditAnywhere, Category = Sounds)
+	class USoundBase* WorldSwitch = nullptr;
+
 private:
 	EWorldState State = EWorldState::Dream;
 

@@ -17,6 +17,7 @@
 #include "Components/CombatComponent.h"
 #include "Components/FlickerComponent.h"
 #include "Components/AnimationComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -58,6 +59,14 @@ void ABaseCharacter::Tick(float DeltaTime)
 			Controller->SetControlRotation(FRotator(0.0f, 0.0f, 0.0f));
 		}
 	}
+
+	float speed = PlayerVelocity.Size();
+	_footStepTimer += DeltaTime * (speed / 100.0f);
+	if (_footStepTimer > FootStepPerMeter)
+	{
+		PlayFootStep();
+		_footStepTimer = 0.0f;
+	}
 }
 
 bool ABaseCharacter::GetFacingRight() const
@@ -83,4 +92,42 @@ UFlickerComponent* ABaseCharacter::GetFlicker() const
 UFakePerspectiveComponent* ABaseCharacter::GetFakePerspective() const
 {
 	return _fakePerspective;
+}
+
+UWorldStateComponent* ABaseCharacter::GetWorldStateComponent() const
+{
+	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+	return gameState->GetWorldState();
+}
+
+EWorldState ABaseCharacter::GetWorldState() const
+{
+	return GetWorldStateComponent()->GetWorldState();
+}
+
+void ABaseCharacter::PlayFoleySound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), FoleySound);
+}
+
+void ABaseCharacter::PlayHitSound()
+{
+	if (GetWorldState() == EWorldState::Dream)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), DreamHitSound);
+	}
+	else
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), NightmareHitSound);
+	}
+}
+
+void ABaseCharacter::PlayFootStep()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), FootStep);
+}
+
+void ABaseCharacter::PlayDieSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), DieSound);
 }
