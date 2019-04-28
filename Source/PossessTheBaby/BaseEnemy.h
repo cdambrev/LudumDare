@@ -51,6 +51,10 @@ public:
 
 	void ApplyDamage();
 
+	void SetIsDreamWorld(bool isDreamWorld);
+
+	bool GetIsDreamWorld() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -75,7 +79,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float soulsReward = 0.f;
-
+	
 private:
 
 	EEnemyStateMachine _currentState = EEnemyStateMachine::Wandering;
@@ -83,4 +87,6 @@ private:
 	bool _allowedToAttack = false;
 	
 	float _currentHp = 0;
+	
+	bool _isDreamWorld = false;
 };

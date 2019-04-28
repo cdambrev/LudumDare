@@ -90,3 +90,13 @@ void ABaseEnemy::ApplyDamage()
 	GetFlicker()->TintFlick(0.2f, FColor::Red);
 	_currentHp--;
 }
+
+void ABaseEnemy::SetIsDreamWorld(bool isDreamWorld)
+{
+	_isDreamWorld = isDreamWorld;
+}
+
+bool ABaseEnemy::GetIsDreamWorld() const
+{
+	return _isDreamWorld;
+}

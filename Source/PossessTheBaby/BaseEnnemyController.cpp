@@ -5,10 +5,32 @@
 #include "PossessTheBabyGameState.h"
 #include "PossessTheBabyCharacter.h"
 #include "Components/CombatComponent.h"
+#include "Components/WorldStateComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ABaseEnnemyController::ABaseEnnemyController()
 {
 	PrimaryActorTick.bCanEverTick = true;
+}
+
+void ABaseEnnemyController::BeginPlay()
+{
+	Super::BeginPlay();
+	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+	if (IsValid(gameState))
+	{
+		gameState->GetWorldState()->OnWorldStateChanged.AddUObject(this, &ABaseEnnemyController::OnPlayerChangedWorld);
+	}
+}
+
+void ABaseEnnemyController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+	if (IsValid(gameState))
+	{
+		gameState->GetWorldState()->OnWorldStateChanged.RemoveAll(this);
+	}
+	Super::EndPlay(EndPlayReason);
 }
 
 void ABaseEnnemyController::Tick(float DeltaTime)
@@ -21,6 +43,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 		switch (ennemy->getCurrentState())
 		{
 		case EEnemyStateMachine::Wandering:
+			ennemy->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 			ennemy->AddMovementInput(FVector(XComp, 0.f, FMath::FRandRange(-1.f, 1.f)));
 			ennemy->SetFacingRight(XComp > 0);
 			if (ennemy->canAttack())
@@ -69,6 +92,8 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 			ennemy->Destroy();
 			break;
 		case EEnemyStateMachine::Frozen:
+			ennemy->GetCharacterMovement()->StopActiveMovement();
+			break;
 		default:
 			break;
 		}
@@ -80,22 +105,18 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 	}
 }
 
-void ABaseEnnemyController::OnPlayerChangedWorld()
+void ABaseEnnemyController::OnPlayerChangedWorld(EWorldState worldState)
 {
 	ABaseEnemy* ennemy = Cast<ABaseEnemy>(GetPawn());
-	if (true /*player in this world*/)
+	if (IsValid(ennemy))
 	{
-		if (true /* player in reach*/)
+		if ((worldState == EWorldState::Dream && ennemy->GetIsDreamWorld()) || (worldState == EWorldState::Nightmare && !ennemy->GetIsDreamWorld()))
 		{
-			ennemy->SetCurrentState(EEnemyStateMachine::Attacking);
+			ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
 		}
 		else
 		{
-			ennemy->SetCurrentState(EEnemyStateMachine::Attacking);
+			ennemy->SetCurrentState(EEnemyStateMachine::Frozen);
 		}
-	}
-	else
-	{
-			ennemy->SetCurrentState(EEnemyStateMachine::Attacking);
 	}
 }
