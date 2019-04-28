@@ -235,7 +235,7 @@ bool APossessTheBabyCharacter::IsStun() const
 
 void APossessTheBabyCharacter::OnHit(float damage)
 {
-	if (CanGetHit())
+	if (CanGetHit() && !IsGettingHit())
 	{
 		GetHealth()->ApplyDamage(damage);
 		GetFlicker()->TintFlick(0.2f, FColor::Red);
