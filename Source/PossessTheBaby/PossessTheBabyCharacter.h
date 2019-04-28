@@ -42,6 +42,8 @@ public:
 
 	bool IsStun() const;
 
+	bool GetWantToAttack() const;
+
 	DECLARE_MULTICAST_DELEGATE(FOnDeath)
 	FOnDeath OnDeathDelegate;
 
@@ -89,6 +91,8 @@ private:
 	void PlayAnimAttack(bool right);
 
 	void OnDeath();
+
+	void SetWantToAttack(bool attack);
 	
 	UFUNCTION()
 	void OnAttackingEnd();
@@ -100,6 +104,6 @@ private:
 
 	bool _isBoundToDeath = false;
 
-	bool _isAttacking = false;
+	bool _wantToAttack = false;
 	bool _attackEnded = true;
 };

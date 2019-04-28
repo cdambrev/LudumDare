@@ -124,15 +124,16 @@ void APossessTheBabyCharacter::UpdateAnimation()
 			_isBoundToDeath = true;
 		}
 	}
-	else if (_isAttacking)
+	else if (GetWantToAttack() || !_attackEnded)
 	{
 		if (_attackEnded)
 		{
 			GetSprite()->SetLooping(false);
 			GetSprite()->SetFlipbook(HitAnimation);
 			GetSprite()->PlayFromStart();
-			GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnAttackingEnd);
+			SetWantToAttack(false);
 			_attackEnded = false;
+			GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnAttackingEnd);
 		}
 	}
 	else
@@ -233,7 +234,6 @@ void APossessTheBabyCharacter::AttackLeft()
 	{
 		PlayAnimAttack(false);
 		Attack();
-		_isAttacking = true;
 	}
 }
 
@@ -243,7 +243,6 @@ void APossessTheBabyCharacter::AttackRight()
 	{
 		PlayAnimAttack(true);
 		Attack();
-		_isAttacking = true;
 	}
 }
 
@@ -251,6 +250,7 @@ void APossessTheBabyCharacter::Attack()
 {
 	// jouer animation et stopper le player pour le temps de l'anim
 	GetCharacterMovement()->StopActiveMovement();
+	SetWantToAttack(true);
 	SetAttackEnabled(false);
 
 	// tenter de toucher qqchose
@@ -296,7 +296,18 @@ bool APossessTheBabyCharacter::IsDead() const
 
 void APossessTheBabyCharacter::OnAttackingEnd()
 {
-	_isAttacking = false;
+	GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &APossessTheBabyCharacter::OnAttackingEnd);
+	_wantToAttack = false;
 	_attackEnded = true;
 	SetAttackEnabled(true);
+}
+
+void APossessTheBabyCharacter::SetWantToAttack(bool attack)
+{
+	_wantToAttack = attack;
+}
+
+bool APossessTheBabyCharacter::GetWantToAttack() const
+{
+	return _wantToAttack;
 }
