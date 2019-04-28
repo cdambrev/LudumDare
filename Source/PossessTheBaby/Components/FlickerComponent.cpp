@@ -35,11 +35,22 @@ void UFlickerComponent::TickComponent(float deltaSeconds, ELevelTick tickType, F
 	_sprite->SetSpriteColor(_color);
 }
 
-void UFlickerComponent::Flick(float duration, FLinearColor color)
+void UFlickerComponent::TintFlick(float duration, FLinearColor color)
 {
 	SetComponentTickEnabled(true);
 	_duration = duration;
+	_timeLeft = duration;
 	_color = color;
 	_color.A = 0.0f;
+	_type = FlickType::Tint;
+}
+
+void UFlickerComponent::Flick(float rate, float duration)
+{
+	SetComponentTickEnabled(true);
+	_duration = duration;
+	_timeLeft = duration;
+	_color.A = 0.0f;
+	_type = FlickType::Flicker;
 }
 

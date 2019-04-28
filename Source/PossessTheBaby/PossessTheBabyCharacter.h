@@ -26,6 +26,7 @@ class APossessTheBabyCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
 
+public:
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta=(AllowPrivateAccess="true"))
 	class UCameraComponent* SideViewCameraComponent;
@@ -38,6 +39,16 @@ class APossessTheBabyCharacter : public APaperCharacter
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
+	
+	UFUNCTION(BlueprintGetter)
+	UHealthComponent* GetHealth() const;
+
+	// Receive a hit.
+	void OnHit(float damage);
+
+	bool IsStun() const;
+
+	bool GetFacingRight() const;
 
 protected:
 	// The animation to play while running around
@@ -47,6 +58,10 @@ protected:
 	// The animation to play while idle (standing still)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* IdleAnimation;
+
+	// The animation to play while idle (standing still)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* DieAnimation;
 
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();
@@ -62,13 +77,15 @@ protected:
 	// End of APawn interface
 
 private:
+	UFUNCTION()
+	void OnAnimationEnded();
 	void ToggleWorldState();
 
 	UWorldStateComponent* GetWorldState() const;
 
-	void AttackLeft();
+	void AttackLeft(float Value);
 
-	void AttackRight();
+	void AttackRight(float Value);
 
 	void SetMovementEnabled(bool enabled);
 
@@ -88,6 +105,8 @@ private:
 	UPROPERTY()
 	UFlickerComponent* _flicker = nullptr;
 
+	float _stunDuration = 0.0f;
+
 public:
 	APossessTheBabyCharacter();
 
@@ -96,8 +115,5 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	
-	UFUNCTION(BlueprintGetter)
-	UHealthComponent* GetHealth() const;
-
 	UCombatComponent* GetCombatComponent() const;
 };

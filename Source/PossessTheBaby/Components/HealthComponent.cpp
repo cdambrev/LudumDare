@@ -65,6 +65,8 @@ void UHealthComponent::SetDreamPoints(float value)
 	DreamPoints = FMath::Max(0.0f, value);
 	OnDreamPointsChanged.Broadcast(GetDreamPoints());
 	OnDreamPointsPercentChanged.Broadcast(GetDreamPointsPercent());
+
+	UpdateDeath();
 }
 
 float UHealthComponent::GetNightmarePoints() const
@@ -82,4 +84,14 @@ void UHealthComponent::SetNightmarePoints(float value)
 	NightmarePoints = FMath::Max(0.0f, value);
 	OnNightmarePointsChanged.Broadcast(GetNightmarePoints());
 	OnNightmarePointsPercentChanged.Broadcast(GetNightmarePointsPercent());
+
+	UpdateDeath();
+}
+
+void UHealthComponent::UpdateDeath()
+{
+	if (IsDead())
+	{
+		OnDeath.Broadcast();
+	}
 }
