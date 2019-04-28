@@ -7,6 +7,7 @@
 #include "BaseEnnemyController.generated.h"
 
 class ABaseEnemy;
+enum class EWorldState : uint8;
 /**
  * 
  */
@@ -23,9 +24,13 @@ public:
 	ABaseEnnemyController();
 	
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void BeginPlay() override;
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 private:
 
-	void OnPlayerChangedWorld();
+	void OnPlayerChangedWorld(EWorldState worldState);
 
 };

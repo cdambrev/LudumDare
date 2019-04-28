@@ -110,3 +110,13 @@ void ABaseEnemy::ApplyDamage()
 {
 	_currentHp--;
 }
+
+void ABaseEnemy::SetIsDreamWorld(bool isDreamWorld)
+{
+	_isDreamWorld = isDreamWorld;
+}
+
+bool ABaseEnemy::GetIsDreamWorld() const
+{
+	return _isDreamWorld;
+}

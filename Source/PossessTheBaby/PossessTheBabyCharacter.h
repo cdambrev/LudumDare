@@ -83,9 +83,9 @@ private:
 
 	UWorldStateComponent* GetWorldState() const;
 
-	void AttackLeft(float Value);
+	void AttackLeft();
 
-	void AttackRight(float Value);
+	void AttackRight();
 
 	void SetMovementEnabled(bool enabled);
 

@@ -137,11 +137,11 @@ void APossessTheBabyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 {
 	// Note: the 'Jump' action and the 'MoveRight' axis are bound to actual keys/buttons/sticks in DefaultInput.ini (editable from Project Settings..Input)
 	PlayerInputComponent->BindAction("ToggleWorldState", IE_Pressed, this, &APossessTheBabyCharacter::ToggleWorldState);
+	PlayerInputComponent->BindAction("AttackLeft", IE_Pressed, this, &APossessTheBabyCharacter::AttackLeft);
+	PlayerInputComponent->BindAction("AttackRight", IE_Pressed, this, &APossessTheBabyCharacter::AttackRight);
 
 	PlayerInputComponent->BindAxis("MoveRight", this, &APossessTheBabyCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("MoveUp", this, &APossessTheBabyCharacter::MoveUp);
-	PlayerInputComponent->BindAxis("AttackLeft", this, &APossessTheBabyCharacter::AttackLeft);
-	PlayerInputComponent->BindAxis("AttackRight", this, &APossessTheBabyCharacter::AttackRight);
 }
 
 void APossessTheBabyCharacter::MoveRight(float Value)
@@ -208,7 +208,7 @@ void APossessTheBabyCharacter::OnHit(float damage)
 	_stunDuration = 0.5f;
 }
 
-void APossessTheBabyCharacter::AttackLeft(float Value)
+void APossessTheBabyCharacter::AttackLeft()
 {
 	// jouer animation et stopper le player pour le temps de l'anim
 	GetCharacterMovement()->StopActiveMovement();
@@ -223,7 +223,7 @@ void APossessTheBabyCharacter::AttackLeft(float Value)
 	_combat->AttackEnemy(ennemy);
 }
 
-void APossessTheBabyCharacter::AttackRight(float Value)
+void APossessTheBabyCharacter::AttackRight()
 {
 	// jouer animation et stopper le player pour le temps de l'anim
 	GetCharacterMovement()->StopActiveMovement();

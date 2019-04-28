@@ -101,12 +101,20 @@ void UEnemiesManager::SpawnNewEnnemy(bool strong)
 			{
 				controller->OnEnnemyDied.AddUObject(this, &UEnemiesManager::OnEnnemyDied);
 			}
+			ennemy->SetIsDreamWorld(_isForDream);
 			_ennemiesOnScreen.Add(ennemy);
 		}
 		else
 		{
 			FActorSpawnParameters spawnParameters;
-			_ennemiesOnScreen.Add(GetWorld()->SpawnActor<ABaseEnemy>(lightMonsterClass, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator, spawnParameters));
+			ABaseEnemy* ennemy = GetWorld()->SpawnActor<ABaseEnemy>(lightMonsterClass, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator, spawnParameters);
+			ABaseEnnemyController* controller = Cast<ABaseEnnemyController>(ennemy->GetController());
+			if (IsValid(controller))
+			{
+				controller->OnEnnemyDied.AddUObject(this, &UEnemiesManager::OnEnnemyDied);
+			}
+			ennemy->SetIsDreamWorld(_isForDream);
+			_ennemiesOnScreen.Add(ennemy);
 		}
 	}
 }
