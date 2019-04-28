@@ -322,7 +322,7 @@ bool APossessTheBabyCharacter::IsDead() const
 
 void APossessTheBabyCharacter::OnAttackingEnd()
 {
-	GetSprite()->OnFinishedPlaying.RemoveDynamic(this,&APossessTheBabyCharacter::OnAttackingEnd);
+	GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &APossessTheBabyCharacter::OnAttackingEnd);
 	_wantToAttack = false;
 	_attackEnded = true;
 	SetAttackEnabled(true);
@@ -342,7 +342,6 @@ void APossessTheBabyCharacter::OnGettingHitEnded()
 {
 	SetCanGetHit(true);
 	SetGettingHit(false);
-	GetSprite()->OnFinishedPlaying.RemoveDynamic(this,&APossessTheBabyCharacter::OnGettingHitEnded);
 }
 
 bool APossessTheBabyCharacter::CanGetHit() const
