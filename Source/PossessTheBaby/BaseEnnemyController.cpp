@@ -7,6 +7,8 @@
 #include "Components/CombatComponent.h"
 #include "Components/WorldStateComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/WorldLimitsComponent.h"
+#include "Components/FakePerspectiveComponent.h"
 
 ABaseEnnemyController::ABaseEnnemyController()
 {
@@ -40,62 +42,84 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 	if (IsValid(ennemy))
 	{
 		float XComp = FMath::FRandRange(-1.f, 1.f);
-		switch (ennemy->getCurrentState())
+		APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+		if (IsValid(gameState))
 		{
-		case EEnemyStateMachine::Wandering:
-			ennemy->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-			ennemy->AddMovementInput(FVector(XComp, 0.f, FMath::FRandRange(-1.f, 1.f)));
-			ennemy->SetFacingRight(XComp > 0);
-			if (ennemy->canAttack())
+			switch (ennemy->getCurrentState())
 			{
-				ennemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
-			}
-			break;
-		case EEnemyStateMachine::MovingToPlayer:
-			if (!ennemy->canAttack())
-			{
-				ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
-			}
-			else
-			{
-				if (!ennemy->GetCombatComponent()->TestAttackHero()) // out of reach
+			case EEnemyStateMachine::Spawning:
+				if (gameState->GetWorldLimits()->IsInWorldLimits(ennemy->GetActorLocation()))
 				{
-					APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
-					APossessTheBabyCharacter* player = gameState->GetPlayer();
-					FVector distanceToPlayer = player->GetActorLocation() - ennemy->GetActorLocation();
-					distanceToPlayer.Y = 0;
-					ennemy->SetFacingRight(distanceToPlayer.X > 0);
-					ennemy->AddMovementInput(distanceToPlayer);
+					ennemy->getFakePerspective()->SetRestrictInX(true);
+					ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
 				}
 				else
 				{
-					ennemy->SetCurrentState(EEnemyStateMachine::Attacking);
+					if (ennemy->GetActorLocation().X < 0)
+					{
+						ennemy->AddMovementInput(FVector(100.f, 0.f, 0.f));
+					}
+					else
+					{
+						ennemy->AddMovementInput(FVector(-100.f, 0.f, 0.f));
+					}
 				}
+				break;
+			case EEnemyStateMachine::Wandering:
+				ennemy->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+				ennemy->AddMovementInput(FVector(XComp, 0.f, FMath::FRandRange(-1.f, 1.f)));
+				ennemy->SetFacingRight(XComp > 0);
+				if (ennemy->canAttack())
+				{
+					ennemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
+				}
+				break;
+			case EEnemyStateMachine::MovingToPlayer:
+				if (!ennemy->canAttack())
+				{
+					ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
+				}
+				else
+				{
+					if (!ennemy->GetCombatComponent()->TestAttackHero()) // out of reach
+					{
+						APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+						APossessTheBabyCharacter* player = gameState->GetPlayer();
+						FVector distanceToPlayer = player->GetActorLocation() - ennemy->GetActorLocation();
+						distanceToPlayer.Y = 0;
+						ennemy->SetFacingRight(distanceToPlayer.X > 0);
+						ennemy->AddMovementInput(distanceToPlayer);
+					}
+					else
+					{
+						ennemy->SetCurrentState(EEnemyStateMachine::Attacking);
+					}
+				}
+				break;
+			case EEnemyStateMachine::Attacking:
+				if (!ennemy->canAttack())
+				{
+					ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
+				}
+				else if (!ennemy->GetCombatComponent()->TestAttackHero())
+				{
+					ennemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
+				}
+				else
+				{
+					// animation
+					ennemy->GetCombatComponent()->AttackHero();
+				}
+				break;
+			case EEnemyStateMachine::Dead:
+				ennemy->Destroy();
+				break;
+			case EEnemyStateMachine::Frozen:
+				ennemy->GetCharacterMovement()->StopActiveMovement();
+				break;
+			default:
+				break;
 			}
-			break;
-		case EEnemyStateMachine::Attacking:
-			if (!ennemy->canAttack())
-			{
-				ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
-			}
-			else if (!ennemy->GetCombatComponent()->TestAttackHero())
-			{
-				ennemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
-			}
-			else
-			{
-				// animation
-				ennemy->GetCombatComponent()->AttackHero();
-			}
-			break;
-		case EEnemyStateMachine::Dead:
-			ennemy->Destroy();
-			break;
-		case EEnemyStateMachine::Frozen:
-			ennemy->GetCharacterMovement()->StopActiveMovement();
-			break;
-		default:
-			break;
 		}
 		if (ennemy->GetCurrentHp() <= 0 && ennemy->getCurrentState() != EEnemyStateMachine::Dead)
 		{

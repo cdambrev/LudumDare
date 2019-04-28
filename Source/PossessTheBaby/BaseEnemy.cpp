@@ -28,6 +28,7 @@ void ABaseEnemy::BeginPlay()
 	GetSprite()->SetSpriteColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.0f));
 
 	_currentHp = maxHp;
+	GetCharacterMovement()->MaxFlySpeed = speed;
 }
 
 // Called every frame
@@ -119,4 +120,9 @@ void ABaseEnemy::SetIsDreamWorld(bool isDreamWorld)
 bool ABaseEnemy::GetIsDreamWorld() const
 {
 	return _isDreamWorld;
+}
+
+UFakePerspectiveComponent* ABaseEnemy::getFakePerspective() const
+{
+	return _fakePerspective;
 }

@@ -45,3 +45,8 @@ float UWorldLimitsComponent::GetMaxZ() const
 {
 	return _maxZ;
 }
+
+bool UWorldLimitsComponent::IsInWorldLimits(FVector position) const
+{
+	return position.X < _maxX&& position.X > _minX&& position.Z < _maxZ&& position.Z > _minZ;
+}

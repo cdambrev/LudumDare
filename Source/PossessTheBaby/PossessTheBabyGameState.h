@@ -35,6 +35,8 @@ public:
 
 	UFUNCTION(BlueprintGetter, Category = "World Limits")
 	UWorldLimitsComponent* GetWorldLimits() const;
+	
+	FVector GetRandomSpawnPoint() const;
 
 private:
 	UPROPERTY(BlueprintGetter= GetWorldState)

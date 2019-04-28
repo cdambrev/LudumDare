@@ -29,6 +29,8 @@ public:
 	UFUNCTION(BlueprintGetter, Category = "Settings")
 	float GetMaxZ() const;
 
+	bool IsInWorldLimits(FVector position) const;
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintGetter=GetMinX, Category = "Settings")
 	float _minX = -925.0f;

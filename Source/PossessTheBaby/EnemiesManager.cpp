@@ -12,6 +12,7 @@
 #include "Engine/World.h"
 #include "PossessTheBabyCharacter.h"
 #include "BaseEnnemyController.h"
+#include "Components/FakePerspectiveComponent.h"
 
 // Sets default values
 UEnemiesManager::UEnemiesManager()
@@ -96,25 +97,29 @@ void UEnemiesManager::SpawnNewEnnemy(bool strong)
 		if (strong)
 		{
 			FActorSpawnParameters spawnParameters;
-			ABaseEnemy* ennemy = GetWorld()->SpawnActor<ABaseEnemy>(strongMonsterClass, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator, spawnParameters);
+			APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+			ABaseEnemy* ennemy = GetWorld()->SpawnActor<ABaseEnemy>(strongMonsterClass, gameState->GetRandomSpawnPoint(), FRotator::ZeroRotator, spawnParameters);
 			ABaseEnnemyController* controller = Cast<ABaseEnnemyController>(ennemy->GetController());
 			if (IsValid(controller))
 			{
 				controller->OnEnnemyDied.AddUObject(this, &UEnemiesManager::OnEnnemyDied);
 			}
 			ennemy->SetIsDreamWorld(_isForDream);
+			ennemy->getFakePerspective()->SetRestrictInX(false);
 			_ennemiesOnScreen.Add(ennemy);
 		}
 		else
 		{
 			FActorSpawnParameters spawnParameters;
-			ABaseEnemy* ennemy = GetWorld()->SpawnActor<ABaseEnemy>(lightMonsterClass, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator, spawnParameters);
+			APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+			ABaseEnemy* ennemy = GetWorld()->SpawnActor<ABaseEnemy>(lightMonsterClass, gameState->GetRandomSpawnPoint(), FRotator::ZeroRotator, spawnParameters);
 			ABaseEnnemyController* controller = Cast<ABaseEnnemyController>(ennemy->GetController());
 			if (IsValid(controller))
 			{
 				controller->OnEnnemyDied.AddUObject(this, &UEnemiesManager::OnEnnemyDied);
 			}
 			ennemy->SetIsDreamWorld(_isForDream);
+			ennemy->getFakePerspective()->SetRestrictInX(false);
 			_ennemiesOnScreen.Add(ennemy);
 		}
 	}
@@ -129,7 +134,7 @@ void UEnemiesManager::InitializeWave()
 	GetOwner()->GetWorldTimerManager().SetTimer(_spawnLightMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 5.f);
 	
 	FTimerDelegate SpawnStrongEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &UEnemiesManager::SpawnNewEnnemy, true);
-	GetOwner()->GetWorldTimerManager().SetTimer(_spawnStrongMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 7.f);
+	GetOwner()->GetWorldTimerManager().SetTimer(_spawnStrongMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 12.f);
 }
 
 UWorldStateComponent* UEnemiesManager::GetWorldStateComponent() const

@@ -44,3 +44,20 @@ UWorldLimitsComponent* APossessTheBabyGameState::GetWorldLimits() const
 {
 	return _worldLimits;
 }
+
+FVector APossessTheBabyGameState::GetRandomSpawnPoint() const
+{
+	FVector spawnPoint;
+	UWorldLimitsComponent* worldLimits = GetWorldLimits();
+	int32 leftSide = FMath::FRandRange(0, 1.9);
+	if (leftSide == 1)
+	{
+		spawnPoint.X = worldLimits->GetMinX() - 100.f;
+	}
+	else
+	{
+		spawnPoint.X = worldLimits->GetMaxX() + 100.f;
+	}
+	spawnPoint.Z = FMath::FRandRange(worldLimits->GetMinZ(), worldLimits->GetMaxZ());
+	return spawnPoint;
+}

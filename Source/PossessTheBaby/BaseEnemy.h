@@ -17,7 +17,8 @@ enum class EEnemyStateMachine : uint8
 	MovingToPlayer,
 	Attacking,
 	GettingHit,
-	Dead
+	Dead,
+	Spawning
 };
 
 UCLASS()
@@ -61,6 +62,8 @@ public:
 
 	bool GetIsDreamWorld() const;
 
+	UFakePerspectiveComponent* getFakePerspective() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -88,7 +91,7 @@ protected:
 	
 private:
 
-	EEnemyStateMachine _currentState = EEnemyStateMachine::Wandering;
+	EEnemyStateMachine _currentState = EEnemyStateMachine::Spawning;
 
 	bool _allowedToAttack = false;
 	
