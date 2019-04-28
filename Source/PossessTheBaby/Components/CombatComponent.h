@@ -25,6 +25,11 @@ public:
 
 	void AttackEnemy(ABaseEnemy* ennemy);
 
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnSuccessfulHit, int32)
+	FOnSuccessfulHit OnSuccessfulHit;
+
+	int32 GetSuccessfulHit() const;
+
 protected:
 	UPROPERTY(EditAnywhere, Category="Settings")
 	float _precisionZ = 50.0f;
@@ -41,4 +46,6 @@ protected:
 private:
 	UEnemiesManager* GetEnemyManager() const;
 	bool CanHit(const FVector& attackerLocation, bool isAttackerFacingRight, const FVector& attackeeLocation, float precisionX, float percisionZ) const;
+
+	int32 _successfulHit = 0;
 };
