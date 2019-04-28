@@ -28,6 +28,8 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	virtual void UpdateControlRotation(float DeltaTime, bool bUpdatePawn = true) override final;
 	
 private:
 

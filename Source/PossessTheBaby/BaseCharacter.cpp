@@ -39,6 +39,27 @@ void ABaseCharacter::BeginPlay()
 	GetSprite()->SetSpriteColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.0f));
 }
 
+void ABaseCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	// Now setup the rotation of the controller based on the direction we are travelling.
+	const FVector PlayerVelocity = GetVelocity();
+	float TravelDirection = PlayerVelocity.X;
+	// Set the rotation so that the character faces his direction of travel.
+	if (Controller != nullptr)
+	{
+		if (TravelDirection < 0.0f)
+		{
+			Controller->SetControlRotation(FRotator(0.0, 180.0f, 0.0f));
+		}
+		else if (TravelDirection > 0.0f)
+		{
+			Controller->SetControlRotation(FRotator(0.0f, 0.0f, 0.0f));
+		}
+	}
+}
+
 bool ABaseCharacter::GetFacingRight() const
 {
 	return _facingRight;

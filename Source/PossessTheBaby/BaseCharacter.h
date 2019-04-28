@@ -41,6 +41,7 @@ public:
 	ABaseCharacter();
 
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 
 	UCombatComponent* GetCombatComponent() const;
 	UFakePerspectiveComponent* GetFakePerspective() const;

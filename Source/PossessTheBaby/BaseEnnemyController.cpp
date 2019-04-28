@@ -127,6 +127,9 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 			OnEnnemyDied.Broadcast(ennemy);
 		}
 	}
+
+
+	ennemy->FaceRotation(GetControlRotation(), DeltaTime);
 }
 
 void ABaseEnnemyController::OnPlayerChangedWorld(EWorldState worldState)
@@ -144,3 +147,5 @@ void ABaseEnnemyController::OnPlayerChangedWorld(EWorldState worldState)
 		}
 	}
 }
+
+void ABaseEnnemyController::UpdateControlRotation(float DeltaTime, bool bUpdatePawn) {}
