@@ -16,6 +16,7 @@
 #include "Components/CombatComponent.h"
 #include "Components/FlickerComponent.h"
 #include "Components/AnimationComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -144,7 +145,10 @@ void APossessTheBabyCharacter::MoveRight(float Value)
 {
 	// Apply the input to the character motion
 	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
-	SetFacingRight(Value > 0);
+	if (FMath::Abs(Value) > 0.1f)
+	{
+		SetFacingRight(Value > 0);
+	}
 }
 
 void APossessTheBabyCharacter::MoveUp(float Value)
@@ -202,32 +206,27 @@ void APossessTheBabyCharacter::OnHit(float damage)
 	GetHealth()->ApplyDamage(damage);
 	GetFlicker()->TintFlick(0.2f, FColor::Red);
 	_stunDuration = 0.5f;
+	UGameplayStatics::PlaySound2D(GetWorld(), HitSound);
 }
 
 void APossessTheBabyCharacter::AttackLeft()
 {
-	// jouer animation et stopper le player pour le temps de l'anim
-	GetCharacterMovement()->StopActiveMovement();
-	GetCharacterMovement()->SetMovementMode(MOVE_None);
 	PlayAnimAttack(false);
-	FTimerHandle timerHandle;
-	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetMovementEnabled, true);
-	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, 1.f, false);
-	
-	// tenter de toucher qqchose
-	ABaseEnemy* ennemy = GetCombatComponent()->TestAttackEnemy();
-	if (ennemy != nullptr)
-	{
-		GetCombatComponent()->AttackEnemy(ennemy);
-	}
+	Attack();
 }
 
 void APossessTheBabyCharacter::AttackRight()
 {
+	PlayAnimAttack(true);
+	Attack();
+}
+
+void APossessTheBabyCharacter::Attack()
+{
 	// jouer animation et stopper le player pour le temps de l'anim
 	GetCharacterMovement()->StopActiveMovement();
 	GetCharacterMovement()->SetMovementMode(MOVE_None);
-	PlayAnimAttack(true);
+
 	FTimerHandle timerHandle;
 	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetMovementEnabled, true);
 	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, 1.f, false);
@@ -238,6 +237,8 @@ void APossessTheBabyCharacter::AttackRight()
 	{
 		GetCombatComponent()->AttackEnemy(ennemy);
 	}
+
+	UGameplayStatics::PlaySound2D(GetWorld(), PunchSound);
 }
 
 void APossessTheBabyCharacter::SetMovementEnabled(bool enabled)
