@@ -12,6 +12,17 @@ class UHealthComponent;
 class UFakePerspectiveComponent;
 class UCombatComponent;
 class UFlickerComponent;
+class UAnimationComponent;
+
+UENUM(BlueprintType)
+enum class EAnimState : uint8
+{
+	Idle,
+	Running, 
+	Punching,
+	Hit,
+	Death
+};
 
 /**
  * This class is the default character for PossessTheBaby, and it is responsible for all
@@ -26,13 +37,8 @@ class APossessTheBabyCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
 
-	/** Side view camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta=(AllowPrivateAccess="true"))
-	class UCameraComponent* SideViewCameraComponent;
-
-	/** Camera boom positioning the camera beside the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+public:
+	APossessTheBabyCharacter();
 
 	UTextRenderComponent* TextComponent;
 	virtual void Tick(float DeltaSeconds) override;
@@ -93,16 +99,8 @@ private:
 	UPROPERTY()
 	UFlickerComponent* _flicker = nullptr;
 
+	UPROPERTY()
+	UAnimationComponent* _animationComponent = nullptr;
+
 	float _stunDuration = 0.0f;
-
-public:
-	APossessTheBabyCharacter();
-
-	/** Returns SideViewCameraComponent subobject **/
-	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	
-	UFUNCTION(BlueprintGetter)
-	UHealthComponent* GetHealth() const;
 };

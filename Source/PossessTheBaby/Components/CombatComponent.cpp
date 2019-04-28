@@ -28,8 +28,13 @@ bool UCombatComponent::TestAttackHero() const
 		APossessTheBabyCharacter* player = gameState->GetPlayer();
 		FVector playerLocation = player->GetActorLocation();
 		FVector ennemyLocation = enemy->GetActorLocation();
-		if (FMath::Abs(playerLocation.X - ennemyLocation.X) < 100.f && FMath::Abs(playerLocation.Z - ennemyLocation.Z) < _precision
-			&& (ennemyLocation.X - playerLocation.X > 0 && !enemy->GetFacingRight() || ennemyLocation.X - playerLocation.X < 0 && enemy->GetFacingRight()))
+		float diffX = ennemyLocation.X - playerLocation.X;
+		bool enemyOnRight = diffX > 0.0f;
+		float distanceX = FMath::Abs(diffX);
+		float distanceZ = FMath::Abs(playerLocation.Z - ennemyLocation.Z);
+		if (distanceX < 100.f
+			&& distanceZ < _precision
+			&& (enemyOnRight != enemy->GetFacingRight()))
 		{
 			canAttack = true;
 		}
@@ -48,10 +53,7 @@ void UCombatComponent::AttackHero()
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	APossessTheBabyCharacter* player = gameState->GetPlayer();
 	ABaseEnemy* enemy = Cast<ABaseEnemy>(GetOwner());
-	if (IsValid(enemy))
-	{
-		player->GetHealth()->ApplyDamage(enemy->GetHitPoints());
-	}
+	player->OnHit(enemy->GetHitPoints());
 }
 
 void UCombatComponent::AttackEnemy(ABaseEnemy* ennemy)

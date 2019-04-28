@@ -28,5 +28,5 @@ public:
 private:
 	UEnemiesManager* GetEnemyManager() const;
 
-	float _precision = 0.01;
+	float _precision = 0.01f;
 };

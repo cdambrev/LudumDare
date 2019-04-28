@@ -49,6 +49,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 					ennemy->SetCurrentState(EEnemyStateMachine::Attacking);
 				}
 			}
+			break;
 		case EEnemyStateMachine::Attacking:
 			if (!ennemy->canAttack())
 			{

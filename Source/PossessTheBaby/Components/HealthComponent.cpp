@@ -47,7 +47,8 @@ void UHealthComponent::ApplyDamage(float value)
 
 bool UHealthComponent::IsDead() const
 {
-	return DreamPoints <= 0.0f && NightmarePoints <= 0.0f;
+	return (DreamPoints <= 0.0f && _worldState->IsInDreamWorld()) 
+		|| (NightmarePoints <= 0.0f && _worldState->IsInNightmareWorld());
 }
 
 float UHealthComponent::GetDreamPoints() const
