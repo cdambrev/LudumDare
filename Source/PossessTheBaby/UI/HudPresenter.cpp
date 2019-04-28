@@ -26,13 +26,13 @@ void UHudPresenter::SetWorldStateComponent(UWorldStateComponent* worldState)
 {
 	if (IsValid(_worldState))
 	{
-		_worldState->OnWorldStateChanged.Remove(_onWorldStateChangedHandle);
+		_worldState->OnWorldStateChanged.RemoveDynamic(this, &UHudPresenter::OnWorldStateChanged);
 		_onDreamPointsChangedHandle.Reset();
 	}
 	_worldState = worldState;
 	if (IsValid(_worldState))
 	{
-		_onWorldStateChangedHandle = _worldState->OnWorldStateChanged.AddUObject(this, &UHudPresenter::OnWorldStateChanged);
+		_worldState->OnWorldStateChanged.AddDynamic(this, &UHudPresenter::OnWorldStateChanged);
 		OnWorldStateChanged(_worldState->GetWorldState());
 	}
 }

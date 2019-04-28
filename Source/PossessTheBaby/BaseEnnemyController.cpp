@@ -21,7 +21,7 @@ void ABaseEnnemyController::BeginPlay()
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	if (IsValid(gameState))
 	{
-		gameState->GetWorldState()->OnWorldStateChanged.AddUObject(this, &ABaseEnnemyController::OnPlayerChangedWorld);
+		gameState->GetWorldState()->OnWorldStateChanged.AddDynamic(this, &ABaseEnnemyController::OnPlayerChangedWorld);
 	}
 }
 
@@ -30,7 +30,7 @@ void ABaseEnnemyController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	if (IsValid(gameState))
 	{
-		gameState->GetWorldState()->OnWorldStateChanged.RemoveAll(this);
+		gameState->GetWorldState()->OnWorldStateChanged.RemoveDynamic(this, &ABaseEnnemyController::OnPlayerChangedWorld);
 	}
 	Super::EndPlay(EndPlayReason);
 }

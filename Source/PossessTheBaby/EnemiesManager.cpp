@@ -6,7 +6,6 @@
 
 #include "CoreMinimal.h"
 #include "TimerManager.h"
-#include "Components/WorldStateComponent.h"
 #include "PossessTheBabyGameMode.h"
 #include "PossessTheBabyGameState.h"
 #include "Engine/World.h"
@@ -28,7 +27,7 @@ void UEnemiesManager::BeginPlay()
 	Super::BeginPlay();
 	InitializeWave();
 
-	GetWorldStateComponent()->OnWorldStateChanged.AddUObject(this, &UEnemiesManager::OnWorldStateChanged);
+	GetWorldStateComponent()->OnWorldStateChanged.AddDynamic(this, &UEnemiesManager::OnWorldStateChanged);
 }
 
 void UEnemiesManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
