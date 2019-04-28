@@ -13,6 +13,7 @@
 #include "PossessTheBabyCharacter.h"
 #include "BaseEnnemyController.h"
 #include "Components/FakePerspectiveComponent.h"
+#include "Components/HealthComponent.h"
 
 // Sets default values
 UEnemiesManager::UEnemiesManager()
@@ -135,6 +136,12 @@ void UEnemiesManager::InitializeWave()
 	
 	FTimerDelegate SpawnStrongEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &UEnemiesManager::SpawnNewEnnemy, true);
 	GetOwner()->GetWorldTimerManager().SetTimer(_spawnStrongMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 12.f);
+
+	if (!_isForDream)
+	{
+		GetOwner()->GetWorldTimerManager().PauseTimer(_spawnLightMonsterHandle);
+		GetOwner()->GetWorldTimerManager().PauseTimer(_spawnStrongMonsterHandle);
+	}
 }
 
 UWorldStateComponent* UEnemiesManager::GetWorldStateComponent() const
@@ -178,5 +185,18 @@ const TArray<ABaseEnemy*>& UEnemiesManager::GetEnemiesOnScreen() const
 
 void UEnemiesManager::OnEnnemyDied(ABaseEnemy* ennemy)
 {
+	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+	if (IsValid(gameState))
+	{
+		APossessTheBabyCharacter* player = gameState->GetPlayer();
+		if (_isForDream)
+		{
+			player->GetHealth()->AddNightmarePoints(ennemy->GetSoulsRewarded());
+		}
+		else
+		{
+			player->GetHealth()->AddDreamPoints(ennemy->GetSoulsRewarded());
+		}
+	}
 	_ennemiesOnScreen.RemoveSingle(ennemy);
 }

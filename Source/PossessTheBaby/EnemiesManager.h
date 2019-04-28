@@ -38,6 +38,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Properties")
 	TSubclassOf<ABaseEnemy> strongMonsterClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category= "Properties")
+	bool _isForDream = false;
 
 private:
 
@@ -60,6 +63,4 @@ private:
 
 	FTimerHandle _spawnLightMonsterHandle;
 	FTimerHandle _spawnStrongMonsterHandle;
-
-	bool _isForDream = false;
 };

@@ -40,12 +40,14 @@ public:
 	UFUNCTION(BlueprintGetter, Category="State")
 	float GetDreamPoints() const;
 	float GetDreamPointsPercent() const;
+	void AddDreamPoints(float points);
 	FOnFloatChanged OnDreamPointsChanged;
 	FOnFloatChanged OnDreamPointsPercentChanged;
 
 	UFUNCTION(BlueprintGetter, Category = "State")
 	float GetNightmarePoints() const;
 	float GetNightmarePointsPercent() const;
+	void AddNightmarePoints(float points);
 	FOnFloatChanged OnNightmarePointsChanged;
 	FOnFloatChanged OnNightmarePointsPercentChanged;
 

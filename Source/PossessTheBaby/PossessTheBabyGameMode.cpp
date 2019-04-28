@@ -20,8 +20,6 @@ APossessTheBabyGameMode::APossessTheBabyGameMode()
 void APossessTheBabyGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	_dreamWorldEnnemiesManager->SetIsForDream(true);
-	_nightmareEnnemiesManager->SetIsForDream(false);
 }
 
 FLevelData APossessTheBabyGameMode::GetLevelData() const
