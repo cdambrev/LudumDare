@@ -46,6 +46,8 @@ public:
 
 	float GetCurrentHp() const;
 
+	bool IsDead() const;
+
 	float GetHitPoints() const;
 
 	float GetSoulsRewarded() const;
@@ -70,6 +72,10 @@ protected:
 	// The animation to play while idle (standing still)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	UPaperFlipbook* IdleAnimation;
+
+	// The animation to play while idle (standing still)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* DieAnimation;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float speed = 0.f;

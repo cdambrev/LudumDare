@@ -31,6 +31,7 @@ ABaseEnemy* UCombatComponent::TestAttackEnemy() const
 
 bool UCombatComponent::TestAttackHero() const
 {
+	return false;
 	bool canHit = false;
 	ABaseEnemy* enemy = Cast<ABaseEnemy>(GetOwner());
 	if (IsValid(enemy))
@@ -52,8 +53,8 @@ bool UCombatComponent::CanHit(const FVector& attackerLocation, bool isAttackerFa
 	bool onRight = diffX > 0.0f;
 	float distanceX = FMath::Abs(diffX);
 	float distanceZ = FMath::Abs(attackerLocation.Z - attackeeLocation.Z);
-	result = distanceX < 100.f
-		&& distanceZ < _precision
+	result = distanceX < 30000.0f
+		&& distanceZ < 30000.0f
 		&& (onRight != isAttackerFacingRight);
 	return result;
 }
