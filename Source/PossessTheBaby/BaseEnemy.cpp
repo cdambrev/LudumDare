@@ -29,6 +29,8 @@ void ABaseEnemy::BeginPlay()
 void ABaseEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	UpdateAnimation();
 }
 
 // Called to bind functionality to input
@@ -43,11 +45,18 @@ void ABaseEnemy::UpdateAnimation()
 	const FVector PlayerVelocity = GetVelocity();
 	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
 
-	// Are we moving or standing still?
-	UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
-	if( GetSprite()->GetFlipbook() != DesiredAnimation 	)
+	if (IsDead())
 	{
-		GetSprite()->SetFlipbook(DesiredAnimation);
+		GetSprite()->SetFlipbook(DieAnimation);
+	}
+	else
+	{
+		// Are we moving or standing still?
+		UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
+		if (GetSprite()->GetFlipbook() != DesiredAnimation)
+		{
+			GetSprite()->SetFlipbook(DesiredAnimation);
+		}
 	}
 }
 
@@ -69,6 +78,11 @@ void ABaseEnemy::SetCurrentState(EEnemyStateMachine nextState)
 void ABaseEnemy::SetAllowedToAttack(bool allowed)
 {
 	_allowedToAttack = allowed;
+}
+
+bool ABaseEnemy::IsDead() const
+{
+	return GetCurrentHp() <= 0.0f;
 }
 
 float ABaseEnemy::GetCurrentHp() const

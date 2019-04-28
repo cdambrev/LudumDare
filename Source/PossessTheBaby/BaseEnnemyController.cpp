@@ -55,14 +55,14 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				}
 				else
 				{
-					if (ennemy->GetActorLocation().X < 0)
+					float input = 1.0f;
+					if (ennemy->GetActorLocation().X > 0)
 					{
-						ennemy->AddMovementInput(FVector(100.f, 0.f, 0.f));
+						input = -1.0f;
 					}
-					else
-					{
-						ennemy->AddMovementInput(FVector(-100.f, 0.f, 0.f));
-					}
+
+					ennemy->AddMovementInput(FVector(input, 0.f, 0.f));
+					ennemy->SetFacingRight(input > 0);
 				}
 				break;
 			case EEnemyStateMachine::Wandering:
@@ -84,10 +84,10 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 					if (!ennemy->GetCombatComponent()->TestAttackHero()) // out of reach
 					{
 						APossessTheBabyCharacter* player = gameState->GetPlayer();
-						FVector distanceToPlayer = player->GetActorLocation() - ennemy->GetActorLocation();
-						distanceToPlayer.Y = 0;
-						ennemy->SetFacingRight(distanceToPlayer.X > 0);
-						ennemy->AddMovementInput(distanceToPlayer);
+						FVector diffToPlayer = player->GetActorLocation() - ennemy->GetActorLocation();
+						diffToPlayer.Y = 0;
+						ennemy->SetFacingRight(diffToPlayer.X > 0);
+						ennemy->AddMovementInput(diffToPlayer);
 					}
 					else
 					{
@@ -112,6 +112,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				break;
 			case EEnemyStateMachine::Dead:
 				ennemy->Destroy();
+				ennemy->GetCharacterMovement()->StopActiveMovement();
 				break;
 			case EEnemyStateMachine::Frozen:
 				ennemy->GetCharacterMovement()->StopActiveMovement();
@@ -120,7 +121,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				break;
 			}
 		}
-		if (ennemy->GetCurrentHp() <= 0 && ennemy->getCurrentState() != EEnemyStateMachine::Dead)
+		if (ennemy->IsDead() && ennemy->getCurrentState() != EEnemyStateMachine::Dead)
 		{
 			ennemy->SetCurrentState(EEnemyStateMachine::Dead);
 			OnEnnemyDied.Broadcast(ennemy);
