@@ -184,6 +184,7 @@ void ABaseEnnemyController::State_DieEnter()
 	GetEnemyPawn()->StopMoving();
 	GetEnemyPawn()->SetCurrentState(EEnemyStateMachine::Die);
 	GetEnemyPawn()->PlayDieSound();
+	OnEnnemyDied.Broadcast(GetEnemyPawn());
 }
 
 void ABaseEnnemyController::State_Die()
@@ -196,7 +197,6 @@ void ABaseEnnemyController::State_Die()
 
 void ABaseEnnemyController::State_Dead()
 {
-	OnEnnemyDied.Broadcast(GetEnemyPawn());
 	GetEnemyPawn()->Destroy();
 }
 

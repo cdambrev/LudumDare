@@ -150,18 +150,24 @@ void APossessTheBabyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void APossessTheBabyCharacter::MoveRight(float Value)
 {
-	// Apply the input to the character motion
-	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
-	if (FMath::Abs(Value) > 0.1f)
+	if (!IsDead())
 	{
-		SetFacingRight(Value > 0);
+		// Apply the input to the character motion
+		AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
+		if (FMath::Abs(Value) > 0.1f)
+		{
+			SetFacingRight(Value > 0);
+		}
 	}
 }
 
 void APossessTheBabyCharacter::MoveUp(float Value)
 {
-	// Apply the input to the character motion
-	AddMovementInput(FVector(0.0f, 0.0f, 1.0f), Value);
+	if (!IsDead())
+	{
+		// Apply the input to the character motion
+		AddMovementInput(FVector(0.0f, 0.0f, 1.0f), Value);
+	}
 }
 
 void APossessTheBabyCharacter::UpdateCharacter()
