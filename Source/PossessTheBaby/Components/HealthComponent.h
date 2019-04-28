@@ -70,7 +70,7 @@ private:
 
 	//  Points per seconds depleted in the opposite world.
 	UPROPERTY(EditAnywhere, Category = "Settings")
-	float _pointsDepletionRate = 1.0f;
+	float _pointsDepletionRate = 0.5f;
 
 	//  Points per seconds depleted in the opposite world.
 	UPROPERTY(EditAnywhere, Category = "Settings")
