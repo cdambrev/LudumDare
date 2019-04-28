@@ -55,6 +55,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category=Sounds)
 	class USoundBase* WorldSwitchToggleDeniedSound = nullptr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* HitAnimation;
 
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();
@@ -81,6 +84,9 @@ private:
 	void PlayAnimAttack(bool right);
 
 	void OnDeath();
+	
+	UFUNCTION()
+	void OnAttackingEnd();
 
 	UPROPERTY(BlueprintGetter="GetHealth")
 	UHealthComponent* Health = nullptr;
@@ -88,4 +94,7 @@ private:
 	float _stunDuration = 0.0f;
 
 	bool _isBoundToDeath = false;
+
+	bool _isAttacking = false;
+	bool _attackEnded = true;
 };

@@ -124,12 +124,24 @@ void APossessTheBabyCharacter::UpdateAnimation()
 			_isBoundToDeath = true;
 		}
 	}
+	else if (_isAttacking)
+	{
+		if (_attackEnded)
+		{
+			GetSprite()->SetLooping(false);
+			GetSprite()->SetFlipbook(HitAnimation);
+			GetSprite()->PlayFromStart();
+			GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnAttackingEnd);
+			_attackEnded = false;
+		}
+	}
 	else
 	{
 		UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
 		if (GetSprite()->GetFlipbook() != DesiredAnimation)
 		{
 			GetSprite()->SetFlipbook(DesiredAnimation);
+			GetSprite()->PlayFromStart();
 		}
 	}
 }
@@ -215,6 +227,7 @@ void APossessTheBabyCharacter::AttackLeft()
 	{
 		PlayAnimAttack(false);
 		Attack();
+		_isAttacking = true;
 	}
 }
 
@@ -224,6 +237,7 @@ void APossessTheBabyCharacter::AttackRight()
 	{
 		PlayAnimAttack(true);
 		Attack();
+		_isAttacking = true;
 	}
 }
 
@@ -232,10 +246,6 @@ void APossessTheBabyCharacter::Attack()
 	// jouer animation et stopper le player pour le temps de l'anim
 	GetCharacterMovement()->StopActiveMovement();
 	SetAttackEnabled(false);
-
-	FTimerHandle timerHandle;
-	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetAttackEnabled, true);
-	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, _attackDuration, false);
 
 	// tenter de toucher qqchose
 	ABaseEnemy* ennemy = GetCombatComponent()->TestAttackEnemy();
@@ -269,4 +279,11 @@ void APossessTheBabyCharacter::OnDeath()
 {
 	PlayDieSound();
 	StopMoving();
+}
+
+void APossessTheBabyCharacter::OnAttackingEnd()
+{
+	_isAttacking = false;
+	_attackEnded = true;
+	SetAttackEnabled(true);
 }
