@@ -4,6 +4,8 @@
 #include "Components/ActorComponent.h"
 #include "WorldStateComponent.generated.h"
 
+class UAudioComponent;
+
 UENUM(BlueprintType)
 enum class EWorldState : uint8
 {
@@ -11,7 +13,7 @@ enum class EWorldState : uint8
 	Nightmare
 };
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class POSSESSTHEBABY_API UWorldStateComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -31,6 +33,18 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, Category = Sounds)
+	class USoundBase* AmbienceDream = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = Sounds)
+	class USoundBase* AmbienceNightmare = nullptr;
+
 private:
 	EWorldState State = EWorldState::Dream;
+
+	UPROPERTY(Transient)
+	UAudioComponent* _dreamAmbienceInstance = nullptr;
+
+	UPROPERTY(Transient)
+	UAudioComponent* _nightmareAmbienceInstance = nullptr;
 };
