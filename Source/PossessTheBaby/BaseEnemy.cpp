@@ -49,6 +49,11 @@ void ABaseEnemy::UpdateAnimation()
 	{
 		GetSprite()->SetFlipbook(DieAnimation);
 	}
+	else if (_wantToAttack)
+	{
+		GetSprite()->SetFlipbook(HitAnimation);
+		_wantToAttack = false;
+	}
 	else
 	{
 		// Are we moving or standing still?
@@ -114,4 +119,14 @@ void ABaseEnemy::SetIsDreamWorld(bool isDreamWorld)
 bool ABaseEnemy::GetIsDreamWorld() const
 {
 	return _isDreamWorld;
+}
+
+void ABaseEnemy::SetWantToAttack(bool wantToAttack)
+{
+	_wantToAttack = wantToAttack;
+}
+
+bool ABaseEnemy::GetWantToAttack() const
+{
+	return _wantToAttack;
 }

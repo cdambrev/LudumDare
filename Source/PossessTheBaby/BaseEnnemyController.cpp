@@ -75,6 +75,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				}
 				break;
 			case EEnemyStateMachine::MovingToPlayer:
+				ennemy->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 				if (!ennemy->canAttack())
 				{
 					ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
@@ -107,6 +108,8 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				else
 				{
 					// animation
+					ennemy->SetWantToAttack(true);
+					ennemy->GetCharacterMovement()->SetMovementMode(MOVE_None);
 					ennemy->GetCombatComponent()->AttackHero();
 				}
 				break;
