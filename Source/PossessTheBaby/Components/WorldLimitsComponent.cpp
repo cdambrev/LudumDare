@@ -15,7 +15,7 @@ UWorldLimitsComponent::UWorldLimitsComponent()
 
 void UWorldLimitsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	/**/
+/*
 	FVector topRight(GetMinX(), 0.0f, GetMaxZ());
 	FVector topLeft(GetMaxX(), 0.0f, GetMaxZ());
 	FVector bottomRight(GetMinX(), 0.0f, GetMinZ());
@@ -25,7 +25,7 @@ void UWorldLimitsComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	DrawDebugLine(GetWorld(), topRight, bottomRight, FColor::Blue);
 	DrawDebugLine(GetWorld(), bottomRight, bottomLeft, FColor::Blue);
 	DrawDebugLine(GetWorld(), bottomLeft, topLeft, FColor::Blue);
-	/**/
+*/
 }
 
 float UWorldLimitsComponent::GetMinX() const
