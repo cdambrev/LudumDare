@@ -157,6 +157,7 @@ void ABaseEnnemyController::OnPlayerChangedWorld(EWorldState worldState)
 	{
 		if ((worldState == EWorldState::Dream && enemy->GetIsDreamWorld()) || (worldState == EWorldState::Nightmare && !enemy->GetIsDreamWorld()))
 		{
+			enemy->playAppear = true;
 			enemy->SetCurrentState(EEnemyStateMachine::Wandering);
 		}
 		else

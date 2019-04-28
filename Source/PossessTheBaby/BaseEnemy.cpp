@@ -48,10 +48,23 @@ void ABaseEnemy::UpdateAnimation()
 	if (IsDead())
 	{
 		GetSprite()->SetFlipbook(DieAnimation);
+		GetSprite()->SetLooping(false);
+	}
+	else if (_currentState == EEnemyStateMachine::Frozen)
+	{
+		GetSprite()->SetFlipbook(FrozenAnimation);
+		GetSprite()->SetLooping(false);
+	}
+	else if (playAppear)
+	{
+		GetSprite()->ReverseFromEnd();
+		GetSprite()->SetLooping(false);
+		playAppear = false;
 	}
 	else if (_wantToAttack)
 	{
 		GetSprite()->SetFlipbook(HitAnimation);
+		GetSprite()->SetLooping(false);
 		_wantToAttack = false;
 	}
 	else
@@ -61,6 +74,7 @@ void ABaseEnemy::UpdateAnimation()
 		if (GetSprite()->GetFlipbook() != DesiredAnimation)
 		{
 			GetSprite()->SetFlipbook(DesiredAnimation);
+			GetSprite()->SetLooping(true);
 		}
 	}
 }
