@@ -15,6 +15,8 @@ ABaseEnemy::ABaseEnemy()
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, -1.0f, 0.0f));
 	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
+
+	_attackDuration = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -77,13 +79,14 @@ void ABaseEnemy::UpdateAnimation()
 			GetSprite()->OnFinishedPlaying.AddDynamic(this, &ABaseEnemy::OnAppearEnd);
 		}
 	}
-	else if (_wantToAttack || !_attackEnd)
+	else if (GetWantToAttack() || !_attackEnd)
 	{
 		if (_attackEnd)
 		{
 			GetSprite()->SetLooping(false);
 			GetSprite()->SetFlipbook(HitAnimation);
 			GetSprite()->PlayFromStart();
+			SetWantToAttack(false);
 			_wantToAttack = false;
 			_attackEnd = false;
 			GetSprite()->OnFinishedPlaying.AddDynamic(this, &ABaseEnemy::OnAttackEnd);
@@ -105,6 +108,11 @@ void ABaseEnemy::UpdateAnimation()
 bool ABaseEnemy::canAttack() const
 {
 	return _allowedToAttack || GetCombatComponent()->TestAttackHero();
+}
+
+bool ABaseEnemy::CanMoveCloseToHero() const
+{
+	return _canMoveCloseToHero;
 }
 
 EEnemyStateMachine ABaseEnemy::getCurrentState() const
@@ -184,4 +192,21 @@ void ABaseEnemy::OnAttackEnd()
 {
 	GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &ABaseEnemy::OnAttackEnd);
 	_attackEnd = true;
+}
+
+void ABaseEnemy::Attack()
+{
+	SetWantToAttack(true);
+
+	GetCharacterMovement()->StopActiveMovement();
+	SetAttackEnabled(false);
+
+	FTimerHandle timerHandle;
+	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &ABaseEnemy::SetAttackEnabled, true);
+	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, _attackDuration, false);
+
+	GetCombatComponent()->AttackHero();
+	PlayHitSound();
+
+	PlayFoleySound();
 }

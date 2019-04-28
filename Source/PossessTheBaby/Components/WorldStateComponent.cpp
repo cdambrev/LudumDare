@@ -13,10 +13,10 @@ void UWorldStateComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	_dreamAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceDream);
+	_dreamAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceDream, 1, 1, 0, nullptr, false, false);
 	_dreamAmbienceInstance->Play();
 
-	_nightmareAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceNightmare);
+	_nightmareAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceNightmare, 1, 1, 0, nullptr, false, false);
 	_nightmareAmbienceInstance->Stop();
 }
 
@@ -55,12 +55,14 @@ void UWorldStateComponent::ToggleWorldState()
 	if (IsInDreamWorld())
 	{
 		State = EWorldState::Nightmare;
-		_nightmareAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceNightmare);
+		_dreamAmbienceInstance->FadeOut(1.0f, 0.0f);
+		_nightmareAmbienceInstance->FadeIn(1.0f);
 	}
 	else
 	{
 		State = EWorldState::Dream;
-		_dreamAmbienceInstance = UGameplayStatics::SpawnSound2D(GetWorld(), AmbienceDream);
+		_nightmareAmbienceInstance->FadeOut(1.0f, 0.0f);
+		_dreamAmbienceInstance->FadeIn(1.0f);
 	}
 
 	UGameplayStatics::PlaySound2D(GetWorld(), WorldSwitch);

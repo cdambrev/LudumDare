@@ -55,7 +55,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category=Sounds)
 	class USoundBase* WorldSwitchToggleDeniedSound = nullptr;
-	
+
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();
 
@@ -77,8 +77,6 @@ private:
 	void Attack();
 	void AttackLeft();
 	void AttackRight();
-
-	void SetMovementEnabled(bool enabled);
 
 	void PlayAnimAttack(bool right);
 
