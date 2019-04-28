@@ -152,6 +152,7 @@ void APossessTheBabyCharacter::UpdateAnimation()
 		UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
 		if (GetSprite()->GetFlipbook() != DesiredAnimation)
 		{
+			GetSprite()->SetLooping(true);
 			GetSprite()->SetFlipbook(DesiredAnimation);
 			GetSprite()->PlayFromStart();
 		}
@@ -331,6 +332,7 @@ void APossessTheBabyCharacter::OnGettingHitEnded()
 	SetCanGetHit(true);
 	SetGettingHit(false);
 	GetSprite()->OnFinishedPlaying.RemoveDynamic(this,&APossessTheBabyCharacter::OnGettingHitEnded);
+	SetMovementEnabled(true);
 }
 
 bool APossessTheBabyCharacter::CanGetHit() const

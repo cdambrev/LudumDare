@@ -32,7 +32,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Settings")
 	float _precisionX = 150.0f;
 
+	UPROPERTY(EditAnywhere, Category="Settings")
+	float _precisionForHeroZ = 70.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float _precisionForHeroX = 175.0f;
+
 private:
 	UEnemiesManager* GetEnemyManager() const;
-	bool CanHit(const FVector& attackerLocation, bool isAttackerFacingRight, const FVector& attackeeLocation) const;
+	bool CanHit(const FVector& attackerLocation, bool isAttackerFacingRight, const FVector& attackeeLocation, float precisionX, float percisionZ) const;
 };

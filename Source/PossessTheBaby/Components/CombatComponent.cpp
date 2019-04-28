@@ -19,7 +19,7 @@ ABaseEnemy* UCombatComponent::TestAttackEnemy() const
 	ABaseEnemy** result = enemies.FindByPredicate([&](ABaseEnemy* enemy)
 	{
 		APossessTheBabyCharacter* player = Cast<APossessTheBabyCharacter>(GetOwner());
-		return CanHit(player->GetActorLocation(), player->GetFacingRight(), enemy->GetActorLocation());
+		return CanHit(player->GetActorLocation(), player->GetFacingRight(), enemy->GetActorLocation(), _precisionForHeroX, _precisionForHeroZ);
 	});
 
 	if (result != nullptr)
@@ -38,13 +38,13 @@ bool UCombatComponent::TestAttackHero() const
 		APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 		APossessTheBabyCharacter* player = gameState->GetPlayer();
 
-		canHit = CanHit(enemy->GetActorLocation(), enemy->GetFacingRight(), player->GetActorLocation());
+		canHit = CanHit(enemy->GetActorLocation(), enemy->GetFacingRight(), player->GetActorLocation(), _precisionX, _precisionZ);
 
 	}
 	return canHit;
 }
 
-bool UCombatComponent::CanHit(const FVector& attackerLocation, bool isAttackerFacingRight, const FVector& attackeeLocation) const
+bool UCombatComponent::CanHit(const FVector& attackerLocation, bool isAttackerFacingRight, const FVector& attackeeLocation, float precisionX, float percisionZ) const
 {
 	bool result = false;
 
@@ -52,8 +52,8 @@ bool UCombatComponent::CanHit(const FVector& attackerLocation, bool isAttackerFa
 	bool onRight = diffX > 0.0f;
 	float distanceX = FMath::Abs(diffX);
 	float distanceZ = FMath::Abs(attackerLocation.Z - attackeeLocation.Z);
-	result = distanceX < _precisionX
-		&& distanceZ < _precisionZ
+	result = distanceX < precisionX
+		&& distanceZ < percisionZ
 		&& (onRight != isAttackerFacingRight);
 	return result;
 }
