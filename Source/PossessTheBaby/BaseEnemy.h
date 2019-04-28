@@ -98,6 +98,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* FrozenAnimation;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* AppearAnimation;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float speed = 0.f;
@@ -113,6 +116,15 @@ protected:
 	
 private:
 
+	UFUNCTION()
+	void OnAppearEnd();
+
+	UFUNCTION()
+	void OnDeadAnimOver();
+	
+	UFUNCTION()
+	void OnAttackEnd();
+	
 	EEnemyStateMachine _currentState = EEnemyStateMachine::Spawning;
 
 	bool _allowedToAttack = false;
@@ -123,4 +135,5 @@ private:
 	bool _isDreamWorld = false;
 
 	bool _wantToAttack = false;
+	bool _attackEnd = true;
 };
