@@ -96,3 +96,13 @@ void UHealthComponent::UpdateDeath()
 		OnDeath.Broadcast();
 	}
 }
+
+void UHealthComponent::AddDreamPoints(float points)
+{
+	DreamPoints += points;
+}
+
+void UHealthComponent::AddNightmarePoints(float points)
+{
+	NightmarePoints += points;
+}
