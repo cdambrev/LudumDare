@@ -39,7 +39,7 @@ public:
 	FVector GetRandomSpawnPoint() const;
 
 private:
-	UPROPERTY(BlueprintGetter= GetWorldState)
+	UPROPERTY(VisibleAnywhere, BlueprintGetter= GetWorldState)
 	UWorldStateComponent* WorldState = nullptr;
 
 	UPROPERTY()
