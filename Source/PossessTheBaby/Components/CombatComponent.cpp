@@ -31,7 +31,6 @@ ABaseEnemy* UCombatComponent::TestAttackEnemy() const
 
 bool UCombatComponent::TestAttackHero() const
 {
-	return false;
 	bool canHit = false;
 	ABaseEnemy* enemy = Cast<ABaseEnemy>(GetOwner());
 	if (IsValid(enemy))
@@ -67,8 +66,6 @@ UEnemiesManager* UCombatComponent::GetEnemyManager() const
 
 void UCombatComponent::AttackHero()
 {
-	return;
-
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	APossessTheBabyCharacter* player = gameState->GetPlayer();
 	ABaseEnemy* enemy = Cast<ABaseEnemy>(GetOwner());
