@@ -57,6 +57,7 @@ void ABaseEnemy::UpdateAnimation()
 			GetSprite()->SetLooping(false);
 			GetSprite()->SetFlipbook(DieAnimation);
 			GetSprite()->PlayFromStart();
+			GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &ABaseEnemy::OnDeadAnimOver);
 			GetSprite()->OnFinishedPlaying.AddDynamic(this, &ABaseEnemy::OnDeadAnimOver);
 		}
 	}
@@ -76,6 +77,7 @@ void ABaseEnemy::UpdateAnimation()
 			GetSprite()->SetLooping(false);
 			GetSprite()->SetFlipbook(AppearAnimation);
 			GetSprite()->PlayFromStart();
+			GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &ABaseEnemy::OnAppearEnd);
 			GetSprite()->OnFinishedPlaying.AddDynamic(this, &ABaseEnemy::OnAppearEnd);
 		}
 	}
@@ -89,6 +91,7 @@ void ABaseEnemy::UpdateAnimation()
 			SetWantToAttack(false);
 			_wantToAttack = false;
 			_attackEnd = false;
+			GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &ABaseEnemy::OnAttackEnd);
 			GetSprite()->OnFinishedPlaying.AddDynamic(this, &ABaseEnemy::OnAttackEnd);
 		}
 	}
@@ -107,7 +110,7 @@ void ABaseEnemy::UpdateAnimation()
 
 bool ABaseEnemy::canAttack() const
 {
-	return _allowedToAttack || GetCombatComponent()->TestAttackHero();
+	return _allowedToAttack;
 }
 
 bool ABaseEnemy::CanMoveCloseToHero() const
