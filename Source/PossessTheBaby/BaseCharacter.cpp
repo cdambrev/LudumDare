@@ -126,3 +126,8 @@ void ABaseCharacter::PlayFootStep()
 {
 	UGameplayStatics::PlaySound2D(GetWorld(), FootStep);
 }
+
+void ABaseCharacter::PlayDieSound()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), DieSound);
+}

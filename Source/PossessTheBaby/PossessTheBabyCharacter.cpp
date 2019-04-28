@@ -96,6 +96,8 @@ void APossessTheBabyCharacter::BeginPlay()
 	}
 
 	GetSprite()->SetSpriteColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.0f));
+
+	Health->OnDeath.AddUObject(this, &APossessTheBabyCharacter::OnDeath);
 }
 
 void APossessTheBabyCharacter::Tick(float DeltaSeconds)
@@ -247,3 +249,7 @@ void APossessTheBabyCharacter::OnAnimationEnded()
 	GetSprite()->Stop();
 }
 
+void APossessTheBabyCharacter::OnDeath()
+{
+	PlayDieSound();
+}

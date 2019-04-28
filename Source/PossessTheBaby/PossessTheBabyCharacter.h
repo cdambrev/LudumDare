@@ -79,6 +79,8 @@ private:
 
 	void PlayAnimAttack(bool right);
 
+	void OnDeath();
+
 	UPROPERTY(BlueprintGetter="GetHealth")
 	UHealthComponent* Health = nullptr;
 

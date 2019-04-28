@@ -56,6 +56,7 @@ public:
 	void PlayFoleySound();
 	void PlayHitSound();
 	void PlayFootStep();
+	void PlayDieSound();
 
 protected:
 
@@ -72,6 +73,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category=Sounds)
 	class USoundBase* FootStep = nullptr;
+
+	UPROPERTY(EditAnywhere, Category=Sounds)
+	class USoundBase* DieSound = nullptr;
 
 	UPROPERTY(EditAnywhere, Category=Sounds)
 	float FootStepPerMeter = 1.0f;
