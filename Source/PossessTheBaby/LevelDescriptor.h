@@ -18,8 +18,14 @@ struct FLevelData
 	TArray<float> timeBetweenEnemiesPerWave;
 
 	UPROPERTY(EditDefaultsOnly)
-	UCurveFloat* lightEnemiesCountPerWave;
+	TArray<float> enemiesCountPerWave;
 
 	UPROPERTY(EditDefaultsOnly)
-	UCurveFloat* strongEnemiesCountPerWave;
+	TArray<float> lightEnnemyCountPerWave;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TArray<float> strongEnnemyCountPerWave;
+
+	UPROPERTY(EditDefaultsOnly)
+	TArray<float> _maxEnemiesOnScreenPerWave;
 };

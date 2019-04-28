@@ -92,35 +92,22 @@ void UEnemiesManager::TickComponent(float DeltaTime, enum ELevelTick TickType, F
 
 void UEnemiesManager::SpawnNewEnnemy(bool strong)
 {
-	if (_ennemiesOnScreen.Num() < _maxEnnemiesOnScreen)
+	if (_enemiesSpawnedThisWave < _currentEnemiesPerWave)
 	{
-		if (strong)
+		if (_ennemiesOnScreen.Num() < _maxEnnemiesOnScreen)
 		{
-			FActorSpawnParameters spawnParameters;
-			APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
-			ABaseEnemy* ennemy = GetWorld()->SpawnActor<ABaseEnemy>(strongMonsterClass, gameState->GetRandomSpawnPoint(), FRotator::ZeroRotator, spawnParameters);
-			ABaseEnnemyController* controller = Cast<ABaseEnnemyController>(ennemy->GetController());
-			if (IsValid(controller))
+			if (strong && _currentStrongEnemiesSpawned < _currentStrongEnemiesPerWave)
 			{
-				controller->OnEnnemyDied.AddUObject(this, &UEnemiesManager::OnEnnemyDied);
+				SpawnEnemy(strongMonsterClass);
 			}
-			ennemy->SetIsDreamWorld(_isForDream);
-			ennemy->GetFakePerspective()->SetRestrictInX(false);
-			_ennemiesOnScreen.Add(ennemy);
+			else if (!strong && _currentLightEnemiesSpawned < _currentLightEnemiesPerWave)
+			{
+				SpawnEnemy(lightMonsterClass);
+			}
 		}
-		else
+		if (_enemiesSpawnedThisWave == _currentEnemiesPerWave)
 		{
-			FActorSpawnParameters spawnParameters;
-			APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
-			ABaseEnemy* ennemy = GetWorld()->SpawnActor<ABaseEnemy>(lightMonsterClass, gameState->GetRandomSpawnPoint(), FRotator::ZeroRotator, spawnParameters);
-			ABaseEnnemyController* controller = Cast<ABaseEnnemyController>(ennemy->GetController());
-			if (IsValid(controller))
-			{
-				controller->OnEnnemyDied.AddUObject(this, &UEnemiesManager::OnEnnemyDied);
-			}
-			ennemy->SetIsDreamWorld(_isForDream);
-			ennemy->GetFakePerspective()->SetRestrictInX(false);
-			_ennemiesOnScreen.Add(ennemy);
+			InitializeNewWave();
 		}
 	}
 }
@@ -128,14 +115,24 @@ void UEnemiesManager::SpawnNewEnnemy(bool strong)
 void UEnemiesManager::InitializeWave()
 {
 	APossessTheBabyGameMode * gameMode = Cast<APossessTheBabyGameMode>(GetWorld()->GetAuthGameMode());
-	float timeBetweenEnemiesFirstWave = gameMode->GetLevelData().timeBetweenEnemiesPerWave[0];
+	FLevelData levelData = gameMode->GetLevelData();
+	float timeBetweenEnemiesFirstWave = levelData.timeBetweenEnemiesPerWave[0];
+	
+	_maxEnnemiesOnScreen = levelData._maxEnemiesOnScreenPerWave[0];
+	_currentEnemiesPerWave = levelData.enemiesCountPerWave[0];
+	_currentStrongEnemiesPerWave = levelData.strongEnnemyCountPerWave[0];
+	_currentLightEnemiesPerWave = levelData.lightEnnemyCountPerWave[0];
+	
+	_enemiesSpawnedThisWave = 0;
+	_currentLightEnemiesSpawned = 0;
+	_currentStrongEnemiesSpawned = 0;
 	
 	FTimerDelegate SpawnEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &UEnemiesManager::SpawnNewEnnemy, false);
-	GetOwner()->GetWorldTimerManager().SetTimer(_spawnLightMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 5.f);
+	GetOwner()->GetWorldTimerManager().SetTimer(_spawnLightMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 4.f);
 	
 	FTimerDelegate SpawnStrongEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &UEnemiesManager::SpawnNewEnnemy, true);
-	GetOwner()->GetWorldTimerManager().SetTimer(_spawnStrongMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 12.f);
-
+	GetOwner()->GetWorldTimerManager().SetTimer(_spawnStrongMonsterHandle, SpawnStrongEnemyTimerDelegate, timeBetweenEnemiesFirstWave, true, 6.f);
+		
 	if (!_isForDream)
 	{
 		GetOwner()->GetWorldTimerManager().PauseTimer(_spawnLightMonsterHandle);
@@ -172,6 +169,38 @@ void UEnemiesManager::OnWorldStateChanged(EWorldState worldState)
 	}
 }
 
+void UEnemiesManager::InitializeNewWave()
+{
+	_enemiesSpawnedThisWave = 0;
+	_currentLightEnemiesSpawned = 0;
+	_currentStrongEnemiesSpawned = 0;
+	
+	APossessTheBabyGameMode * gameMode = Cast<APossessTheBabyGameMode>(GetWorld()->GetAuthGameMode());
+	FLevelData levelData = gameMode->GetLevelData();
+	int32 maxWave = levelData.maxWave;
+	if (_currentWave < maxWave)
+	{
+		_currentWave++;
+	}
+	
+	_maxEnnemiesOnScreen = levelData._maxEnemiesOnScreenPerWave[_currentWave];
+	_currentEnemiesPerWave = levelData.enemiesCountPerWave[_currentWave];
+	_currentStrongEnemiesPerWave = levelData.strongEnnemyCountPerWave[_currentWave];
+	_currentLightEnemiesPerWave = levelData.lightEnnemyCountPerWave[_currentWave];
+	
+	FTimerManager& timerManager = GetOwner()->GetWorldTimerManager();
+	timerManager.ClearTimer(_spawnLightMonsterHandle);
+	timerManager.ClearTimer(_spawnStrongMonsterHandle);
+	
+	float timeBetweenEnemies = levelData.timeBetweenEnemiesPerWave[_currentWave];
+	
+	FTimerDelegate SpawnEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &UEnemiesManager::SpawnNewEnnemy, false);
+	timerManager.SetTimer(_spawnLightMonsterHandle, SpawnEnemyTimerDelegate, timeBetweenEnemies, true, 6.f);
+	
+	FTimerDelegate SpawnStrongEnemyTimerDelegate = FTimerDelegate::CreateUObject(this, &UEnemiesManager::SpawnNewEnnemy, true);
+	timerManager.SetTimer(_spawnStrongMonsterHandle, SpawnStrongEnemyTimerDelegate, timeBetweenEnemies, true, 8.f);
+}
+
 void UEnemiesManager::SetIsForDream(bool forDream)
 {
 	_isForDream = forDream;
@@ -198,4 +227,20 @@ void UEnemiesManager::OnEnnemyDied(ABaseEnemy* ennemy)
 		}
 	}
 	_ennemiesOnScreen.RemoveSingle(ennemy);
+}
+
+void UEnemiesManager::SpawnEnemy(TSubclassOf<ABaseEnemy> enemyClass)
+{
+	FActorSpawnParameters spawnParameters;
+	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
+	ABaseEnemy* ennemy = GetWorld()->SpawnActor<ABaseEnemy>(enemyClass, gameState->GetRandomSpawnPoint(), FRotator::ZeroRotator, spawnParameters);
+	ABaseEnnemyController* controller = Cast<ABaseEnnemyController>(ennemy->GetController());
+	if (IsValid(controller))
+	{
+		controller->OnEnnemyDied.AddUObject(this, &UEnemiesManager::OnEnnemyDied);
+	}
+	ennemy->SetIsDreamWorld(_isForDream);
+	ennemy->GetFakePerspective()->SetRestrictInX(false);
+	_ennemiesOnScreen.Add(ennemy);
+	_enemiesSpawnedThisWave++;
 }

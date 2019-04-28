@@ -56,12 +56,26 @@ private:
 
 	void OnEnnemyDied(ABaseEnemy* ennemy);
 
+	void SpawnEnemy(TSubclassOf<ABaseEnemy> enemyClass);
+
+	void InitializeNewWave();
+
 	UPROPERTY(Transient)
 	TArray<ABaseEnemy*> _ennemiesOnScreen;
 
-	int32 _maxEnnemiesOnScreen = 1;
+	int32 _maxEnnemiesOnScreen = 0;
 
-	int32 _maxEnnemiesAttacking = 5;
+	int32 _maxEnnemiesAttacking = 3;
+
+	int32 _currentEnemiesPerWave = 0;
+	int32 _currentStrongEnemiesPerWave = 0;
+	int32 _currentLightEnemiesPerWave = 0;
+
+	int32 _currentWave = 0;
+
+	int32 _enemiesSpawnedThisWave = 0;
+	int32 _currentLightEnemiesSpawned = 0;
+	int32 _currentStrongEnemiesSpawned = 0;
 
 	FTimerHandle _spawnLightMonsterHandle;
 	FTimerHandle _spawnStrongMonsterHandle;
