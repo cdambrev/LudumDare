@@ -46,7 +46,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 		if (IsValid(gameState))
 		{
 			// Force wandering when player is dead.
-			if (!ennemy->IsDead() && gameState->GetPlayer()->IsDead())
+			if (!ennemy->IsDead() && gameState->GetPlayer()->IsDead() && ennemy->getCurrentState() != EEnemyStateMachine::Frozen)
 			{
 				ennemy->SetCurrentState(EEnemyStateMachine::WanderingEndGame);
 			}
