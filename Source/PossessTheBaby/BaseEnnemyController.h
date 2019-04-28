@@ -35,7 +35,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Settings")
 	float AttackMinWait = 0.5f;
 	UPROPERTY(EditAnywhere, Category = "Settings")
-	float AttackMaxWait = 3.0f;
+	float AttackMaxWait = 1.5f;
 	
 private:
 	ABaseEnemy* GetEnemyPawn() const;
