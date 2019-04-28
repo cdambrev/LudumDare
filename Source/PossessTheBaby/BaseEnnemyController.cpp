@@ -114,7 +114,6 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				break;
 			case EEnemyStateMachine::Dead:
 				ennemy->PlayDieSound();
-				ennemy->Destroy();
 				ennemy->GetCharacterMovement()->StopActiveMovement();
 				break;
 			case EEnemyStateMachine::Frozen:
