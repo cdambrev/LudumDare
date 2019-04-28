@@ -13,6 +13,8 @@ enum class EWorldState : uint8
 	Nightmare
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWorldStateChanged, EWorldState, worldState);
+
 UCLASS(BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class POSSESSTHEBABY_API UWorldStateComponent : public UActorComponent
 {
@@ -27,7 +29,7 @@ public:
 	EWorldState GetWorldState() const;
 	void ToggleWorldState();
 
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnWorldStateChanged, EWorldState)
+	UPROPERTY(BlueprintAssignable, Category="WorldChanged")
 	FOnWorldStateChanged OnWorldStateChanged;
 
 protected:

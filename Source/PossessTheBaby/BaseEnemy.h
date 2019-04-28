@@ -60,6 +60,10 @@ public:
 
 	UFakePerspectiveComponent* getFakePerspective() const;
 
+	void SetWantToAttack(bool wantToAttack);
+
+	bool GetWantToAttack() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -76,6 +80,9 @@ protected:
 	// The animation to play while idle (standing still)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* DieAnimation;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* HitAnimation;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Properties")
 	float speed = 0.f;
@@ -98,4 +105,6 @@ private:
 	float _currentHp = 0;
 	
 	bool _isDreamWorld = false;
+
+	bool _wantToAttack = false;
 };

@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Components/WorldStateComponent.h"
 #include "BaseEnnemyController.generated.h"
 
 class ABaseEnemy;
-enum class EWorldState : uint8;
 /**
  * 
  */
@@ -33,6 +33,7 @@ public:
 	
 private:
 
+	UFUNCTION()
 	void OnPlayerChangedWorld(EWorldState worldState);
 
 };

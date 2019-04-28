@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "BaseEnemy.h"
 #include "LevelDescriptor.h"
+#include "Components/WorldStateComponent.h"
 
 #include "EnemiesManager.generated.h"
 
@@ -50,6 +51,7 @@ private:
 
 	UWorldStateComponent* GetWorldStateComponent() const;
 
+	UFUNCTION()
 	void OnWorldStateChanged(EWorldState worldState);
 
 	void OnEnnemyDied(ABaseEnemy* ennemy);

@@ -21,7 +21,7 @@ void ABaseEnnemyController::BeginPlay()
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	if (IsValid(gameState))
 	{
-		gameState->GetWorldState()->OnWorldStateChanged.AddUObject(this, &ABaseEnnemyController::OnPlayerChangedWorld);
+		gameState->GetWorldState()->OnWorldStateChanged.AddDynamic(this, &ABaseEnnemyController::OnPlayerChangedWorld);
 	}
 }
 
@@ -30,7 +30,7 @@ void ABaseEnnemyController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	if (IsValid(gameState))
 	{
-		gameState->GetWorldState()->OnWorldStateChanged.RemoveAll(this);
+		gameState->GetWorldState()->OnWorldStateChanged.RemoveDynamic(this, &ABaseEnnemyController::OnPlayerChangedWorld);
 	}
 	Super::EndPlay(EndPlayReason);
 }
@@ -75,6 +75,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				}
 				break;
 			case EEnemyStateMachine::MovingToPlayer:
+				ennemy->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
 				if (!ennemy->canAttack())
 				{
 					ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
@@ -107,6 +108,8 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				else
 				{
 					// animation
+					ennemy->SetWantToAttack(true);
+					ennemy->GetCharacterMovement()->SetMovementMode(MOVE_None);
 					ennemy->GetCombatComponent()->AttackHero();
 				}
 				break;
