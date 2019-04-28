@@ -55,6 +55,7 @@ public:
 
 	void PlayFoleySound();
 	void PlayHitSound();
+	void PlayFootStep();
 
 protected:
 
@@ -68,6 +69,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category=Sounds)
 	class USoundBase* NightmareHitSound = nullptr;
+
+	UPROPERTY(EditAnywhere, Category=Sounds)
+	class USoundBase* FootStep = nullptr;
+
+	UPROPERTY(EditAnywhere, Category=Sounds)
+	float FootStepPerMeter = 1.0f;
 
 	UWorldStateComponent* GetWorldStateComponent() const;
 	EWorldState GetWorldState() const;
@@ -87,4 +94,6 @@ private:
 	UAnimationComponent* _animationComponent = nullptr;
 
 	bool _facingRight = true;
+
+	float _footStepTimer = 0.0f;
 };

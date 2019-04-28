@@ -59,6 +59,14 @@ void ABaseCharacter::Tick(float DeltaTime)
 			Controller->SetControlRotation(FRotator(0.0f, 0.0f, 0.0f));
 		}
 	}
+
+	float speed = PlayerVelocity.Size();
+	_footStepTimer += DeltaTime * (speed / 100.0f);
+	if (_footStepTimer > FootStepPerMeter)
+	{
+		PlayFootStep();
+		_footStepTimer = 0.0f;
+	}
 }
 
 bool ABaseCharacter::GetFacingRight() const
@@ -112,4 +120,9 @@ void ABaseCharacter::PlayHitSound()
 	{
 		UGameplayStatics::PlaySound2D(GetWorld(), NightmareHitSound);
 	}
+}
+
+void ABaseCharacter::PlayFootStep()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), FootStep);
 }
