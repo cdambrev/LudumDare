@@ -99,10 +99,10 @@ void UHealthComponent::UpdateDeath()
 
 void UHealthComponent::AddDreamPoints(float points)
 {
-	DreamPoints += points;
+	SetDreamPoints(DreamPoints + points);
 }
 
 void UHealthComponent::AddNightmarePoints(float points)
 {
-	NightmarePoints += points;
+	SetNightmarePoints(NightmarePoints + points);
 }
