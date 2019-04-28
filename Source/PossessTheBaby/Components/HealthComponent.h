@@ -28,8 +28,12 @@ public:
 	UHealthComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	DECLARE_MULTICAST_DELEGATE(FOnEvent)
+
 	UFUNCTION(BlueprintCallable, Category = "State")
 	bool IsDead() const;
+
+	FOnEvent OnDeath;
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnFloatChanged, float)
 
@@ -54,6 +58,7 @@ protected:
 private:
 	void SetDreamPoints(float value);
 	void SetNightmarePoints(float value);
+	void UpdateDeath();
 
 	UPROPERTY(BlueprintGetter="GetDreamPoints", Category="State")
 	float DreamPoints = 1.0f;

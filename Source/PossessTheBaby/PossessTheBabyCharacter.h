@@ -42,6 +42,11 @@ class APossessTheBabyCharacter : public APaperCharacter
 	UFUNCTION(BlueprintGetter)
 	UHealthComponent* GetHealth() const;
 
+	// Receive a hit.
+	void OnHit(float damage);
+
+	bool IsStun() const;
+
 protected:
 	// The animation to play while running around
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animations)
@@ -50,6 +55,10 @@ protected:
 	// The animation to play while idle (standing still)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* IdleAnimation;
+
+	// The animation to play while idle (standing still)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* DieAnimation;
 
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();
@@ -65,6 +74,8 @@ protected:
 	// End of APawn interface
 
 private:
+	UFUNCTION()
+	void OnAnimationEnded();
 	void ToggleWorldState();
 
 	UWorldStateComponent* GetWorldState() const;
@@ -80,6 +91,8 @@ private:
 
 	UPROPERTY()
 	UFlickerComponent* _flicker = nullptr;
+
+	float _stunDuration = 0.0f;
 
 public:
 	APossessTheBabyCharacter();

@@ -87,22 +87,6 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
 	PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Animation
-
-void APossessTheBabyCharacter::UpdateAnimation()
-{
-	const FVector PlayerVelocity = GetVelocity();
-	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
-
-	// Are we moving or standing still?
-	UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
-	if( GetSprite()->GetFlipbook() != DesiredAnimation 	)
-	{
-		GetSprite()->SetFlipbook(DesiredAnimation);
-	}
-}
-
 void APossessTheBabyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -120,7 +104,30 @@ void APossessTheBabyCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	
+	_stunDuration -= DeltaSeconds;
+
 	UpdateCharacter();
+}
+
+void APossessTheBabyCharacter::UpdateAnimation()
+{
+	const FVector PlayerVelocity = GetVelocity();
+	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
+
+	if (Health->IsDead())
+	{
+		GetSprite()->SetFlipbook(DieAnimation);
+		//GetSprite()->PlayFromStart();
+		GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnAnimationEnded);
+	}
+	else
+	{
+		UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
+		if (GetSprite()->GetFlipbook() != DesiredAnimation)
+		{
+			GetSprite()->SetFlipbook(DesiredAnimation);
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -183,8 +190,23 @@ UHealthComponent* APossessTheBabyCharacter::GetHealth() const
 void APossessTheBabyCharacter::ToggleWorldState()
 {
 	GetWorldState()->ToggleWorldState();
-
-	_flicker->Flick(0.2f, FLinearColor(1.0f, 0.0f, 0.0f));
+	OnHit(5.0f);
 }
 
+bool APossessTheBabyCharacter::IsStun() const
+{
+	return _stunDuration >= 0.0f;
+}
+
+void APossessTheBabyCharacter::OnHit(float damage)
+{
+	GetHealth()->ApplyDamage(damage);
+	_flicker->TintFlick(0.2f, FColor::Red);
+	_stunDuration = 0.5f;
+}
+
+void APossessTheBabyCharacter::OnAnimationEnded()
+{
+	GetSprite()->Stop();
+}
 
