@@ -88,4 +88,6 @@ private:
 	UHealthComponent* Health = nullptr;
 
 	float _stunDuration = 0.0f;
+
+	bool _isBoundToDeath = false;
 };

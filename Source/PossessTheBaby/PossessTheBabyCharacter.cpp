@@ -116,8 +116,13 @@ void APossessTheBabyCharacter::UpdateAnimation()
 
 	if (Health->IsDead())
 	{
+		GetSprite()->SetLooping(false);
 		GetSprite()->SetFlipbook(DieAnimation);
-		//GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnAnimationEnded);
+		if (!_isBoundToDeath)
+		{
+			GetSprite()->OnFinishedPlaying.AddDynamic(this, &APossessTheBabyCharacter::OnAnimationEnded);
+			_isBoundToDeath = true;
+		}
 	}
 	else
 	{
