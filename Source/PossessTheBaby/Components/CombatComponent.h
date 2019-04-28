@@ -18,7 +18,7 @@ public:
 	// Sets default values for this component's properties
 	UCombatComponent();
 
-	bool TestAttackEnemy() const;
+	ABaseEnemy* TestAttackEnemy() const;
 	bool TestAttackHero() const;
 
 	void AttackHero();

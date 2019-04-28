@@ -105,3 +105,8 @@ float ABaseEnemy::GetSoulsRewarded() const
 {
 	return soulsReward;
 }
+
+void ABaseEnemy::ApplyDamage()
+{
+	_currentHp--;
+}

@@ -12,10 +12,20 @@ UCombatComponent::UCombatComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-bool UCombatComponent::TestAttackEnemy() const
+ABaseEnemy* UCombatComponent::TestAttackEnemy() const
 {
-	UEnemiesManager* enemies = GetEnemyManager();
-	return true;
+	ABaseEnemy* result = nullptr;
+	UEnemiesManager* enemiesManager = GetEnemyManager();
+	TArray<ABaseEnemy*> enemies = enemiesManager->GetEnemiesOnScreen();
+	result = *enemies.FindByPredicate([&](ABaseEnemy* enemy) {
+		APossessTheBabyCharacter* player = Cast<APossessTheBabyCharacter>(GetOwner());
+		FVector playerLocation = player->GetActorLocation();
+		FVector ennemyLocation = enemy->GetActorLocation();
+		return FMath::Abs(playerLocation.X - ennemyLocation.X) < 100.f && FMath::Abs(playerLocation.Z - ennemyLocation.Z) < _precision
+			&& (playerLocation.X - ennemyLocation.X > 0 && !player->GetFacingRight() || playerLocation.X - ennemyLocation.X < 0 && player->GetFacingRight());
+	});
+
+	return result;
 }
 
 bool UCombatComponent::TestAttackHero() const

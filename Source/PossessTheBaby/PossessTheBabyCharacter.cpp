@@ -133,6 +133,8 @@ void APossessTheBabyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 	PlayerInputComponent->BindAxis("MoveRight", this, &APossessTheBabyCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("MoveUp", this, &APossessTheBabyCharacter::MoveUp);
+	PlayerInputComponent->BindAxis("AttackLeft", this, &APossessTheBabyGameState::AttackLeft);
+	PlayerInputComponent->BindAxis("AttackRight", this, &APossessTheBabyGameState::AttackRight);
 }
 
 void APossessTheBabyCharacter::MoveRight(float Value)
@@ -188,4 +190,59 @@ void APossessTheBabyCharacter::ToggleWorldState()
 	_flicker->Flick(0.2f, FLinearColor(1.0f, 0.0f, 0.0f));
 }
 
+void APossessTheBabyCharacter::AttackLeft()
+{
+	// jouer animation et stopper le player pour le temps de l'anim
+	GetCharacterMovement()->StopActiveMovement();
+	GetCharacterMovement()->SetMovementMode(MOVE_None);
+	PlayAnimAttack(false);
+	FTimerHandle timerHandle;
+	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetMovementEnabled, true);
+	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, 1.f, false);
+	
+	// tenter de toucher qqchose
+	ABaseEnemy* ennemy = _combat->TestAttackEnemy();
+	_combat->AttackEnemy(ennemy);
+}
 
+void APossessTheBabyCharacter::AttackRight()
+{
+	// jouer animation et stopper le player pour le temps de l'anim
+	GetCharacterMovement()->StopActiveMovement();
+	GetCharacterMovement()->SetMovementMode(MOVE_None);
+	PlayAnimAttack(true);
+	FTimerHandle timerHandle;
+	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetMovementEnabled, true);
+	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, 1.f, false);
+	// jouer animation toujours
+	// tenter de toucher qqchose
+}
+
+void APossessTheBabyCharacter::SetMovementEnabled(bool enabled)
+{
+	if (enabled)
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+	}
+	else
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_None);
+	}
+}
+
+void APossessTheBabyCharacter::PlayAnimAttack(bool right)
+{
+	if (right)
+	{
+
+	}
+	else
+	{
+
+	}
+}
+
+UCombatComponent* APossessTheBabyCharacter::GetCombatComponent() const
+{
+	return _combat;
+}

@@ -66,6 +66,14 @@ private:
 
 	UWorldStateComponent* GetWorldState() const;
 
+	void AttackLeft();
+
+	void AttackRight();
+
+	void SetMovementEnabled(bool enabled);
+
+	void PlayAnimAttack(bool right);
+
 	UPROPERTY(BlueprintGetter="GetHealth")
 	UHealthComponent* Health = nullptr;
 
@@ -90,4 +98,6 @@ public:
 	
 	UFUNCTION(BlueprintGetter)
 	UHealthComponent* GetHealth() const;
+
+	UCombatComponent* GetCombatComponent() const;
 };
