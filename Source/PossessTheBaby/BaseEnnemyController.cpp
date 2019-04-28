@@ -38,10 +38,10 @@ void ABaseEnnemyController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void ABaseEnnemyController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	ABaseEnemy* ennemy = Cast<ABaseEnemy>(GetPawn());
+	ABaseEnemy* ennemy = GetEnemyPawn();
+
 	if (IsValid(ennemy))
 	{
-		float XComp = FMath::FRandRange(-1.f, 1.f);
 		APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 		if (IsValid(gameState))
 		{
@@ -66,13 +66,7 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				}
 				break;
 			case EEnemyStateMachine::Wandering:
-				ennemy->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
-				ennemy->AddMovementInput(FVector(XComp, 0.f, FMath::FRandRange(-1.f, 1.f)));
-				ennemy->SetFacingRight(XComp > 0);
-				if (ennemy->canAttack())
-				{
-					ennemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
-				}
+				State_Wander();
 				break;
 			case EEnemyStateMachine::MovingToPlayer:
 				ennemy->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
@@ -140,20 +134,41 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 	ennemy->FaceRotation(GetControlRotation(), DeltaTime);
 }
 
+void ABaseEnnemyController::State_Wander()
+{
+	ABaseEnemy* enemy = GetEnemyPawn();
+	float inputX = FMath::FRandRange(-1.f, 1.f);
+	float inputZ = FMath::FRandRange(-1.f, 1.f);
+
+	enemy->GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+	enemy->AddMovementInput(FVector(inputX, 0.f, inputZ));
+	enemy->SetFacingRight(inputX > 0);
+	if (enemy->canAttack())
+	{
+		//ennemy->SetCurrentState(EEnemyStateMachine::MovingToPlayer);
+	}
+}
+
+
 void ABaseEnnemyController::OnPlayerChangedWorld(EWorldState worldState)
 {
-	ABaseEnemy* ennemy = Cast<ABaseEnemy>(GetPawn());
-	if (IsValid(ennemy))
+	ABaseEnemy* enemy = GetEnemyPawn();
+	if (IsValid(enemy))
 	{
-		if ((worldState == EWorldState::Dream && ennemy->GetIsDreamWorld()) || (worldState == EWorldState::Nightmare && !ennemy->GetIsDreamWorld()))
+		if ((worldState == EWorldState::Dream && enemy->GetIsDreamWorld()) || (worldState == EWorldState::Nightmare && !enemy->GetIsDreamWorld()))
 		{
-			ennemy->SetCurrentState(EEnemyStateMachine::Wandering);
+			enemy->SetCurrentState(EEnemyStateMachine::Wandering);
 		}
 		else
 		{
-			ennemy->SetCurrentState(EEnemyStateMachine::Frozen);
+			enemy->SetCurrentState(EEnemyStateMachine::Frozen);
 		}
 	}
 }
 
 void ABaseEnnemyController::UpdateControlRotation(float DeltaTime, bool bUpdatePawn) {}
+
+ABaseEnemy* ABaseEnnemyController::GetEnemyPawn() const
+{
+	return Cast<ABaseEnemy>(GetPawn());
+}

@@ -25,9 +25,14 @@ public:
 
 	void AttackEnemy(ABaseEnemy* ennemy);
 
+protected:
+	UPROPERTY(EditAnywhere, Category="Settings")
+	float _precisionZ = 50.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float _precisionX = 120.0f;
+
 private:
 	UEnemiesManager* GetEnemyManager() const;
 	bool CanHit(const FVector& attackerLocation, bool isAttackerFacingRight, const FVector& attackeeLocation) const;
-
-	float _precision = 20.0f;
 };
