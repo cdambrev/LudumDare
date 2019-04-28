@@ -38,20 +38,26 @@ class APossessTheBabyCharacter : public APaperCharacter
 	GENERATED_BODY()
 
 public:
+
 	APossessTheBabyCharacter();
 
 	UTextRenderComponent* TextComponent;
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void BeginPlay() override;
-
+	
 	UFUNCTION(BlueprintGetter)
 	UHealthComponent* GetHealth() const;
+
+	UCombatComponent* GetCombatComponent() const;
 
 	// Receive a hit.
 	void OnHit(float damage);
 
 	bool IsStun() const;
+
+	bool GetFacingRight() const;
+
 protected:
 	// The animation to play while running around
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animations)
@@ -84,6 +90,14 @@ private:
 	void ToggleWorldState();
 
 	UWorldStateComponent* GetWorldState() const;
+
+	void AttackLeft();
+
+	void AttackRight();
+
+	void SetMovementEnabled(bool enabled);
+
+	void PlayAnimAttack(bool right);
 
 	UPROPERTY(BlueprintGetter="GetHealth")
 	UHealthComponent* Health = nullptr;

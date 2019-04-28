@@ -18,7 +18,7 @@ public:
 	// Sets default values for this component's properties
 	UCombatComponent();
 
-	bool TestAttackEnemy() const;
+	ABaseEnemy* TestAttackEnemy() const;
 	bool TestAttackHero() const;
 
 	void AttackHero();
@@ -27,6 +27,7 @@ public:
 
 private:
 	UEnemiesManager* GetEnemyManager() const;
+	bool CanHit(const FVector& attackerLocation, bool isAttackerFacingRight, const FVector& attackeeLocation) const;
 
 	float _precision = 0.01f;
 };

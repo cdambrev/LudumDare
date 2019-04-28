@@ -12,34 +12,50 @@ UCombatComponent::UCombatComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-bool UCombatComponent::TestAttackEnemy() const
+ABaseEnemy* UCombatComponent::TestAttackEnemy() const
 {
-	UEnemiesManager* enemies = GetEnemyManager();
-	return true;
+	UEnemiesManager* enemiesManager = GetEnemyManager();
+	TArray<ABaseEnemy*> enemies = enemiesManager->GetEnemiesOnScreen();
+	ABaseEnemy** result = enemies.FindByPredicate([&](ABaseEnemy* enemy)
+	{
+		APossessTheBabyCharacter* player = Cast<APossessTheBabyCharacter>(GetOwner());
+		return CanHit(player->GetActorLocation(), player->GetFacingRight(), enemy->GetActorLocation());
+	});
+
+	if (result != nullptr)
+	{
+		return *result;
+	}
+	return nullptr;
 }
 
 bool UCombatComponent::TestAttackHero() const
 {
-	bool canAttack = false;
+	bool canHit = false;
 	ABaseEnemy* enemy = Cast<ABaseEnemy>(GetOwner());
 	if (IsValid(enemy))
 	{
 		APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 		APossessTheBabyCharacter* player = gameState->GetPlayer();
-		FVector playerLocation = player->GetActorLocation();
-		FVector ennemyLocation = enemy->GetActorLocation();
-		float diffX = ennemyLocation.X - playerLocation.X;
-		bool enemyOnRight = diffX > 0.0f;
-		float distanceX = FMath::Abs(diffX);
-		float distanceZ = FMath::Abs(playerLocation.Z - ennemyLocation.Z);
-		if (distanceX < 100.f
-			&& distanceZ < _precision
-			&& (enemyOnRight != enemy->GetFacingRight()))
-		{
-			canAttack = true;
-		}
+
+		canHit = CanHit(enemy->GetActorLocation(), enemy->GetFacingRight(), player->GetActorLocation());
+
 	}
-	return canAttack;
+	return canHit;
+}
+
+bool UCombatComponent::CanHit(const FVector& attackerLocation, bool isAttackerFacingRight, const FVector& attackeeLocation) const
+{
+	bool result = false;
+
+	float diffX = attackeeLocation.X - attackerLocation.X;
+	bool onRight = diffX > 0.0f;
+	float distanceX = FMath::Abs(diffX);
+	float distanceZ = FMath::Abs(attackerLocation.Z - attackeeLocation.Z);
+	result = distanceX < 100.f
+		&& distanceZ < _precision
+		&& (onRight != isAttackerFacingRight);
+	return result;
 }
 
 UEnemiesManager* UCombatComponent::GetEnemyManager() const

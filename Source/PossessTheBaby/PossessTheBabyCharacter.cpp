@@ -139,6 +139,8 @@ void APossessTheBabyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 {
 	// Note: the 'Jump' action and the 'MoveRight' axis are bound to actual keys/buttons/sticks in DefaultInput.ini (editable from Project Settings..Input)
 	PlayerInputComponent->BindAction("ToggleWorldState", IE_Pressed, this, &APossessTheBabyCharacter::ToggleWorldState);
+	PlayerInputComponent->BindAction("AttackLeft", IE_Pressed, this, &APossessTheBabyCharacter::AttackLeft);
+	PlayerInputComponent->BindAction("AttackRight", IE_Pressed, this, &APossessTheBabyCharacter::AttackRight);
 
 	PlayerInputComponent->BindAxis("MoveRight", this, &APossessTheBabyCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("MoveUp", this, &APossessTheBabyCharacter::MoveUp);
@@ -208,8 +210,69 @@ void APossessTheBabyCharacter::OnHit(float damage)
 	_stunDuration = 0.5f;
 }
 
+void APossessTheBabyCharacter::AttackLeft()
+{
+	// jouer animation et stopper le player pour le temps de l'anim
+	GetCharacterMovement()->StopActiveMovement();
+	GetCharacterMovement()->SetMovementMode(MOVE_None);
+	PlayAnimAttack(false);
+	FTimerHandle timerHandle;
+	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetMovementEnabled, true);
+	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, 1.f, false);
+	
+	// tenter de toucher qqchose
+	ABaseEnemy* ennemy = _combat->TestAttackEnemy();
+	_combat->AttackEnemy(ennemy);
+}
+
+void APossessTheBabyCharacter::AttackRight()
+{
+	// jouer animation et stopper le player pour le temps de l'anim
+	GetCharacterMovement()->StopActiveMovement();
+	GetCharacterMovement()->SetMovementMode(MOVE_None);
+	PlayAnimAttack(true);
+	FTimerHandle timerHandle;
+	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetMovementEnabled, true);
+	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, 1.f, false);
+	// jouer animation toujours
+	// tenter de toucher qqchose
+}
+
+void APossessTheBabyCharacter::SetMovementEnabled(bool enabled)
+{
+	if (enabled)
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_Flying);
+	}
+	else
+	{
+		GetCharacterMovement()->SetMovementMode(MOVE_None);
+	}
+}
+
+void APossessTheBabyCharacter::PlayAnimAttack(bool right)
+{
+	if (right)
+	{
+
+	}
+	else
+	{
+
+	}
+}
+
 void APossessTheBabyCharacter::OnAnimationEnded()
 {
 	GetSprite()->Stop();
 }
 
+UCombatComponent* APossessTheBabyCharacter::GetCombatComponent() const
+{
+	return _combat;
+}
+
+bool APossessTheBabyCharacter::GetFacingRight() const
+{
+	return _facingRight;
+}
