@@ -116,6 +116,8 @@ void ABaseEnnemyController::Tick(float DeltaTime)
 				break;
 			case EEnemyStateMachine::Frozen:
 				ennemy->GetCharacterMovement()->StopActiveMovement();
+				ennemy->ConsumeMovementInputVector();
+				ennemy->GetCharacterMovement()->SetMovementMode(MOVE_None);
 				break;
 			default:
 				break;
