@@ -172,7 +172,21 @@ UHealthComponent* APossessTheBabyCharacter::GetHealth() const
 
 void APossessTheBabyCharacter::ToggleWorldState()
 {
-	GetWorldStateComponent()->ToggleWorldState();
+	bool canToogle = false;
+	if (GetWorldState() == EWorldState::Dream)
+	{
+		canToogle = GetHealth()->GetNightmarePoints() > 0;
+	}
+	else
+	{
+		canToogle = GetHealth()->GetDreamPoints() > 0;
+	}
+
+	if (canToogle)
+	{
+		GetWorldStateComponent()->ToggleWorldState();
+		UGameplayStatics::PlaySound2D(GetWorld(), WorldSwitchToggleDeniedSound);
+	}
 }
 
 bool APossessTheBabyCharacter::IsStun() const
