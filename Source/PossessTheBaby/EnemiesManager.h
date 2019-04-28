@@ -54,7 +54,7 @@ private:
 	UPROPERTY(Transient)
 	TArray<ABaseEnemy*> _ennemiesOnScreen;
 
-	int32 _maxEnnemiesOnScreen = 10;
+	int32 _maxEnnemiesOnScreen = 1;
 
 	int32 _maxEnnemiesAttacking = 5;
 

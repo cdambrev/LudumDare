@@ -79,12 +79,6 @@ APossessTheBabyCharacter::APossessTheBabyCharacter()
     // 	TextComponent->SetupAttachment(RootComponent);
 
 	Health = CreateDefaultSubobject<UHealthComponent>(TEXT("Health"));
-	_fakePerspective = CreateDefaultSubobject<UFakePerspectiveComponent>(TEXT("Fake Perspective"));
-	_combat = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat Component"));
-	_flicker = CreateDefaultSubobject<UFlickerComponent>(TEXT("Flicker Component"));
-	_flicker->SetSprite(GetSprite());
-
-	_animationComponent = CreateDefaultSubobject<UAnimationComponent>(TEXT("Animation Component"));
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
@@ -150,7 +144,7 @@ void APossessTheBabyCharacter::MoveRight(float Value)
 {
 	// Apply the input to the character motion
 	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
-	_facingRight = Value > 0;
+	SetFacingRight(Value > 0);
 }
 
 void APossessTheBabyCharacter::MoveUp(float Value)
@@ -206,7 +200,7 @@ bool APossessTheBabyCharacter::IsStun() const
 void APossessTheBabyCharacter::OnHit(float damage)
 {
 	GetHealth()->ApplyDamage(damage);
-	_flicker->TintFlick(0.2f, FColor::Red);
+	GetFlicker()->TintFlick(0.2f, FColor::Red);
 	_stunDuration = 0.5f;
 }
 
@@ -221,8 +215,11 @@ void APossessTheBabyCharacter::AttackLeft()
 	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, 1.f, false);
 	
 	// tenter de toucher qqchose
-	ABaseEnemy* ennemy = _combat->TestAttackEnemy();
-	_combat->AttackEnemy(ennemy);
+	ABaseEnemy* ennemy = GetCombatComponent()->TestAttackEnemy();
+	if (ennemy != nullptr)
+	{
+		GetCombatComponent()->AttackEnemy(ennemy);
+	}
 }
 
 void APossessTheBabyCharacter::AttackRight()
@@ -234,8 +231,13 @@ void APossessTheBabyCharacter::AttackRight()
 	FTimerHandle timerHandle;
 	FTimerDelegate timerDelegate = FTimerDelegate::CreateUObject(this, &APossessTheBabyCharacter::SetMovementEnabled, true);
 	GetWorldTimerManager().SetTimer(timerHandle, timerDelegate, 1.f, false);
-	// jouer animation toujours
+
 	// tenter de toucher qqchose
+	ABaseEnemy* ennemy = GetCombatComponent()->TestAttackEnemy();
+	if (ennemy != nullptr)
+	{
+		GetCombatComponent()->AttackEnemy(ennemy);
+	}
 }
 
 void APossessTheBabyCharacter::SetMovementEnabled(bool enabled)
@@ -267,12 +269,3 @@ void APossessTheBabyCharacter::OnAnimationEnded()
 	GetSprite()->Stop();
 }
 
-UCombatComponent* APossessTheBabyCharacter::GetCombatComponent() const
-{
-	return _combat;
-}
-
-bool APossessTheBabyCharacter::GetFacingRight() const
-{
-	return _facingRight;
-}

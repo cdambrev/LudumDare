@@ -48,7 +48,7 @@ bool UCombatComponent::CanHit(const FVector& attackerLocation, bool isAttackerFa
 {
 	bool result = false;
 
-	float diffX = attackeeLocation.X - attackerLocation.X;
+	float diffX = attackerLocation.X - attackeeLocation.X;
 	bool onRight = diffX > 0.0f;
 	float distanceX = FMath::Abs(diffX);
 	float distanceZ = FMath::Abs(attackerLocation.Z - attackeeLocation.Z);
@@ -66,13 +66,15 @@ UEnemiesManager* UCombatComponent::GetEnemyManager() const
 
 void UCombatComponent::AttackHero()
 {
+	return;
+
 	APossessTheBabyGameState* gameState = GetWorld()->GetGameState<APossessTheBabyGameState>();
 	APossessTheBabyCharacter* player = gameState->GetPlayer();
 	ABaseEnemy* enemy = Cast<ABaseEnemy>(GetOwner());
 	player->OnHit(enemy->GetHitPoints());
 }
 
-void UCombatComponent::AttackEnemy(ABaseEnemy* ennemy)
+void UCombatComponent::AttackEnemy(ABaseEnemy* enemy)
 {
-
+	enemy->ApplyDamage();
 }

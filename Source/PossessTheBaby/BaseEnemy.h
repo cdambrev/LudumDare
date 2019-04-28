@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PaperCharacter.h"
+#include "BaseCharacter.h"
 #include "BaseEnemy.generated.h"
 
 class UPaperFlipbook;
@@ -21,7 +21,7 @@ enum class EEnemyStateMachine : uint8
 };
 
 UCLASS()
-class POSSESSTHEBABY_API ABaseEnemy : public APaperCharacter
+class POSSESSTHEBABY_API ABaseEnemy : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -44,12 +44,6 @@ public:
 	bool canAttack() const;
 
 	float GetCurrentHp() const;
-
-	UCombatComponent* GetCombatComponent() const;
-
-	void SetFacingRight(bool facingRight);
-
-	bool GetFacingRight() const;
 
 	float GetHitPoints() const;
 
@@ -89,12 +83,4 @@ private:
 	bool _allowedToAttack = false;
 	
 	float _currentHp = 0;
-	
-	UPROPERTY()
-	UFakePerspectiveComponent* _fakePerspective = nullptr;
-
-	UPROPERTY()
-	UCombatComponent* _combatComponent = nullptr;
-
-	bool _facingRight = true;
 };
