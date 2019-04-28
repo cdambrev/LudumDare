@@ -259,7 +259,6 @@ void APossessTheBabyCharacter::AttackLeft()
 {
 	if (IsAttackEnabled())
 	{
-		PlayAnimAttack(false);
 		Attack();
 	}
 }
@@ -268,7 +267,6 @@ void APossessTheBabyCharacter::AttackRight()
 {
 	if (IsAttackEnabled())
 	{
-		PlayAnimAttack(true);
 		Attack();
 	}
 }
@@ -291,18 +289,6 @@ void APossessTheBabyCharacter::Attack()
 	PlayFoleySound();
 }
 
-void APossessTheBabyCharacter::PlayAnimAttack(bool right)
-{
-	if (right)
-	{
-
-	}
-	else
-	{
-
-	}
-}
-
 void APossessTheBabyCharacter::OnAnimationEnded()
 {
 	GetSprite()->Stop();
@@ -311,7 +297,6 @@ void APossessTheBabyCharacter::OnAnimationEnded()
 void APossessTheBabyCharacter::OnAttackingEnd()
 {
 	OnAnimationEnded();
-
 	GetSprite()->OnFinishedPlaying.RemoveDynamic(this, &APossessTheBabyCharacter::OnAttackingEnd);
 	_wantToAttack = false;
 	_attackEnded = true;

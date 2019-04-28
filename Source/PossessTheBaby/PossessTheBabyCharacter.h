@@ -97,8 +97,6 @@ private:
 	void AttackLeft();
 	void AttackRight();
 
-	void PlayAnimAttack(bool right);
-
 	void OnDeath();
 
 	void SetWantToAttack(bool attack);
