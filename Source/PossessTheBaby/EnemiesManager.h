@@ -49,14 +49,14 @@ private:
 
 	void OnWorldStateChanged(EWorldState worldState);
 
+	void OnEnnemyDied(ABaseEnemy* ennemy);
+
 	UPROPERTY(Transient)
 	TArray<ABaseEnemy*> _ennemiesOnScreen;
 
 	int32 _maxEnnemiesOnScreen = 10;
 
 	int32 _maxEnnemiesAttacking = 5;
-
-	int32 _currentEnnemiesAttacking = 0;
 
 	FTimerHandle _spawnLightMonsterHandle;
 	FTimerHandle _spawnStrongMonsterHandle;

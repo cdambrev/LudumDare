@@ -11,6 +11,7 @@
 #include "PossessTheBabyGameState.h"
 #include "Engine/World.h"
 #include "PossessTheBabyCharacter.h"
+#include "BaseEnnemyController.h"
 
 // Sets default values
 UEnemiesManager::UEnemiesManager()
@@ -35,6 +36,7 @@ void UEnemiesManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		worldStateComponent->OnWorldStateChanged.RemoveAll(this);
 	}
+	_ennemiesOnScreen.Empty();
 }
 
 // Called every frame
@@ -93,7 +95,13 @@ void UEnemiesManager::SpawnNewEnnemy(bool strong)
 		if (strong)
 		{
 			FActorSpawnParameters spawnParameters;
-			_ennemiesOnScreen.Add(GetWorld()->SpawnActor<ABaseEnemy>(strongMonsterClass, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator, spawnParameters));
+			ABaseEnemy* ennemy = GetWorld()->SpawnActor<ABaseEnemy>(strongMonsterClass, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator, spawnParameters);
+			ABaseEnnemyController* controller = Cast<ABaseEnnemyController>(ennemy->GetController());
+			if (IsValid(controller))
+			{
+				controller->OnEnnemyDied.AddUObject(this, &UEnemiesManager::OnEnnemyDied);
+			}
+			_ennemiesOnScreen.Add(ennemy);
 		}
 		else
 		{
@@ -152,4 +160,9 @@ void UEnemiesManager::SetIsForDream(bool forDream)
 const TArray<ABaseEnemy*>& UEnemiesManager::GetEnemiesOnScreen() const
 {
 	return _ennemiesOnScreen;
+}
+
+void UEnemiesManager::OnEnnemyDied(ABaseEnemy* ennemy)
+{
+	_ennemiesOnScreen.RemoveSingle(ennemy);
 }

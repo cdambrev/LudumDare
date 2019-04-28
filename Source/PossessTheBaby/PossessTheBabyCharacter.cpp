@@ -146,6 +146,7 @@ void APossessTheBabyCharacter::MoveRight(float Value)
 {
 	// Apply the input to the character motion
 	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
+	_facingRight = Value > 0;
 }
 
 void APossessTheBabyCharacter::MoveUp(float Value)
