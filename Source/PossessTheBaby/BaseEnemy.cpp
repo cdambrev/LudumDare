@@ -6,27 +6,21 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/FakePerspectiveComponent.h"
 #include "Components/CombatComponent.h"
+#include "Components/FlickerComponent.h"
 
 // Sets default values
 ABaseEnemy::ABaseEnemy()
+	: Super()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->SetPlaneConstraintNormal(FVector(0.0f, -1.0f, 0.0f));
 	GetCharacterMovement()->bUseFlatBaseForFloorChecks = true;
-	
-	_fakePerspective = CreateDefaultSubobject<UFakePerspectiveComponent>(TEXT("Fake Perspective"));
-	_combatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat Component"));
 }
 
 // Called when the game starts or when spawned
 void ABaseEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-
-	GetSprite()->SetSpriteColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.0f));
-
 	_currentHp = maxHp;
 	GetCharacterMovement()->MaxFlySpeed = speed;
 }
@@ -82,21 +76,6 @@ float ABaseEnemy::GetCurrentHp() const
 	return _currentHp;
 }
 
-UCombatComponent* ABaseEnemy::GetCombatComponent() const
-{
-	return _combatComponent;
-}
-
-void ABaseEnemy::SetFacingRight(bool facingRight)
-{
-	_facingRight = facingRight;
-}
-
-bool ABaseEnemy::GetFacingRight() const
-{
-	return _facingRight;
-}
-
 float ABaseEnemy::GetHitPoints() const
 {
 	return hit;
@@ -109,6 +88,7 @@ float ABaseEnemy::GetSoulsRewarded() const
 
 void ABaseEnemy::ApplyDamage()
 {
+	GetFlicker()->TintFlick(0.2f, FColor::Red);
 	_currentHp--;
 }
 

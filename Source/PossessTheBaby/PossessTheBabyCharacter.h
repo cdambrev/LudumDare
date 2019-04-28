@@ -3,26 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PaperCharacter.h"
+#include "BaseCharacter.h"
 #include "PossessTheBabyCharacter.generated.h"
 
 class UTextRenderComponent;
 class UWorldStateComponent;
 class UHealthComponent;
-class UFakePerspectiveComponent;
-class UCombatComponent;
-class UFlickerComponent;
-class UAnimationComponent;
-
-UENUM(BlueprintType)
-enum class EAnimState : uint8
-{
-	Idle,
-	Running, 
-	Punching,
-	Hit,
-	Death
-};
 
 /**
  * This class is the default character for PossessTheBaby, and it is responsible for all
@@ -33,7 +19,7 @@ enum class EAnimState : uint8
  * The Sprite component (inherited from APaperCharacter) handles the visuals
  */
 UCLASS(config=Game)
-class APossessTheBabyCharacter : public APaperCharacter
+class APossessTheBabyCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -49,14 +35,10 @@ public:
 	UFUNCTION(BlueprintGetter)
 	UHealthComponent* GetHealth() const;
 
-	UCombatComponent* GetCombatComponent() const;
-
 	// Receive a hit.
 	void OnHit(float damage);
 
 	bool IsStun() const;
-
-	bool GetFacingRight() const;
 
 protected:
 	// The animation to play while running around
@@ -101,20 +83,6 @@ private:
 
 	UPROPERTY(BlueprintGetter="GetHealth")
 	UHealthComponent* Health = nullptr;
-
-	UPROPERTY()
-	UFakePerspectiveComponent* _fakePerspective = nullptr;
-
-	UPROPERTY()
-	UCombatComponent* _combat = nullptr;
-
-	bool _facingRight = true;
-
-	UPROPERTY()
-	UFlickerComponent* _flicker = nullptr;
-
-	UPROPERTY()
-	UAnimationComponent* _animationComponent = nullptr;
 
 	float _stunDuration = 0.0f;
 };
